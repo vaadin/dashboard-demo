@@ -1,0 +1,47 @@
+/*div.v-app-loading {
+	background-image: url(img/spinner.png);
+}*/
+
+@mixin dashboard-loading-indicator {
+	
+	.v-loading-indicator,
+	.v-loading-indicator-delay,
+	.v-loading-indicator-wait {
+		top: 50%;
+		left: 50%;
+		right: auto;
+		width: 44px;
+		height: 44px;
+		margin-top: -22px;
+		margin-left: -22px;
+		
+		background: transparent url(img/spinner.png);
+		
+		-webkit-animation: spinner 1s steps(12, end) 0 infinite;
+		
+		-moz-animation-name: spinner;
+		-moz-animation-duration: 1s;
+		-moz-animation-timing-function: steps(12, end);
+		-moz-animation-iteration-count: infinite;
+		
+		-o-animation-name: spinner;
+		-o-animation-duration: 1s;
+		-o-animation-timing-function: steps(12, end);
+		-o-animation-iteration-count: infinite;
+		
+		-ms-animation: spinner 1s steps(12, end) 0 infinite;
+	}
+	
+	.v-ie &,
+	.v-op & {
+		.v-loading-indicator,
+		.v-loading-indicator-delay,
+		.v-loading-indicator-wait {
+			background-image: url(img/spinner.gif);
+			opacity: .8;
+			filter: alpha(opacity=80);
+		}
+	}
+	
+
+}

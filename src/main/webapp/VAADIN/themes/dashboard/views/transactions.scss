@@ -1,0 +1,85 @@
+@mixin dashboard-transactions-view {
+	
+	/* TODO move to table styles once finalized */
+	.transactions .h1 {
+		padding: 10px 1em .5em 8px;
+	}
+	
+	.transactions .borderless .v-table-header-wrap {
+		border-top: 1px solid #d4d5d5;
+	}
+	
+	
+	/*
+	.v-table.editable .v-table-cell-content {
+		padding-top: 0;
+		padding-bottom: 0;
+		border-top: 1px solid #becfe0;
+	}
+	
+	.v-table.editable .v-table-row:first-child .v-table-cell-content {
+		border-top: none;
+	}
+	
+	.v-table.editable .v-table-cell-wrapper {
+		margin-left: -6px;
+		margin-right: -6px;
+	}
+	
+	.v-table.editable .v-textfield {
+		border: none;
+		@include box-shadow(none);
+		@include border-radius(0);
+		background: transparent;
+		text-shadow: inherit;
+		padding: .2em 0 .2em 6px;
+		font-size: inherit;
+	}
+	
+	.v-table.editable .v-textfield-focus,
+	.v-table.editable .v-textfield:focus,
+	.v-table.editable .v-textfield.v-focus,
+	.v-table.editable .v-focus > .v-textfield {
+		@include box-shadow(inset 0 1px 2px rgba(0,0,0,.3));
+	}
+	
+	.v-table.editable .v-table-row,
+	.v-table.editable .v-table-row-odd {
+		background: #fff;
+	}
+	
+	.v-table.editable .v-selected {
+		background: #cfe7ff;
+		color: #576472;
+		text-shadow: none;
+	}
+	
+	.v-table.editable .v-selected .v-table-cell-content {
+		border-color: #becfe0 
+	}
+	
+	.v-table.editable .v-selected + .v-table-row-odd .v-table-cell-content,
+	.v-table.editable .v-selected + .v-table-row .v-table-cell-content {
+		border-top-color: #e5e8e8;
+	}
+	
+	.help-overlay.table-lazy {
+		left: auto !important;
+		right: 20px;
+	}
+	
+	.help-overlay.table-filter {
+		top: 50px !important;
+		left: 30% !important;
+		max-width: 20em;
+	}
+	
+	.help-overlay.table-rows {
+		top: 50px !important;
+		left: auto !important;
+		right: 20px !important;
+		max-width: 24em;
+	}
+	*/
+
+}

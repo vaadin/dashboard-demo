@@ -1,0 +1,36 @@
+@mixin dashboard-label {
+	
+	/* TODO fix in base theme */
+	.v-label {
+		overflow: visible;
+	}
+	
+	.v-label.h1 {
+		font-size: 36px;
+		line-height: 1;
+		font-weight: 300;
+		-webkit-font-smoothing: antialiased;
+		letter-spacing: -0.05em;
+	/* 	color: #404346; */
+	}
+	
+	.v-label.h2 {
+		color: #404346;
+		font-size: 22px;
+		line-height: 1;
+		font-weight: normal;
+		padding: .5em 0;
+		-webkit-font-smoothing: antialiased;
+	}
+	
+	.v-label.light {
+		color: #979699;
+	}
+	
+	.v-label.h4 {
+		font-weight: bold;
+		text-transform: uppercase;
+		color: #349aff;
+	}
+
+}

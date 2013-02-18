@@ -1,0 +1,89 @@
+@mixin dashboard-combobox {
+	
+	.v-filterselect {
+		position: relative;
+	}
+	
+	.v-filterselect-input {
+		@include appearance(none);
+		background: transparent;
+		border: none;
+		padding: 0 1.5em 0 0;
+		margin: 0;
+		font-size: inherit;
+		width: 100% !important;
+	}
+	
+	.v-filterselect-input:focus {
+		outline: none;
+	}
+	
+	.v-filterselect-button {
+		position: absolute;
+		right: 1.5em;
+		width: 0;
+		height: 0;
+		border: 1px solid;
+		border-width: .5em .45em;
+		border-color: #646E77 transparent transparent;
+		top: 0.8em;
+		background: transparent;
+	}
+	
+	.v-filterselect-suggestpopup {
+		margin-top: .4em !important;
+	}
+	
+	.v-filterselect-suggestmenu tr {
+		line-height: inherit;
+	}
+	
+	.v-filterselect-prevpage-off,
+	.v-filterselect-prevpage,
+	.v-filterselect-nextpage-off,
+	.v-filterselect-nextpage {
+		background: transparent;
+	}
+	
+	.v-filterselect-prevpage-off,
+	.v-filterselect-prevpage {
+		padding-bottom: 5px;
+	}
+	
+	.v-filterselect-nextpage-off,
+	.v-filterselect-nextpage {
+		padding-top: 5px;
+	}
+	 
+	.v-filterselect-prevpage-off span,
+	.v-filterselect-prevpage span,
+	.v-filterselect-nextpage-off span,
+	.v-filterselect-nextpage span {
+		width: 0;
+		height: 0;
+		border: 1px solid;
+		border-width: .5em .45em;
+		border-color: transparent transparent #aaa;
+		overflow: hidden;
+		display: inline-block;
+	}
+	
+	.v-filterselect-nextpage-off span,
+	.v-filterselect-nextpage span {
+		border-color: #aaa transparent transparent;
+	}
+	
+	.v-filterselect-prevpage:hover span {
+		border-bottom-color: #fff;
+	}
+	
+	.v-filterselect-nextpage:hover span {
+		border-top-color: #fff;
+	}
+	
+	.v-filterselect-status {
+		color: #999;
+		font-size: 13px;
+	}
+
+}

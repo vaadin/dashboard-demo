@@ -1,0 +1,52 @@
+@mixin dashboard-textfield {
+	
+	.v-textfield,
+	.v-filterselect {
+		@include border-radius(3px);
+		border: 1px solid #c9c8c7;
+		border-top-color: #d8d7d6;
+		
+		background: #fff;
+		box-shadow: 0 0 0 2px rgba(51,50,49,.07);
+		
+		font: inherit;
+		color: inherit;
+		line-height: 1;
+		
+		margin: 0;
+	}
+	
+	input.v-widget.v-textfield,
+	.v-filterselect {
+		padding: .25em .3em;	
+	}
+	
+	.v-webkit & input.v-textfield,
+	.v-webkit & .v-filterselect {
+		padding-bottom: .3em;	
+	}
+	
+	.v-textfield:focus,
+	.v-filterselect-focus {
+		outline: none;
+		border-color: #69a5e4;
+	}
+	
+	input.v-textfield-prompt,
+	.v-filterselect-prompt .v-filterselect-input {
+		font-style: normal;
+	}
+	
+	input.v-widget.v-textfield.small,
+	.v-filterselect.small {
+		padding: .15em .2em;
+		font-size: 12px;
+	}
+	
+	
+	.v-webkit & input.v-textfield.small,
+	.v-webkit & .v-filterselect.small {
+		padding-bottom: .2em;
+	}
+
+}

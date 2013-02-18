@@ -1,0 +1,63 @@
+1	Shanghai	17,836,133	Core districts	2,605.8	6,845	 China	Asia
+2	Istanbul	13,483,052	Metropolitan municipality	5,343	2,481	 Turkey	Europe/Asia
+3	Karachi	12,991,000	City District	3,527	5,700	 Pakistan	Asia
+4	Mumbai	12,478,447	Municipal Corporation	603	20,694	 India	Asia
+5	Tehran	12,223,598	City proper	760	10,359	 Iran	Asia
+6	Moscow	11,810,000	Federal City	2,511	4,705	 Russia	Europe
+7	Beijing	11,716,000	Core districts	1,368.32	7,400	 China	Asia
+9	Tianjin	11,090,314	All districts	7,422	1,494	 China	Asia
+10	Guangzhou	11,070,654	All districts	3,843	2,881	 China	Asia
+11	Delhi	11,007,835	Municipal Corporation	1,397.29	7,922.9	 India	Asia
+12	Seoul	10,575,447	Special City	605.25	17,473	 South Korea	Asia
+13	Shenzhen	10,357,938	All districts	1,989	5,201	 China	Asia
+14	Jakarta	9,588,198	Special capital district	662.33	14,476	 Indonesia	Asia
+15	Tokyo	8,887,608	23 Special Wards	617.18	14,400	 Japan	Asia
+16	Mexico City	8,873,017	Federal District	1,485.49	5,973	 Mexico	North America
+17	Kinshasa	8,754,000	City-Province	2,016	4,342	 Democratic Republic of the Congo	Africa
+18	Bangalore	8,425,970	Municipal Corporation	709.5	11,876	 India	Asia
+19	New York	8,244,910	City proper	789.4	10,519	 United States	North America
+20	Dongguan	8,220,237	Prefecture-level city	2,465	3,335	 China	Asia
+21	London	8,174,100	Greater London	1,580	4,863	 United Kingdom	Europe
+22	Lagos	7,937,932	statistical area	999.6	7,938	 Nigeria	Africa
+23	Lima	7,605,742	Province	2,670.4	2,848	 Peru	South America
+25	Ho Chi Minh City	7,162,864	Province-level municipality	2,095.01	3,419	 Vietnam	Asia
+26	Hong Kong	7,108,100	Special Administrative Region	1,108	6,415	 China	Asia
+27	Bangkok	7,025,000	Administrative area	1,568.74	4,478	 Thailand	Asia
+28	Dhaka	7,000,940	City Corporation	360	19,447	 Bangladesh	Asia
+29	Hyderabad	6,809,970	Municipal Corporation	621.48	10,958	 India	Asia
+30	Cairo	6,758,581	Governorate	453	17,190	 Egypt	Africa
+31	Hanoi	6,451,909	Province-level municipality	3,344.7	1,943.4	 Vietnam	Asia
+32	Wuhan	6,434,373	Central districts	888.42	7,242	 China	Asia
+33	Rio de Janeiro	6,323,037	Municipality	1,182	5,349	 Brazil	South America
+34	Lahore	6,318,745	City District	1,772	3,566	 Pakistan	Asia
+35	Ahmedabad	5,570,585	Municipal Corporation	475	11,727	 India	Asia
+36	Baghdad	5,402,486	City proper	1,134	4,064	 Iraq	Asia
+37	Riyadh	5,188,286	City proper	800	6,485	 Saudi Arabia	Asia
+38	Singapore	5,183,700	City State	712.4	7,276	 Singapore	Asia
+39	Santiago	5,012,973	Province	2,030	2,469	 Chile	South America
+40	Saint Petersburg	4,868,520	Federal city	1,399	3,480	 Russia	Europe
+41	Chennai	4,681,087	Municipal Corporation	176	26,903	 India	Asia
+42	Ankara	4,550,662	Metropolitan Municipality	2,516	1,551	 Turkey	Asia
+43	Chongqing	4,513,100	Core districts	1,435	3,145	 China	Asia
+44	Kolkata	4,486,679	Municipal Corporation	185	24,252	 India	Asia
+45	Surat	4,462,002	Municipal Corporation	326.515	13,666	 India	Asia
+46	Yangon	4,350,000	City proper	598.75	6,828	 Myanmar	Asia
+47	Alexandria	4,110,015	Governorate	2,680	1,611	 Egypt	Africa
+48	Shenyang	4,101,197 (2006-12-31)	Core districts	3,495	1,173	 China	Asia
+49	Suzhou	4,074,000	Core districts	1,679.2	2,426	 China	Asia
+50	New Taipei	3,910,086	Special municipality	2,052.5667	1,905	 Republic of China (Taiwan)	Asia
+51	Johannesburg	3,888,180	Metropolitan Municipality	1,644.96	2,364	 South Africa	Africa
+52	Los Angeles	3,819,702	City proper	1,290	2,940	 United States	North America
+53	Yokohama	3,680,267	City proper	437.38	8,414	 Japan	Asia
+54	Abidjan	3,660,682	Department/District	2,119	1,728	 Ivory Coast	Africa
+55	Busan	3,600,381	Metropolitan City	766.12	4,666	 South Korea	Asia
+56	Berlin	3,499,879	City state	892	3,924	 Germany	Europe
+57	Cape Town	3,497,097	Metropolitan Municipality	2,454.72	1,424	 South Africa	Africa
+58	Durban	3,468,086	Metropolitan Municipality	2,291.89	1,513	 South Africa	Africa
+59	Jeddah	3,430,697	City proper	1,230	2,789	 Saudi Arabia	Asia
+60	Pyongyang	3,255,388	Direct-controlled municipality	3,194	1,019	 North Korea	Asia
+61	Madrid	3,213,271	Municipality	698	4,604	 Spain	Europe
+62	Nairobi	3,138,369	Province	696	4,509	 Kenya	Africa
+63	Pune	3,115,431	Municipal Corporation	450.69	6,913	 India	Asia
+64	Jaipur	3,073,350	Municipal Corporation	485	6,337	 India	Asia
+65	Casablanca	3,027,000	City proper	324	9,342	 Morocco	Africa

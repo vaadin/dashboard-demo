@@ -1,0 +1,60 @@
+@mixin dashboard-sales-view {
+	
+	.timeline .h1 {
+		padding: .6em 0 .3em;
+	}
+	
+	.v-timeline:focus {
+		outline: none;
+	}
+	
+	.timeline .toolbar,
+	.timeline .h1 {
+		padding-left: 20px;
+	}
+	
+	.timeline .v-timeline-widget-modelegend {
+		background: transparent;
+	}
+	
+	.timeline .v-timeline-widget-display .gwt-HTML {
+		left: 0 !important;
+		width: 100%;
+		text-align: center;
+		top: 40% !important;
+		margin-top: -.5em;
+	}
+	
+	.timeline .v-timeline-widget-display-bottombar {
+		background: transparent; 
+	}
+	
+	.timeline .v-timeline-widget-legend-value {
+		font-size: 12px;
+		line-height: 16px;
+		color: #979699;
+		height: 18px !important;
+	}
+	
+	.timeline .v-timeline-widget-legend-label {
+		font-size: 13px;
+	}
+	
+	.help-overlay.timeline-add {
+		left: 500px !important;
+		top: 100px !important;
+		max-width: 20em;
+	}
+	
+	.help-overlay.timeline-clear {
+		top: 100px !important;
+		left: auto !important;
+		right: 80px !important;
+	}
+	
+	.help-overlay.timeline-browse {
+		top: auto !important;
+		bottom: 80px;
+	}
+
+}

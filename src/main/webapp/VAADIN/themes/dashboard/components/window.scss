@@ -1,0 +1,87 @@
+@mixin dashboard-window {
+	
+	.v-window {
+		@include fade-in;
+		@include box-shadow(0 4px 20px rgba(0,0,0,.5));
+	}
+	
+	.v-shadow-window {
+		display: none;
+	}
+	
+	.v-ie8 & .v-shadow-window {
+		display: block;
+	}
+	
+	.v-window-closebox:before {
+		font-family: arial, sans-serif;
+		content: "\00D7";
+	}
+	
+	.v-window-closebox {
+		background: #343638;
+		color: #ddd;
+		font-size: 16px;
+		font-weight: normal;
+		line-height: 20px;
+		text-align: center;
+		width: 20px;
+		height: 20px;
+		@include border-radius(2px);
+		top: 10px;
+		right: 10px;
+	}
+	
+	.v-window-closebox:hover {
+		color: #fff;
+	}
+	
+	.v-window-closebox:active {
+		color: #ddd;
+		background: #000;
+	}
+	
+	.v-window-modalitycurtain {
+		opacity: 0.7;
+		filter: alpha(opacity=70);
+		
+		background: #353637;
+		
+		/* TODO mixin */
+		background: -moz-radial-gradient(center, ellipse cover, #4c4d4e 0%, #1b1c1c 100%);
+		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#4c4d4e), color-stop(100%,#1b1c1c));
+		background: -webkit-radial-gradient(center, ellipse cover, #4c4d4e 0%,#1b1c1c 100%);
+		background: -o-radial-gradient(center, ellipse cover, #4c4d4e 0%,#1b1c1c 100%);
+		background: -ms-radial-gradient(center, ellipse cover, #4c4d4e 0%,#1b1c1c 100%);
+	/* 	background: radial-gradient(ellipse at center, #4c4d4e 0%,#1b1c1c 100%); */
+	}
+	
+	.v-window-outerheader {
+		padding: 0.5em 20px;
+		height: 1.7em;
+		font-weight: 300;
+		font-size: 20px;
+	}
+	
+	.v-window-header {
+		font-weight: inherit;
+	}
+	
+	.dialog.v-window {
+		color: #a6a9aa;
+		font-size: 13px;
+		
+		.v-window-header {
+			text-align: center;
+			color: #fff;
+			font-size: 16px;
+			font-weight: 400;
+		}
+	}
+	
+	.v-window .footer {
+		background: #eee;
+		border-top: 1px solid #e0e0e0;
+	}
+
+}

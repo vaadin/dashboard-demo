@@ -1,0 +1,128 @@
+@mixin icon($name, $char) {
+	.icon-#{$name}.v-nativebutton:before,
+	.icon-#{$name} > .v-button-wrap:before,
+	.icon-#{$name}.v-label:before,
+	.v-menubar-menuitem-icon-#{$name}:before {
+		content: $char;
+	}
+}
+
+
+@mixin box-sizing($b) {
+	-webkit-box-sizing: $b;
+	-moz-box-sizing: $b;
+	box-sizing: $b;
+}
+
+@mixin border-radius ($r) {
+	-webkit-border-radius: $r;
+	-moz-border-radius: $r;
+	border-radius: $r;
+}
+
+@mixin box-shadow ($s) {
+	-webkit-box-shadow: $s;
+	-moz-box-shadow: $s;
+	box-shadow: $s;
+}
+
+@mixin appearance ($a) {
+	-webkit-appearance: $a;
+	-moz-appearance: $a;
+	appearance: $a;
+}
+
+@mixin transition ($t) {
+	-webkit-transition: $t;
+	-moz-transition: $t;
+	-ms-transition: $t;
+	-o-transition: $t;
+	transition: $t;
+}
+
+@mixin transform ($t) {
+	-webkit-transform: $t;
+	-moz-transform: $t;
+	-ms-transform: $t;
+	-o-transform: $t;
+	transform: $t;
+}
+
+@mixin animation ($name, $duration, $easing) {
+	-webkit-animation: $name $duration $easing;
+	-moz-animation: $name $duration $easing;
+	-ms-animation: $name $duration $easing;
+	-o-animation: $name $duration $easing;
+	animation: $name $duration $easing;
+}
+
+@mixin animation-duration ($duration) {
+	-webkit-animation-duration: $duration;
+	-moz-animation-duration: $duration;
+	-ms-animation-duration: $duration;
+	-o-animation-duration: $duration;
+	animation-duration: $duration;
+}
+
+@mixin animation-delay ($delay) {
+	-webkit-animation-delay: $delay;
+	-moz-animation-delay: $delay;
+	-ms-animation-delay: $delay;
+	-o-animation-delay: $delay;
+	animation-delay: $delay;
+}
+
+@mixin animation-fill-mode ($fm) {
+	-webkit-animation-fill-mode: $fm;
+	-moz-animation-fill-mode: $fm;
+	-ms-animation-fill-mode: $fm;
+	-o-animation-fill-mode: $fm;
+	animation-fill-mode: $fm;
+}
+
+@mixin fade-in ($duration: 160ms){
+/* 	TODO this will freak out the Sass compiler */
+/* -moz-animation: fade-in $duration ease-out; */
+/* 	@include animation(fade-in, 160ms, ease-out); */
+	-webkit-animation: fade-in 160ms ease-out;
+	-moz-animation: fade-in 160ms ease-out;
+	-ms-animation: fade-in 160ms ease-out;
+	-o-animation: fade-in 160ms ease-out;
+	animation: fade-in 160ms ease-out;
+	opacity: 1;
+}
+
+@mixin move-up {
+	-webkit-animation: move-up 300ms ease-in-out;
+	-moz-animation: move-up 300ms ease-in-out;
+	-o-animation: move-up 300ms ease-in-out;
+}
+
+@mixin move-up-100 {
+	-webkit-animation: move-up-100 800ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+	-moz-animation: move-up-100 800ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+	-o-animation: move-up-100 800ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+}
+
+@mixin move-right {
+	position: relative;
+	left: 0;
+	-webkit-animation: move-right 300ms ease-in-out;
+	-moz-animation: move-right 700ms ease-out;
+	-o-animation: move-right 500ms ease-out;
+}
+
+@mixin reveal {
+	opacity: 1;
+	-webkit-animation: reveal 100ms ease-in-out;
+	-moz-animation: reveal 100ms ease-in-out;
+	-o-animation: reveal 100ms ease-in-out;
+}
+
+@mixin hide {
+	opacity: 0;
+	z-index: 0;
+	-webkit-animation: hide 300ms ease-in-out;
+	-moz-animation: hide 300ms ease-in-out;
+	-o-animation: hide 300ms ease-in-out;
+}

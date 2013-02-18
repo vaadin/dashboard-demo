@@ -1,0 +1,185 @@
+
+$text-color: #5a6066;
+$font-size: 14px;
+$font: normal $font-size/1.5 "Open Sans", Arial, sans-serif;
+
+@mixin dashboard-common {
+	
+	.v-widget {
+		color: inherit;
+		font: inherit;
+		font-size: 14px;
+	}
+	
+	&.v-app,
+	.v-drag-element,
+	.v-contextmenu,
+	.v-menubar-popup,
+	.v-filterselect-suggestpopup,
+	.v-datefield-popup,
+	.v-popupview-popup,
+	.v-Notification,
+	.v-window,
+	.v-tooltip {
+		color: $text-color;
+		font: $font;
+	}
+	
+	.v-spacing {
+	    height: 12px;
+	    width: 12px;
+	}
+	
+	/* TODO fix in base theme (and use a less precise selector) */
+	.v-caption .v-captiontext {
+		overflow: visible;
+	}
+	
+	.v-caption {
+		font-size: 13px;
+		color: #6c737a;
+	}
+	
+	.v-caption-on-top .v-caption {
+		padding-bottom: .3em;
+	}
+	
+	.v-drag-element {
+		opacity: .7;
+		cursor: move;
+	}
+	
+	.v-drag-element * {
+		cursor: move !important;
+	}
+	
+	.v-drag-element.v-widget {
+		border: 2px solid #2d90f3;
+		background: #fff;
+		padding: 4px;
+		@include border-radius(4px);
+		max-width: 50%;
+		max-height: 50%;
+	}
+	
+	.v-icon,
+	.v-embbedded img {
+		-ms-interpolation-mode: bicubic;
+	}
+	
+	
+	
+	/* Transient overlay elements */
+	.v-contextmenu,
+	.v-menubar-popup,
+	.v-filterselect-suggestpopup,
+	.v-datefield-popup,
+	.v-popupview-popup,
+	.v-tooltip,
+	.v-window.dialog,
+	.v-Notification-tray {
+		background: #343638;
+		background: rgba(52,54,56,.92);
+		@include box-shadow(0 2px 5px rgba(0,0,0,.5));
+		
+		color: #fff;
+		text-shadow: 0 1px 1px rgba(0,0,0,.5);
+		
+		padding: 4px;
+		
+		@include border-radius(.3em);
+		border: none;
+		
+		min-width: 10em;
+		
+		@include fade-in;
+	}
+	
+	.v-tooltip,
+	.v-window.dialog {
+		min-width: 0;
+	}
+	
+	.v-tooltip {
+		font-size: 12px;
+		padding: 0 4px;
+	}
+	
+	.v-contextmenu table,
+	.v-filterselect-suggestpopup table,
+	.v-menubar-submenu {
+		width: 100%;
+		background: transparent;
+	}
+	
+	.v-filterselect-suggestpopup table {
+		width: auto;
+	}
+	
+	.v-contextmenu,
+	.v-menubar-popup,
+	.v-filterselect-suggestpopup-small {
+		font-size: 13px;
+	}
+	
+	.v-contextmenu .gwt-MenuItem,
+	.v-menubar-popup .v-menubar-menuitem,
+	.v-filterselect-suggestpopup .gwt-MenuItem {
+		padding: .1em .6em;
+		@include border-radius(.2em);
+	}
+	
+	.v-contextmenu .gwt-MenuItem-selected,
+	.v-menubar-popup .v-menubar-menuitem-selected,
+	.v-filterselect-suggestpopup .gwt-MenuItem-selected {
+		text-shadow: 0 .1em .1em rgba(0,0,0,.3);
+		
+		background: #6ba7e4;
+		background: -moz-linear-gradient(top, #75b0e7 0%, #5f9de1 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#75b0e7), color-stop(100%,#5f9de1));
+		background: -webkit-linear-gradient(top, #75b0e7 0%,#5f9de1 100%);
+		background: -o-linear-gradient(top, #75b0e7 0%,#5f9de1 100%);
+		background: -ms-linear-gradient(top, #75b0e7 0%,#5f9de1 100%);
+	/* background: linear-gradient(to bottom, #75b0e7 0%,#5f9de1 100%); */
+	}
+	
+	.v-contextmenu .gwt-MenuItem-selected div {
+		background: transparent;
+	}
+	
+	.v-contextmenu .v-off div:before {
+		opacity: .3;
+	}
+	
+	.v-contextmenu .v-off div:before,
+	.v-contextmenu .v-on div:before {
+		display: inline;
+		content: '\2713';
+		font-family: 'fontello';
+		font-style: normal;
+		font-weight: normal;
+		speak: none;
+		margin-right: .5em;
+	}
+	
+	.v-contextmenu .v-off {
+		color: #fff;
+	}
+	
+	.v-contextmenu .gwt-MenuItem-selected .v-off {
+		opacity: 1;
+	}
+	
+	.v-shadow {
+		display: none;
+	}
+	
+	.v-ie8 & .v-shadow {
+		display: block;
+	}
+	
+	.v-menubar-separator span {
+		border-top-color: rgba(255,255,255,.1);
+	}
+
+}
