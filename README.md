@@ -3,6 +3,8 @@ Vaadin QuickTickets Dashboard Demo
 
 Sources for the official Vaadin desktop browser demo application: http://demo.vaadin.com/dashboard
 
+![QuickTickets Dashboard](https://vaadin.com/image/image_gallery?uuid=0333a002-1e66-43f4-b127-b7da911a3cb3&groupId=10187&t=1359053559577)
+
 To run
 ==
 Currently the Maven project is missing the parent pom.xml (this repo was split from a multi-module project), and it won't build correctly. This will be fixed later.
