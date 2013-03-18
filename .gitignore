@@ -1,2 +1,4 @@
 target/*
 movies.txt
+.idea/
+quicktickets-dashboard.iml
