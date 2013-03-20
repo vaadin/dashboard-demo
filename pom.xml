@@ -1,101 +1,107 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.vaadin.demo</groupId>
-	<version>0.0.1-SNAPSHOT</version>
-	<artifactId>quicktickets-dashboard</artifactId>
-	<packaging>war</packaging>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin.demo</groupId>
+        <artifactId>demo</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>quicktickets-dashboard</artifactId>
+    <packaging>war</packaging>
 
-	<properties>
-		<productionMode>false</productionMode>
-	</properties>
+    <properties>
+        <productionMode>false</productionMode>
+    </properties>
 
-	<profiles>
-		<profile>
-			<id>production-mode</id>
-			<properties>
-				<productionMode>true</productionMode>
-			</properties>
-			<activation>
-				<property>
-					<name>productionMode</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.2.1</version>
-						<executions>
-							<execution>
-								<phase>prepare-package</phase>
-								<configuration>
-									<mainClass>com.vaadin.sass.SassCompiler</mainClass>
-									<workingDirectory>${project.basedir}</workingDirectory>
-									<arguments>
-										<argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.scss</argument>
-										<argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.css</argument>
-									</arguments>
-								</configuration>
-								<goals>
-									<goal>java</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-	<dependencies>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
-            <version>7.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes</artifactId>
-            <version>7.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client</artifactId>
-            <version>7.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiler</artifactId>
-            <version>7.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiled</artifactId>
-            <version>7.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-theme-compiler</artifactId>
-            <version>7.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin.addon</groupId>
-			<artifactId>vaadin-calendar-cval-2.0</artifactId>
-			<version>2.0.0.beta3</version>
-		</dependency>
+    <profiles>
+        <profile>
+            <id>production-mode</id>
+            <properties>
+                <productionMode>true</productionMode>
+            </properties>
+            <activation>
+                <property>
+                    <name>productionMode</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <mainClass>com.vaadin.sass.SassCompiler</mainClass>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>
+                                            ${project.build.directory}/${project.build.finalName}/VAADIN/themes/dashboard/styles.scss
+                                        </argument>
+                                        <argument>
+                                            ${project.build.directory}/${project.build.finalName}/VAADIN/themes/dashboard/styles.css
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-themes</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiler</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-theme-compiler</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>vaadin-calendar-cval-2.0</artifactId>
+            <version>2.0.0-alpha2</version>
+        </dependency>
         <dependency>
             <groupId>com.vaadin.addon</groupId>
             <artifactId>vaadin-charts</artifactId>
             <version>1.0.0</version>
         </dependency>
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>cssinject</artifactId>
-			<version>2.0.3</version>
-		</dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>cssinject</artifactId>
+            <version>2.0.3</version>
+        </dependency>
         <!--
 	    <dependency>
 	        <groupId>org.vaadin.artur.widgetsetoptimizer</groupId>
@@ -103,45 +109,43 @@
 	        <version>0.1.0</version>
 	    </dependency>
 	    -->
-	</dependencies>
-    <repositories>
-        <repository>
-            <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
-        </repository>
-    </repositories>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-maven-plugin</artifactId>
-                <version>7.0.2</version>
-				<configuration>
-					<!-- <strict>true</strict> -->
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
+    </dependencies>
+
+    <build>
+        <finalName>quicktickets-dashboard</finalName>
+        <plugins>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <configuration>
+                    <!-- <strict>true</strict> -->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
                 <version>7.0.1.v20091125</version>
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-					<webResources>
-						<webResource>
-							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
-							<includes>
-								<include>*.xml</include>
-							</includes>
-							<targetPath>WEB-INF</targetPath>
-							<filtering>true</filtering>
-						</webResource>
-					</webResources>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+                    <webResources>
+                        <webResource>
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <includes>
+                                <include>*.xml</include>
+                            </includes>
+                            <targetPath>WEB-INF</targetPath>
+                            <filtering>true</filtering>
+                        </webResource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
