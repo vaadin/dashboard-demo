@@ -1,5 +1,13 @@
 target/*
 movies.txt
+<<<<<<< HEAD
 src/main/webapp/VAADIN/
 .idea/
 quicktickets-dashboard.iml
+=======
+.settings
+.classpath
+.project
+gwt-unitCache/
+widgetsets/
+>>>>>>> 56e68d5ac316b089ee52c05e5de9ad5660343df7

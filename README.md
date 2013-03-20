@@ -7,7 +7,7 @@ Sources for the official Vaadin desktop browser demo application: http://demo.va
 
 To run
 ==
-Currently the Maven project is missing the parent pom.xml (this repo was split from a multi-module project), and it won't build correctly. This will be fixed later.
+Run the Maven install target and deploy the resulting WAR-file to your server.
 
 
 Licenses
