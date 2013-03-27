@@ -10,6 +10,7 @@
         <productionMode>false</productionMode>
         <vaadin.version>7.0.2</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
@@ -51,8 +52,8 @@
                                     <mainClass>com.vaadin.sass.SassCompiler</mainClass>
                                     <workingDirectory>${project.basedir}</workingDirectory>
                                     <arguments>
-                                        <argument>${project.build.directory}/${artifactId}-${version}/VAADIN/themes/dashboard/styles.scss</argument>
-                                        <argument>${project.build.directory}/${artifactId}-${version}/VAADIN/themes/dashboard/styles.css</argument>
+                                        <argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.scss</argument>
+                                        <argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.css</argument>
                                     </arguments>
                                 </configuration>
                                 <goals>
@@ -168,11 +169,13 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.10.v20130312</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
                 <configuration>
                     <webResources>
                         <webResource>
