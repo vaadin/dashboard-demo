@@ -14,22 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.vaadin.cssinject.CSSInject;
-
-import com.vaadin.addon.calendar.event.CalendarEvent;
-import com.vaadin.addon.calendar.event.CalendarEventProvider;
-import com.vaadin.addon.calendar.ui.Calendar;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.BackwardEvent;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.BackwardHandler;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClick;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResize;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardEvent;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardHandler;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.MoveEvent;
-import com.vaadin.addon.calendar.ui.CalendarTargetDetails;
-import com.vaadin.addon.calendar.ui.handler.BasicEventMoveHandler;
-import com.vaadin.addon.calendar.ui.handler.BasicEventResizeHandler;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -48,6 +32,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -59,6 +44,19 @@ import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
+import com.vaadin.ui.components.calendar.CalendarTargetDetails;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
+import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 
 public class ScheduleView extends CssLayout implements View {
 
@@ -66,14 +64,14 @@ public class ScheduleView extends CssLayout implements View {
 
     private Window popup;
 
-    private CSSInject css;
+    // private CSSInject css;
 
     @Override
     public void enter(ViewChangeEvent event) {
         setSizeFull();
         addStyleName("schedule");
 
-        css = new CSSInject(UI.getCurrent());
+        // css = new CSSInject(UI.getCurrent());
 
         TabSheet tabs = new TabSheet();
         tabs.setSizeFull();
@@ -261,7 +259,8 @@ public class ScheduleView extends CssLayout implements View {
                     + " .v-calendar-event-content {background-image:" + bg
                     + ";}";
         }
-        css.setStyles(styles);
+
+        Page.getCurrent().getStyles().add(styles);
     }
 
     void createEventsForDay(Date day) {

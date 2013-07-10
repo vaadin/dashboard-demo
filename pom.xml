@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.vaadin.demo</groupId>
 	<artifactId>quicktickets-dashboard</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>war</packaging>
 
 	<properties>
 		<productionMode>false</productionMode>
-		<vaadin.version>7.0.2</vaadin.version>
+		<vaadin.version>7.1.0</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 	</properties>
 
@@ -94,18 +94,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin.addon</groupId>
-			<artifactId>vaadin-calendar-cval-2.0</artifactId>
-			<version>2.0.0.beta3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin.addon</groupId>
 			<artifactId>vaadin-charts</artifactId>
 			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>cssinject</artifactId>
-			<version>2.0.3</version>
 		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>org.vaadin.artur.widgetsetoptimizer</groupId> -->
@@ -196,6 +186,39 @@
 					<configuration>
 						<source>1.6</source>
 						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.vaadin</groupId>
+										<artifactId>
+											vaadin-maven-plugin
+										</artifactId>
+										<versionRange>
+											[7.1.0,)
+										</versionRange>
+										<goals>
+											<goal>resources</goal>
+											<goal>
+												update-widgetset
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
 			</plugins>

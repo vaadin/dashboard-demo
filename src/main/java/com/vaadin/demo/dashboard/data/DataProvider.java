@@ -153,7 +153,7 @@ public class DataProvider {
                 json = readJsonFromFile(cache);
             } else {
                 // Get an API key from http://developer.rottentomatoes.com
-                String apiKey = "###############";
+                String apiKey = "6ycavarreaaqj4s92d523g9n";
                 json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey=" + apiKey);
                 // Store in cache
                 FileWriter fileWriter = new FileWriter(cache);
