@@ -361,7 +361,7 @@ public class ScheduleView extends CssLayout implements View {
 
         @Override
         public String getStyleName() {
-            return movie.titleSlug();
+            return movie.titleSlug().replaceAll("&", "_");
         }
 
         @Override
