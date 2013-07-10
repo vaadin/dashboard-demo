@@ -255,7 +255,7 @@ public class ScheduleView extends CssLayout implements View {
                 bg = "url(" + m.posterUrl + ")";
             }
 
-            styles += ".v-calendar-event-" + m.titleSlug()
+            styles += ".v-calendar-event-" + m.titleSlug().replaceAll("&", "_")
                     + " .v-calendar-event-content {background-image:" + bg
                     + ";}";
         }
