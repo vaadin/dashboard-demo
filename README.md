@@ -14,7 +14,4 @@ Licenses
 ==
 The source code is released under Apache 2.0.
 
-The application uses a couple of add-ons:
- * Vaadin Charts, Commercial Vaadin Addon License: https://vaadin.com/license/cval-2.0
- * Vaadin Calendar, Apache 2.0
- * CSSInject, Apache 2.0
+The application uses the Vaadin Charts add-on, which is released under the Commercial Vaadin Addon License: https://vaadin.com/license/cval-2.0
