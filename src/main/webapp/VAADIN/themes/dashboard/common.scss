@@ -1,7 +1,7 @@
-
 $text-color: #5a6066;
 $font-size: 14px;
-$font: normal $font-size/1.5 "Open Sans", Arial, sans-serif;
+// TODO error in compiler, we need to declare this in another way
+//$font: normal #{$font-size}/1.5 "Open Sans", Arial, sans-serif;
 
 @mixin dashboard-common {
 	
@@ -22,7 +22,10 @@ $font: normal $font-size/1.5 "Open Sans", Arial, sans-serif;
 	.v-window,
 	.v-tooltip {
 		color: $text-color;
-		font: $font;
+		//font: $font;
+		font-family: "Open Sans", Arial, sans-serif;
+		font-size: $font-size;
+		line-height: 1.5;
 	}
 	
 	.v-spacing {

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module>
-    <inherits name="com.vaadin.DefaultWidgetSet" />
-    <inherits name="com.vaadin.addon.calendar.gwt.CalendarWidgetset" />
-    <inherits name="com.vaadin.addon.charts.ChartsWithTimelineWidgetset" />
-    <inherits name="org.vaadin.cssinject.Cssinject_addonWidgetset" />
-    <!-- <inherits name="org.vaadin.artur.widgetsetoptimizer.WidgetSetOptimizerWidgetSet"
-        /> -->
-    <add-linker name="xsiframe"/>
-    <set-configuration-property name="devModeRedirectEnabled" value="true" />
-    <set-property name="compiler.useSourceMaps" value="true" />
+	<inherits name="com.vaadin.DefaultWidgetSet" />
+	
+	
+	
+	<!--  -->
 
     <!-- Uncomment the following to compile the widgetset for one browser only.
         This can reduce the GWT compilation time significantly when debugging. The
@@ -26,4 +22,8 @@
                 class="com.vaadin.client.metadata.ConnectorBundleLoader" />
     </generate-with>
 
+
+    <inherits name="com.vaadin.addon.charts.Widgetset" />
+
+    <inherits name="com.vaadin.addon.timeline.gwt.TimelineWidgetSet" />
 </module>
