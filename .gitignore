@@ -1,5 +1,8 @@
 target/*
 movies.txt
+src/main/webapp/VAADIN/
+.idea/
+quicktickets-dashboard.iml
 .settings
 .classpath
 .project
