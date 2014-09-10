@@ -179,29 +179,8 @@ public class DashboardUI extends UI {
         signin.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                if (username.getValue() != null
-                        && username.getValue().equals("")
-                        && password.getValue() != null
-                        && password.getValue().equals("")) {
-                    signin.removeShortcutListener(enter);
-                    buildMainView();
-                } else {
-                    if (loginPanel.getComponentCount() > 2) {
-                        // Remove the previous error message
-                        loginPanel.removeComponent(loginPanel.getComponent(2));
-                    }
-                    // Add new error message
-                    Label error = new Label(
-                            "Wrong username or password. <span>Hint: try empty values</span>",
-                            ContentMode.HTML);
-                    error.addStyleName("error");
-                    error.setSizeUndefined();
-                    error.addStyleName("light");
-                    // Add animation
-                    error.addStyleName("v-animate-reveal");
-                    loginPanel.addComponent(error);
-                    username.focus();
-                }
+                signin.removeShortcutListener(enter);
+                buildMainView();
             }
         });
 
