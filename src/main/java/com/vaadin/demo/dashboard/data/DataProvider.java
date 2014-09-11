@@ -433,7 +433,7 @@ public class DataProvider {
         revenue.addContainerProperty("timestamp", Date.class, new Date());
         revenue.addContainerProperty("revenue", Double.class, 0.0);
         revenue.addContainerProperty("date", String.class, "");
-        int index = 0;
+        
         for (Object id : transactions.getItemIds()) {
             SimpleDateFormat df = new SimpleDateFormat();
             df.applyPattern("MM/dd/yyyy");
@@ -449,15 +449,16 @@ public class DataProvider {
                     i.getItemProperty("timestamp").setValue(d);
                     i.getItemProperty("date").setValue(df.format(d));
                 }
-                double current = (Double) i.getItemProperty("revenue")
-                        .getValue();
-                current += (Double) item.getItemProperty("Price").getValue();
-
-                i.getItemProperty("revenue").setValue(current);
             }
         }
 
         revenue.sort(new Object[] { "timestamp" }, new boolean[] { true });
+        double index = 0.0;
+        for (Object id : revenue.getItemIds()) {
+        	Item item = revenue.getItem(id);
+        	item.getItemProperty("revenue").setValue(index++);
+        }
+        
         return revenue;
     }
 
