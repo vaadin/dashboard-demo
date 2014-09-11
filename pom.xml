@@ -97,6 +97,11 @@
 			<artifactId>vaadin-charts</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+		   <groupId>org.vaadin.addons</groupId>
+		   <artifactId>googleanalyticstracker</artifactId>
+		   <version>2.1.0</version>
+		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>org.vaadin.artur.widgetsetoptimizer</groupId> -->
 		<!-- <artifactId>widgetsetoptimizer</artifactId> -->

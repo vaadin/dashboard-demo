@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.demo.dashboard.data.DataProvider;
@@ -66,6 +68,8 @@ public class DashboardUI extends UI {
     CssLayout root = new CssLayout();
 
     VerticalLayout loginLayout;
+    
+    private GoogleAnalyticsTracker tracker;
 
     CssLayout menu = new CssLayout();
     CssLayout content = new CssLayout();
@@ -92,6 +96,13 @@ public class DashboardUI extends UI {
 
         helpManager = new HelpManager(this);
 
+        // Provide a Google Analytics tracker id here
+        String trackerId = null;
+        if (trackerId != null){
+	        tracker = new GoogleAnalyticsTracker(trackerId, "none");
+	        tracker.extend(this);
+        }
+        
         setLocale(Locale.US);
 
         setContent(root);
@@ -377,6 +388,10 @@ public class DashboardUI extends UI {
                     ((ReportsView) newView).autoCreate(2, items, transactions);
                 }
                 autoCreateReport = false;
+                
+                if (tracker!=null){
+                	tracker.trackPageview("/dashboard" + event.getViewName());
+                }
             }
         });
 
