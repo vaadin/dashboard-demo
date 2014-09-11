@@ -8,7 +8,7 @@
 
 	<properties>
 		<productionMode>false</productionMode>
-		<vaadin.version>7.1.0</vaadin.version>
+		<vaadin.version>7.3.0</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 	</properties>
 
@@ -41,22 +41,19 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.2.1</version>
+						<groupId>com.vaadin</groupId>
+						<artifactId>vaadin-maven-plugin</artifactId>
+						<version>${vaadin.plugin.version}</version>
 						<executions>
 							<execution>
-								<phase>prepare-package</phase>
 								<configuration>
-									<mainClass>com.vaadin.sass.SassCompiler</mainClass>
-									<workingDirectory>${project.basedir}</workingDirectory>
-									<arguments>
-										<argument>${project.build.directory}/${artifactId}-${version}/VAADIN/themes/dashboard/styles.scss</argument>
-										<argument>${project.build.directory}/${artifactId}-${version}/VAADIN/themes/dashboard/styles.css</argument>
-									</arguments>
 								</configuration>
 								<goals>
-									<goal>java</goal>
+									<goal>resources</goal>
+									<goal>update-widgetset</goal>
+									<goal>compile</goal>
+									<goal>compile-theme</goal>
+									<goal>update-theme</goal>
 								</goals>
 							</execution>
 						</executions>
@@ -88,32 +85,21 @@
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-theme-compiler</artifactId>
-			<version>${vaadin.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.vaadin.addon</groupId>
 			<artifactId>vaadin-charts</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.7</version>
 		</dependency>
 		<dependency>
-		   <groupId>org.vaadin.addons</groupId>
-		   <artifactId>googleanalyticstracker</artifactId>
-		   <version>2.1.0</version>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>googleanalyticstracker</artifactId>
+			<version>2.1.0</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.vaadin.artur.widgetsetoptimizer</groupId> -->
-		<!-- <artifactId>widgetsetoptimizer</artifactId> -->
-		<!-- <version>0.1.0</version> -->
-		<!-- </dependency> -->
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
