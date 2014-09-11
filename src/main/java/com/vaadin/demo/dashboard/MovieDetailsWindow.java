@@ -48,6 +48,7 @@ public class MovieDetailsWindow extends Window {
 
         final Image coverImage = new Image("", new ExternalResource(
                 movie.posterUrl));
+        coverImage.setWidth(190.0f, Unit.PIXELS);
 
         final Button more = new Button("More…");
 

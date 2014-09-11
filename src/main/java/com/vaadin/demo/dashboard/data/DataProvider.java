@@ -76,8 +76,8 @@ public class DataProvider {
                 JsonObject releaseDates, JsonObject critics) {
             this.title = title;
             this.synopsis = synopsis;
-            this.thumbUrl = thumbUrl;
-            this.posterUrl = posterUrl;
+            this.thumbUrl = thumbUrl.replace("_tmb", "_320");
+            this.posterUrl = posterUrl.replace("_tmb", "_640");
             this.duration = (int) ((1 + Math.round(Math.random())) * 60 + 45 + (Math
                     .random() * 30));
             try {
