@@ -38,4 +38,13 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
+	<filter>
+		<filter-name>CompressionFilter</filter-name>
+		<filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>CompressionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>
