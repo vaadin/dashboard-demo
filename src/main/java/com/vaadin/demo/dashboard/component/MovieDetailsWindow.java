@@ -1,9 +1,9 @@
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.component;
 
 import java.text.SimpleDateFormat;
 
-import com.vaadin.demo.dashboard.ScheduleView.MovieEvent;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
+import com.vaadin.demo.dashboard.view.ScheduleView.MovieEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -27,11 +27,11 @@ public class MovieDetailsWindow extends Window {
 
     Label synopsis = new Label();
 
-    public MovieDetailsWindow(Movie movie, MovieEvent event) {
+    public MovieDetailsWindow(MovieEvent event) {
         VerticalLayout l = new VerticalLayout();
         l.setSpacing(true);
 
-        setCaption(movie.title);
+        setCaption(event.getMovie().getTitle());
         setContent(l);
         center();
         setCloseShortcut(KeyCode.ESCAPE, null);
@@ -47,7 +47,7 @@ public class MovieDetailsWindow extends Window {
         l.addComponent(details);
 
         final Image coverImage = new Image("", new ExternalResource(
-                movie.posterUrl));
+                event.getMovie().getPosterUrl()));
         coverImage.setWidth(190.0f, Unit.PIXELS);
 
         final Button more = new Button("More…");
@@ -65,9 +65,9 @@ public class MovieDetailsWindow extends Window {
                 if (d == event.getTargetDetails().getTarget())
                     return;
                 Movie m = (Movie) d.getData();
-                coverImage.setSource(new ExternalResource(m.posterUrl));
-                coverImage.setAlternateText(m.title);
-                setCaption(m.title);
+                coverImage.setSource(new ExternalResource(m.getPosterUrl()));
+                coverImage.setAlternateText(m.getTitle());
+                setCaption(m.getTitle());
                 updateSynopsis(m, false);
                 more.setVisible(true);
             }
@@ -90,31 +90,31 @@ public class MovieDetailsWindow extends Window {
             SimpleDateFormat df = new SimpleDateFormat();
 
             df.applyPattern("dd-mm-yyyy");
-            label = new Label(df.format(event.start));
+            label = new Label(df.format(event.getStart()));
             label.setSizeUndefined();
             label.setCaption("Date");
             fields.addComponent(label);
 
             df.applyPattern("hh:mm a");
-            label = new Label(df.format(event.start));
+            label = new Label(df.format(event.getStart()));
             label.setSizeUndefined();
             label.setCaption("Starts");
             fields.addComponent(label);
 
-            label = new Label(df.format(event.end));
+            label = new Label(df.format(event.getEnd()));
             label.setSizeUndefined();
             label.setCaption("Ends");
             fields.addComponent(label);
         }
 
-        label = new Label(movie.duration + " minutes");
+        label = new Label(event.getMovie().getDuration() + " minutes");
         label.setSizeUndefined();
         label.setCaption("Duration");
         fields.addComponent(label);
 
-        synopsis.setData(movie.synopsis);
+        synopsis.setData(event.getMovie().getSynopsis());
         synopsis.setCaption("Synopsis");
-        updateSynopsis(movie, false);
+        updateSynopsis(event.getMovie(), false);
         fields.addComponent(synopsis);
 
         more.addStyleName("link");
@@ -149,8 +149,8 @@ public class MovieDetailsWindow extends Window {
     public void updateSynopsis(Movie m, boolean expand) {
         String synopsisText = synopsis.getData().toString();
         if (m != null) {
-            synopsisText = m.synopsis;
-            synopsis.setData(m.synopsis);
+            synopsisText = m.getSynopsis();
+            synopsis.setData(m.getSynopsis());
         }
         if (!expand) {
             synopsisText = synopsisText.length() > 300 ? synopsisText

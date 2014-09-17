@@ -8,7 +8,7 @@
  * 
  */
 
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +20,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.TransactionsContainer;
 import com.vaadin.event.Action;

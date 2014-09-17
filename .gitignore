@@ -5,3 +5,7 @@ movies.txt
 .project
 gwt-unitCache/
 widgetsets/
+/target
+styles.css
+addons.scss
+rebel.xml

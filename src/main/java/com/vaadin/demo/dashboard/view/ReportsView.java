@@ -8,7 +8,7 @@
  * 
  */
 
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -19,6 +19,9 @@ import java.util.Set;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.HelpManager;
+import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;

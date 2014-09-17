@@ -8,7 +8,7 @@
  * 
  */
 
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import java.util.Date;
 
 import com.vaadin.addon.timeline.Timeline;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
 import com.vaadin.event.ShortcutAction.KeyCode;

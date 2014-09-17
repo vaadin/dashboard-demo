@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.component;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class TopSixTheatersChart extends Chart {
         ArrayList<Movie> movies = DataProvider.getMovies();
         for (int i = 0; i < 6; i++) {
             Movie movie = movies.get(i);
-            series.add(new DataSeriesItem(movie.title, movie.score));
+            series.add(new DataSeriesItem(movie.getTitle(), movie.getScore()));
         }
         getConfiguration().setSeries(series);
     }

@@ -37,7 +37,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 public class DataProvider {
@@ -61,16 +63,16 @@ public class DataProvider {
 
     /** Simple Movie class */
     public static class Movie {
-        public final String title;
-        public final String synopsis;
-        public final String thumbUrl;
-        public final String posterUrl;
+        private final String title;
+        private final String synopsis;
+        private final String thumbUrl;
+        private final String posterUrl;
         /** In minutes */
-        public final int duration;
-        public Date releaseDate = null;
+        private final int duration;
+        private Date releaseDate;
 
-        public int score;
-        public double sortScore = 0;
+        private int score;
+        private double sortScore = 0;
 
         Movie(String title, String synopsis, String thumbUrl, String posterUrl,
                 JsonObject releaseDates, JsonObject critics) {
@@ -108,6 +110,51 @@ public class DataProvider {
                     .getTime()) / (1000 * 60 * 60 * 24 * 5));
             sortScore += 10.0 / (101 - score);
         }
+
+        public Date getReleaseDate() {
+            return releaseDate;
+        }
+
+        public void setReleaseDate(Date releaseDate) {
+            this.releaseDate = releaseDate;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+
+        public double getSortScore() {
+            return sortScore;
+        }
+
+        public void setSortScore(double sortScore) {
+            this.sortScore = sortScore;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getSynopsis() {
+            return synopsis;
+        }
+
+        public String getThumbUrl() {
+            return thumbUrl;
+        }
+
+        public String getPosterUrl() {
+            return posterUrl;
+        }
+
+        public int getDuration() {
+            return duration;
+        }
+
     }
 
     /*
@@ -152,9 +199,10 @@ public class DataProvider {
                             * 60 * 60 * 24) {
                 json = readJsonFromFile(cache);
             } else {
-                // Get an API key from http://developer.rottentomatoes.com
+                // TODO: Get an API key from http://developer.rottentomatoes.com
                 String apiKey = "xxxxxxxxxxxxxxxxxxx";
-                json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey=" + apiKey);
+                json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
+                        + apiKey);
                 // Store in cache
                 FileWriter fileWriter = new FileWriter(cache);
                 fileWriter.write(json.toString());
@@ -329,12 +377,12 @@ public class DataProvider {
             int newMonthSubstractor = (int) (5.0 * rand.nextDouble());
             c.add(Calendar.MONTH, -newMonthSubstractor);
 
-            int newDay = (int) (1 + (int) (30.0 * rand.nextDouble()));
+            int newDay = 1 + (int) (30.0 * rand.nextDouble());
             c.set(Calendar.DAY_OF_MONTH, newDay);
 
             if (today.before(c)) {
-                newDay = (int) (1 + (int) (today.get(Calendar.DAY_OF_MONTH) * rand
-                        .nextDouble()));
+                newDay = 1 + (int) (today.get(Calendar.DAY_OF_MONTH) * rand
+                        .nextDouble());
                 c.set(Calendar.DAY_OF_MONTH, newDay);
             }
 
@@ -418,7 +466,7 @@ public class DataProvider {
         int seats = (int) (1 + rand.nextDouble() * 3);
 
         // Price (approx. USD)
-        double price = (double) (seats * (6 + (rand.nextDouble() * 3)));
+        double price = seats * (6 + (rand.nextDouble() * 3));
 
         transactions.addTransaction(cal, country, city, theater, room, title,
                 seats, price);
@@ -433,7 +481,7 @@ public class DataProvider {
         revenue.addContainerProperty("timestamp", Date.class, new Date());
         revenue.addContainerProperty("revenue", Double.class, 0.0);
         revenue.addContainerProperty("date", String.class, "");
-        
+
         for (Object id : transactions.getItemIds()) {
             SimpleDateFormat df = new SimpleDateFormat();
             df.applyPattern("MM/dd/yyyy");
@@ -455,10 +503,10 @@ public class DataProvider {
         revenue.sort(new Object[] { "timestamp" }, new boolean[] { true });
         double index = 0.0;
         for (Object id : revenue.getItemIds()) {
-        	Item item = revenue.getItem(id);
-        	item.getItemProperty("revenue").setValue(index++);
+            Item item = revenue.getItem(id);
+            item.getItemProperty("revenue").setValue(index++);
         }
-        
+
         return revenue;
     }
 
@@ -512,4 +560,15 @@ public class DataProvider {
         return null;
     }
 
+    public static DataProvider getCurrent() {
+        return ((DashboardUI) UI.getCurrent()).dataProvider;
+    }
+
+    public User authenticate(String userName, String password) {
+        User user = new User();
+        user.setFirstName(Generator.randomFirstName());
+        user.setLastName(Generator.randomLastName());
+        user.setRole("admin");
+        return user;
+    }
 }

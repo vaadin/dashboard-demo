@@ -17,9 +17,10 @@ import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
+//TODO: Update!
 public class OptimizedConnectorBundleLoaderFactory extends
         ConnectorBundleLoaderFactory {
-    private Set<String> eagerConnectors = new HashSet<String>();
+    private final Set<String> eagerConnectors = new HashSet<String>();
     {
         eagerConnectors.add(PasswordFieldConnector.class.getName());
         eagerConnectors.add(VerticalLayoutConnector.class.getName());

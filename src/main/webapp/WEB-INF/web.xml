@@ -3,14 +3,6 @@
 	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<display-name>QuickTickets Dashboard</display-name>
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
 
 	<context-param>
 		<description>Vaadin production mode</description>
@@ -27,10 +19,6 @@
 		<init-param>
 			<param-name>widgetset</param-name>
 			<param-value>com.vaadin.demo.dashboard.DashboardWidgetSet</param-value>
-		</init-param>
-		<init-param>
-			<param-name>UIProvider</param-name>
-			<param-value>com.vaadin.demo.dashboard.DashboardUIProvider</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

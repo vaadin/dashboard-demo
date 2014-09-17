@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class TopGrossingMoviesChart extends Chart {
         List<Series> series = new ArrayList<Series>();
         for (int i = 0; i < 6; i++) {
             Movie movie = movies.get(i);
-            series.add(new ListSeries(movie.title, movie.score));
+            series.add(new ListSeries(movie.getTitle(), movie.getScore()));
         }
         getConfiguration().setSeries(series);
 

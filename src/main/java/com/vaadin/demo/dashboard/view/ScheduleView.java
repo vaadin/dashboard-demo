@@ -8,12 +8,13 @@
  * 
  */
 
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -325,7 +326,7 @@ public class ScheduleView extends CssLayout implements View {
 
     }
 
-    class MovieEvent implements CalendarEvent {
+    public class MovieEvent implements CalendarEvent {
 
         Date start;
         Date end;
@@ -368,6 +369,28 @@ public class ScheduleView extends CssLayout implements View {
         public boolean isAllDay() {
             return false;
         }
+
+        public Movie getMovie() {
+            return movie;
+        }
+
+        public void setMovie(Movie movie) {
+            this.movie = movie;
+        }
+
+        public void setStart(Date start) {
+            this.start = start;
+        }
+
+        public void setEnd(Date end) {
+            this.end = end;
+        }
+
+        public void setCaption(String caption) {
+            this.caption = caption;
+        }
+        
+        
 
     }
 

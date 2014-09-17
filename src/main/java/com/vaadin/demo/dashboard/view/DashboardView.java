@@ -8,11 +8,14 @@
  * 
  */
 
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
 import java.text.DecimalFormat;
 
 import com.vaadin.data.Property;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
+import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
