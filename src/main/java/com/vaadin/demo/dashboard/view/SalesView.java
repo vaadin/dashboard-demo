@@ -1,13 +1,3 @@
-/**
- * DISCLAIMER
- * 
- * The quality of the code is such that you should not copy any of it as best
- * practice how to build Vaadin applications.
- * 
- * @author jouni@vaadin.com
- * 
- */
-
 package com.vaadin.demo.dashboard.view;
 
 import java.awt.Color;
@@ -35,15 +25,14 @@ import com.vaadin.ui.VerticalLayout;
 
 public class SalesView extends VerticalLayout implements View {
 
-    private Timeline timeline;
+    private final Timeline timeline;
 
     Color[] colors = new Color[] { new Color(52, 154, 255),
             new Color(242, 81, 57), new Color(255, 201, 35),
             new Color(83, 220, 164) };
     int colorIndex = -1;
 
-    @Override
-    public void enter(ViewChangeEvent event) {
+    public SalesView() {
         setSizeFull();
         addStyleName("timeline");
 
@@ -144,5 +133,10 @@ public class SalesView extends VerticalLayout implements View {
         timeline.setGraphLegend(revenue, title);
         timeline.setEventCaptionPropertyId("date");
         timeline.setVerticalAxisLegendUnit(revenue, "$");
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+        // TODO Auto-generated method stub
     }
 }

@@ -25,6 +25,35 @@ public class QuickTicketsEvent {
 
     }
 
+    public static class NotificationsOpenEvent {
+
+    }
+
+    public static class NotificationsCountUpdatedEvent {
+        private final int count;
+
+        public NotificationsCountUpdatedEvent(int count) {
+            this.count = count;
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    public static class DashboardEditEvent {
+        private final String name;
+
+        public DashboardEditEvent(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+    }
+
     public static class ViewChangeRequestedEvent {
         private final QuickTicketsView view;
 

@@ -3,6 +3,7 @@ package com.vaadin.demo.dashboard.component;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.data.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsOpenEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
@@ -27,14 +28,15 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.themes.ValoTheme;
 
 //TODO: Make generic
-public class ValoMenu extends CustomComponent {
+public class DashboardMenu extends CustomComponent {
 
     private static final String STYLE_VISIBLE = "valo-menu-visible";
 
-    public ValoMenu() {
+    public DashboardMenu() {
         addStyleName("valo-menu");
         setSizeUndefined();
 
@@ -75,8 +77,18 @@ public class ValoMenu extends CustomComponent {
         final MenuItem settingsItem = settings.addItem(user.getFirstName()
                 + " " + user.getLastName(), new ThemeResource(
                 "img/profile-pic-300px.jpg"), null);
-        settingsItem.addItem("Edit Profile", null);
-        settingsItem.addItem("Preferences", null);
+        settingsItem.addItem("Edit Profile", new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Not implemented in this demo");
+            }
+        });
+        settingsItem.addItem("Preferences", new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Not implemented in this demo");
+            }
+        });
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", new Command() {
             @Override
@@ -160,6 +172,11 @@ public class ValoMenu extends CustomComponent {
     @Subscribe
     public void viewChangeRequestedEvent(ViewChangeRequestedEvent event) {
         getCompositionRoot().removeStyleName(STYLE_VISIBLE);
+    }
+
+    @Subscribe
+    public void notificationsOpen(NotificationsOpenEvent event) {
+        // TODO: Clear notificaitons badge
     }
 
     public class ValoMenuItemButton extends Button {

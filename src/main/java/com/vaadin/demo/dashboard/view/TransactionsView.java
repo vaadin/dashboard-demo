@@ -56,8 +56,7 @@ public class TransactionsView extends VerticalLayout implements View {
 
     TransactionsContainer data;
 
-    @Override
-    public void enter(ViewChangeEvent event) {
+    public TransactionsView() {
         data = ((DashboardUI) UI.getCurrent()).dataProvider.getTransactions();
 
         setSizeFull();
@@ -356,6 +355,12 @@ public class TransactionsView extends VerticalLayout implements View {
         String ret = new DecimalFormat("#.##").format(DataProvider
                 .getTotalSum());
         t.setColumnFooter("Price", "$" + ret);
+
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+        // TODO Auto-generated method stub
 
     }
 

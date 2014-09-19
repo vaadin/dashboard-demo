@@ -73,8 +73,7 @@ public class ReportsView extends HorizontalLayout implements View {
 
     private TabSheet editors;
 
-    @Override
-    public void enter(ViewChangeEvent event) {
+    public ReportsView() {
         setSizeFull();
         addStyleName("reports");
 
@@ -710,6 +709,12 @@ public class ReportsView extends HorizontalLayout implements View {
         editors.addTab(createEditorInstance(which, items, table)).setClosable(
                 true);
         editors.setSelectedTab(editors.getComponentCount() - 1);
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+        // TODO Auto-generated method stub
+
     };
 
 }

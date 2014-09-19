@@ -1,17 +1,56 @@
 @import "../valo/valo.scss";
 
-
-
 @mixin dashboard {
 	
 	@include valo;
 	
-	.desktop50percentage {
-		width: 50%;
+	/* Dashboard */
+	.dashboard-view {
 	
-		.v-ui[width-range~="0-800px"] & {
-			width: 100%;
-		}	
+		.layout-panel {
+		
+			margin: 0 2% 38px;
+			background: #fff;
+			border-radius: 4px;
+			
+			.v-ui[width-range~="0-800px"] & {
+				width: 96% !important;
+			}
+			
+			&.notes .v-panel-caption {
+				@include valo-panel-caption-style($background-color: #5d6167);
+			}
+			
+			.v-textarea {
+				border: none;
+				padding: 20px 20px 0;
+				line-height: 20px;
+				background: #fffdf2 url(img/notes-bg.png) repeat;
+				color: #545145;
+			}
+		}
+		
+		.notifications.unread .v-button-caption{
+			display: block;
+			position: absolute;
+			top: 2px;
+			right: 3px;
+			font-size: 11px;
+			line-height: 1;
+			color: #fff;
+			text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+			padding: 0.1em 0.4em 0.2em;
+			background: #f16433;
+			background: -moz-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #faa290), color-stop(14%, #f77b62), color-stop(87%, #ec3120), color-stop(100%, #ce2314));
+			background: -webkit-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
+			background: -o-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
+			background: -ms-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
+			border-radius: 2px;
+			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+		}
+		
 	}
+	
 	
 }

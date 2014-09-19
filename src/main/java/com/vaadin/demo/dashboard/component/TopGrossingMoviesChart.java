@@ -22,8 +22,7 @@ public class TopGrossingMoviesChart extends Chart {
         getConfiguration().getChart().setType(ChartType.BAR);
         getConfiguration().getxAxis().getLabels().setEnabled(false);
         getConfiguration().getxAxis().setTickWidth(0);
-        setWidth("100%");
-        setHeight("90%");
+        setSizeFull();
 
         ArrayList<Movie> movies = DataProvider.getMovies();
         List<Series> series = new ArrayList<Series>();

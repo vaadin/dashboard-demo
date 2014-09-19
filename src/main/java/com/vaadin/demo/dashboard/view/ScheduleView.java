@@ -1,13 +1,3 @@
-/**
- * DISCLAIMER
- * 
- * The quality of the code is such that you should not copy any of it as best
- * practice how to build Vaadin applications.
- * 
- * @author jouni@vaadin.com
- * 
- */
-
 package com.vaadin.demo.dashboard.view;
 
 import java.util.ArrayList;
@@ -64,14 +54,13 @@ import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 public class ScheduleView extends CssLayout implements View,
         BrowserWindowResizeListener {
 
-    private CssLayout catalog;
+    private final CssLayout catalog;
 
     private Window popup;
 
     // private CSSInject css;
 
-    @Override
-    public void enter(ViewChangeEvent event) {
+    public ScheduleView() {
         setSizeFull();
         addStyleName("schedule");
 
@@ -481,6 +470,10 @@ public class ScheduleView extends CssLayout implements View,
     @Override
     public void browserWindowResized(BrowserWindowResizeEvent event) {
         checkForDayView();
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
     }
 
 }

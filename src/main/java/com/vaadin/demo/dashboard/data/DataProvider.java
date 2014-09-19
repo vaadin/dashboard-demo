@@ -44,7 +44,7 @@ import com.vaadin.util.CurrentInstance;
 
 public class DataProvider {
 
-    public static Random rand = new Random();
+    private static Random rand = new Random();
 
     /**
      * Initialize the data for this application.
@@ -190,47 +190,54 @@ public class DataProvider {
             cache = new File(baseDirectory + "/movies.txt");
         }
 
-        JsonObject json = null;
-        try {
-            // TODO check for internet connection also, and use the cache anyway
-            // if no connection is available
-            if (cache.exists()
-                    && System.currentTimeMillis() < cache.lastModified() + 1000
-                            * 60 * 60 * 24) {
-                json = readJsonFromFile(cache);
-            } else {
-                // TODO: Get an API key from http://developer.rottentomatoes.com
-                String apiKey = "xxxxxxxxxxxxxxxxxxx";
-                json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
-                        + apiKey);
-                // Store in cache
-                FileWriter fileWriter = new FileWriter(cache);
-                fileWriter.write(json.toString());
-                fileWriter.close();
+        if (!cache.exists()
+                || System.currentTimeMillis() > cache.lastModified() + 1000
+                        * 60 * 60 * 24) {
+            JsonObject json = null;
+            try {
+                // TODO check for internet connection also, and use the cache
+                // anyway
+                // if no connection is available
+                if (cache.exists()
+                        && System.currentTimeMillis() < cache.lastModified()
+                                + 1000 * 60 * 60 * 24) {
+                    json = readJsonFromFile(cache);
+                } else {
+                    // TODO: Get an API key from
+                    // http://developer.rottentomatoes.com
+                    String apiKey = "xxxxxxxxxxxxxxxxxxx";
+                    json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
+                            + apiKey);
+                    // Store in cache
+                    FileWriter fileWriter = new FileWriter(cache);
+                    fileWriter.write(json.toString());
+                    fileWriter.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        if (json == null) {
-            return;
-        }
+            if (json == null) {
+                return;
+            }
 
-        JsonArray moviesJson;
-        movies.clear();
-        moviesJson = json.getAsJsonArray("movies");
-        for (int i = 0; i < moviesJson.size(); i++) {
-            JsonObject movieJson = moviesJson.get(i).getAsJsonObject();
-            JsonObject posters = movieJson.get("posters").getAsJsonObject();
-            if (!posters.get("profile").getAsString()
-                    .contains("poster_default")) {
-                Movie movie = new Movie(movieJson.get("title").getAsString(),
-                        movieJson.get("synopsis").getAsString(), posters.get(
-                                "profile").getAsString(), posters.get(
-                                "detailed").getAsString(), movieJson.get(
-                                "release_dates").getAsJsonObject(), movieJson
-                                .get("ratings").getAsJsonObject());
-                movies.add(movie);
+            JsonArray moviesJson;
+            movies.clear();
+            moviesJson = json.getAsJsonArray("movies");
+            for (int i = 0; i < moviesJson.size(); i++) {
+                JsonObject movieJson = moviesJson.get(i).getAsJsonObject();
+                JsonObject posters = movieJson.get("posters").getAsJsonObject();
+                if (!posters.get("profile").getAsString()
+                        .contains("poster_default")) {
+                    Movie movie = new Movie(movieJson.get("title")
+                            .getAsString(), movieJson.get("synopsis")
+                            .getAsString(), posters.get("profile")
+                            .getAsString(), posters.get("detailed")
+                            .getAsString(), movieJson.get("release_dates")
+                            .getAsJsonObject(), movieJson.get("ratings")
+                            .getAsJsonObject());
+                    movies.add(movie);
+                }
             }
         }
     }
