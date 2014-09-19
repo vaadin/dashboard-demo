@@ -27,6 +27,8 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.BrowserWindowResizeEvent;
+import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.ui.Alignment;
@@ -59,7 +61,8 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 
-public class ScheduleView extends CssLayout implements View {
+public class ScheduleView extends CssLayout implements View,
+        BrowserWindowResizeListener {
 
     private CssLayout catalog;
 
@@ -86,15 +89,15 @@ public class ScheduleView extends CssLayout implements View {
         tabs.addComponent(catalog);
 
         for (final Movie movie : DataProvider.getMovies()) {
-            Image poster = new Image(movie.title, new ExternalResource(
-                    movie.thumbUrl));
+            Image poster = new Image(movie.getTitle(), new ExternalResource(
+                    movie.getThumbUrl()));
             CssLayout frame = new CssLayout();
             frame.addComponent(poster);
             frame.addLayoutClickListener(new LayoutClickListener() {
                 @Override
                 public void layoutClick(LayoutClickEvent event) {
                     if (event.getButton() == MouseButton.LEFT) {
-                        Window w = new MovieDetailsWindow(movie, null);
+                        Window w = new MovieDetailsWindow(null);
                         UI.getCurrent().addWindow(w);
                         w.focus();
                     }
@@ -103,11 +106,24 @@ public class ScheduleView extends CssLayout implements View {
             catalog.addComponent(frame);
         }
 
+        checkForDayView();
     }
 
     private Calendar cal;
 
-    private MovieEventProvider provider = new MovieEventProvider();
+    private final MovieEventProvider provider = new MovieEventProvider();
+
+    @Override
+    public void attach() {
+        super.attach();
+        Page.getCurrent().addBrowserWindowResizeListener(this);
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        Page.getCurrent().removeBrowserWindowResizeListener(this);
+    }
 
     private Component buildCalendarView() {
         VerticalLayout calendarLayout = new VerticalLayout();
@@ -163,6 +179,7 @@ public class ScheduleView extends CssLayout implements View {
         cal.setDropHandler(new DropHandler() {
             private static final long serialVersionUID = -8939822725278862037L;
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 CalendarTargetDetails details = (CalendarTargetDetails) event
                         .getTargetDetails();
@@ -172,6 +189,7 @@ public class ScheduleView extends CssLayout implements View {
                 createEvent(details, transferable);
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
@@ -249,11 +267,11 @@ public class ScheduleView extends CssLayout implements View {
             WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
 
             String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
-                    + "/img/event-title-bg.png), url(" + m.posterUrl + ")";
+                    + "/img/event-title-bg.png), url(" + m.getPosterUrl() + ")";
 
             // IE8 doesn't support multiple background images
             if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
-                bg = "url(" + m.posterUrl + ")";
+                bg = "url(" + m.getPosterUrl() + ")";
             }
 
             styles += ".v-calendar-event-" + m.titleSlug().replaceAll("&", "_")
@@ -297,7 +315,7 @@ public class ScheduleView extends CssLayout implements View {
             // int endHour = (int) (1 + Math.round(Math.random()));
             // int endMinutes = (int) (45 + Math.random() * 30);
             // end.setHours(end.getHours() + endHour);
-            end.setMinutes(end.getMinutes() + m.duration);
+            end.setMinutes(end.getMinutes() + m.getDuration());
 
             MovieEvent e = new MovieEvent(start, end, m);
             provider.addEvent(e);
@@ -313,7 +331,7 @@ public class ScheduleView extends CssLayout implements View {
     }
 
     class MovieEventProvider implements CalendarEventProvider {
-        private List<CalendarEvent> events = new ArrayList<CalendarEvent>();
+        private final List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 
         @Override
         public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
@@ -336,7 +354,7 @@ public class ScheduleView extends CssLayout implements View {
         public MovieEvent(Date start, Date end, Movie movie) {
             this.start = start;
             this.end = end;
-            this.caption = movie.title;
+            this.caption = movie.getTitle();
             this.movie = movie;
         }
 
@@ -389,13 +407,11 @@ public class ScheduleView extends CssLayout implements View {
         public void setCaption(String caption) {
             this.caption = caption;
         }
-        
-        
 
     }
 
     void buildPopup(final MovieEvent event) {
-        popup = new MovieDetailsWindow(event.movie, event);
+        popup = new MovieDetailsWindow(event);
     }
 
     HorizontalLayout tray;
@@ -452,6 +468,19 @@ public class ScheduleView extends CssLayout implements View {
     void hideTray() {
         if (tray != null)
             removeComponent(tray);
+    }
+
+    private void checkForDayView() {
+        if (Page.getCurrent().getBrowserWindowWidth() < 800
+                && cal.getLastVisibleDayOfWeek() > cal
+                        .getFirstVisibleDayOfWeek()) {
+            cal.setLastVisibleDayOfWeek(cal.getFirstVisibleDayOfWeek());
+        }
+    }
+
+    @Override
+    public void browserWindowResized(BrowserWindowResizeEvent event) {
+        checkForDayView();
     }
 
 }

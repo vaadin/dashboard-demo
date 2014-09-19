@@ -13,7 +13,6 @@ package com.vaadin.demo.dashboard.view;
 import java.text.DecimalFormat;
 
 import com.vaadin.data.Property;
-import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.data.DataProvider;
@@ -23,7 +22,6 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -35,6 +33,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.RowHeaderMode;
@@ -73,7 +72,8 @@ public class DashboardView extends VerticalLayout implements View {
         notify.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ((DashboardUI) getUI()).clearDashboardButtonBadge();
+                // TODO: Eventbus
+                // ((DashboardUI) getUI()).clearDashboardButtonBadge();
                 event.getButton().removeStyleName("unread");
                 event.getButton().setDescription("Notifications");
 
@@ -172,28 +172,17 @@ public class DashboardView extends VerticalLayout implements View {
         });
         top.setComponentAlignment(edit, Alignment.MIDDLE_LEFT);
 
-        HorizontalLayout row = new HorizontalLayout();
-        row.setSizeFull();
-        row.setMargin(new MarginInfo(true, true, false, true));
-        row.setSpacing(true);
-        addComponent(row);
-        setExpandRatio(row, 1.5f);
+        CssLayout row = new CssLayout();
+        row.setWidth(100.0f, Unit.PERCENTAGE);
 
         row.addComponent(createPanel(new TopGrossingMoviesChart()));
 
         TextArea notes = new TextArea("Notes");
         notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
         notes.setSizeFull();
-        CssLayout panel = createPanel(notes);
+        Component panel = createPanel(notes);
         panel.addStyleName("notes");
         row.addComponent(panel);
-
-        row = new HorizontalLayout();
-        row.setMargin(true);
-        row.setSizeFull();
-        row.setSpacing(true);
-        addComponent(row);
-        setExpandRatio(row, 2);
 
         t = new Table() {
             @Override
@@ -225,12 +214,16 @@ public class DashboardView extends VerticalLayout implements View {
 
         row.addComponent(createPanel(new TopSixTheatersChart()));
 
+        Panel dashboardPanel = new Panel(row);
+        dashboardPanel.setSizeFull();
+        addComponent(dashboardPanel);
+        setExpandRatio(dashboardPanel, 2);
     }
 
-    private CssLayout createPanel(Component content) {
+    private Component createPanel(Component content) {
         CssLayout panel = new CssLayout();
         panel.addStyleName("layout-panel");
-        panel.setSizeFull();
+        panel.addStyleName("desktop50percentage");
 
         Button configure = new Button();
         configure.addStyleName("configure");
@@ -253,8 +246,7 @@ public class DashboardView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-        DataProvider dataProvider = ((DashboardUI) getUI()).dataProvider;
-        t.setContainerDataSource(dataProvider.getRevenueByTitle());
+        t.setContainerDataSource(DataProvider.getCurrent().getRevenueByTitle());
     }
 
     Window notifications;

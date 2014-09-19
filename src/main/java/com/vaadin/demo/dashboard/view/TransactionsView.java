@@ -21,7 +21,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.TransactionsContainer;
 import com.vaadin.event.Action;
@@ -46,7 +45,6 @@ import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 public class TransactionsView extends VerticalLayout implements View {
 
@@ -60,7 +58,7 @@ public class TransactionsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-        data = ((DashboardUI) getUI()).dataProvider.getTransactions();
+        data = ((DashboardUI) UI.getCurrent()).dataProvider.getTransactions();
 
         setSizeFull();
         addStyleName("transactions");
@@ -247,11 +245,11 @@ public class TransactionsView extends VerticalLayout implements View {
 
         t.addActionHandler(new Handler() {
 
-            private Action report = new Action("Create Report");
+            private final Action report = new Action("Create Report");
 
-            private Action discard = new Action("Discard");
+            private final Action discard = new Action("Discard");
 
-            private Action details = new Action("Movie details");
+            private final Action details = new Action("Movie details");
 
             @Override
             public void handleAction(Action action, Object sender, Object target) {
@@ -262,11 +260,12 @@ public class TransactionsView extends VerticalLayout implements View {
                 } else if (action == details) {
                     Item item = ((Table) sender).getItem(target);
                     if (item != null) {
-                        Window w = new MovieDetailsWindow(DataProvider
-                                .getMovieForTitle(item.getItemProperty("Title")
-                                        .getValue().toString()), null);
-                        UI.getCurrent().addWindow(w);
-                        w.focus();
+                        // TODO: Fix
+                        // Window w = new MovieDetailsWindow(DataProvider
+                        // .getMovieForTitle(item.getItemProperty("Title")
+                        // .getValue().toString()), null);
+                        // UI.getCurrent().addWindow(w);
+                        // w.focus();
                     }
                 }
             }
@@ -317,9 +316,10 @@ public class TransactionsView extends VerticalLayout implements View {
                 titleLink.addClickListener(new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Window w = new MovieDetailsWindow(DataProvider
-                                .getMovieForTitle(title), null);
-                        UI.getCurrent().addWindow(w);
+                        // TODO: Fix
+                        // Window w = new MovieDetailsWindow(DataProvider
+                        // .getMovieForTitle(title), null);
+                        // UI.getCurrent().addWindow(w);
                     }
                 });
                 return title;

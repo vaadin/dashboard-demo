@@ -30,6 +30,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public class SalesView extends VerticalLayout implements View {
@@ -60,7 +61,7 @@ public class SalesView extends VerticalLayout implements View {
         final ComboBox movieSelect = new ComboBox();
         ArrayList<Movie> movies = DataProvider.getMovies();
         for (Movie m : movies) {
-            movieSelect.addItem(m.title);
+            movieSelect.addItem(m.getTitle());
         }
         movieSelect.setWidth("300px");
         toolbar.addComponent(movieSelect);
@@ -109,7 +110,7 @@ public class SalesView extends VerticalLayout implements View {
         // Add first 4 by default
         int i = 0;
         for (Movie m : DataProvider.getMovies()) {
-            addDataSet(m.title);
+            addDataSet(m.getTitle());
             if (++i > 3)
                 break;
         }
@@ -133,7 +134,7 @@ public class SalesView extends VerticalLayout implements View {
     }
 
     private void addDataSet(String title) {
-        IndexedContainer revenue = ((DashboardUI) getUI()).dataProvider
+        IndexedContainer revenue = ((DashboardUI) UI.getCurrent()).dataProvider
                 .getRevenueForTitle(title);
         timeline.addGraphDataSource(revenue, "timestamp", "revenue");
         colorIndex = (colorIndex >= colors.length - 1 ? 0 : ++colorIndex);

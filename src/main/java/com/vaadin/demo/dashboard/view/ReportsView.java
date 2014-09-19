@@ -20,7 +20,6 @@ import java.util.Set;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.HelpManager;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -67,7 +66,6 @@ import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -119,8 +117,9 @@ public class ReportsView extends HorizontalLayout implements View {
                     public void buttonClick(ClickEvent event) {
                         editors.removeComponent(tabContent);
                         draftCount--;
-                        ((DashboardUI) UI.getCurrent())
-                                .updateReportsButtonBadge(draftCount + "");
+                        // TODO: Eventbus
+                        // ((DashboardUI) UI.getCurrent())
+                        // .updateReportsButtonBadge(draftCount + "");
                         alert.close();
 
                     }
@@ -147,8 +146,9 @@ public class ReportsView extends HorizontalLayout implements View {
                     public void buttonClick(ClickEvent event) {
                         editors.removeComponent(tabContent);
                         draftCount--;
-                        ((DashboardUI) UI.getCurrent())
-                                .updateReportsButtonBadge(draftCount + "");
+                        // TODO: Eventbus
+                        // ((DashboardUI) UI.getCurrent())
+                        // .updateReportsButtonBadge(draftCount + "");
                         alert.close();
                         Notification
                                 .show("The report was saved as a draft",
@@ -262,13 +262,12 @@ public class ReportsView extends HorizontalLayout implements View {
 
         if (!helpShown) {
             helpShown = true;
-            HelpManager helpManager = ((DashboardUI) getUI()).getHelpManager();
-            helpManager.addOverlay("Palette",
-                    "Drag the items from the palette onto the canvas",
-                    "palette");
-            helpManager.addOverlay("Re-order",
-                    "Drag the items on the canvas to re-order them", "reorder")
-                    .center();
+            // helpManager.addOverlay("Palette",
+            // "Drag the items from the palette onto the canvas",
+            // "palette");
+            // helpManager.addOverlay("Re-order",
+            // "Drag the items on the canvas to re-order them", "reorder")
+            // .center();
         }
 
         HorizontalLayout editor = new HorizontalLayout();
@@ -284,9 +283,9 @@ public class ReportsView extends HorizontalLayout implements View {
             editor.setCaption("Unnamed Report – " + (df.format(new Date()))
                     + " (" + draftCount + ")");
         }
-
-        ((DashboardUI) UI.getCurrent()).updateReportsButtonBadge(draftCount
-                + "");
+        // TODO: Eventbus
+        // ((DashboardUI) UI.getCurrent()).updateReportsButtonBadge(draftCount
+        // + "");
 
         draftCount++;
 
@@ -616,17 +615,19 @@ public class ReportsView extends HorizontalLayout implements View {
 
     private class ReorderLayoutDropHandler implements DropHandler {
 
-        private AbstractOrderedLayout layout;
+        private final AbstractOrderedLayout layout;
 
         public ReorderLayoutDropHandler(AbstractOrderedLayout layout) {
             this.layout = layout;
         }
 
+        @Override
         public AcceptCriterion getAcceptCriterion() {
             // return new SourceIs(component)
             return AcceptAll.get();
         }
 
+        @Override
         public void drop(DragAndDropEvent dropEvent) {
             Transferable transferable = dropEvent.getTransferable();
             Component sourceComponent = transferable.getSourceComponent();
