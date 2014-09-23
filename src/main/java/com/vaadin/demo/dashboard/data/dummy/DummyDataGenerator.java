@@ -1,9 +1,13 @@
-package com.vaadin.demo.dashboard.data;
+package com.vaadin.demo.dashboard.data.dummy;
 
+import java.util.Arrays;
+import java.util.Collection;
 
-public class Generator {
+import com.vaadin.demo.dashboard.domain.DashboardNotification;
 
-    public static String randomFirstName() {
+public class DummyDataGenerator {
+
+    static String randomFirstName() {
         String[] names = { "Dave", "Mike", "Katherine", "Jonas", "Linus",
                 "Bob", "Anne", "Minna", "Elisa", "George", "Mathias", "Pekka",
                 "Fredrik", "Kate", "Teppo", "Kim", "Samatha", "Sam", "Linda",
@@ -11,7 +15,7 @@ public class Generator {
         return names[(int) (Math.random() * names.length)];
     }
 
-    public static String randomLastName() {
+    static String randomLastName() {
         String[] names = { "Smith", "Lehtinen", "Chandler", "Hewlett",
                 "Packard", "Jobs", "Buffet", "Reagan", "Carthy", "Wu",
                 "Johnson", "Williams", "Jones", "Brown", "Davis", "Moore",
@@ -23,7 +27,7 @@ public class Generator {
         return names[(int) (Math.random() * names.length)];
     }
 
-    public static String randomCompanyName() {
+    static String randomCompanyName() {
 
         String name = randomName();
         if (Math.random() < 0.03)
@@ -38,7 +42,7 @@ public class Generator {
         return name;
     }
 
-    public static String randomWord(int len, boolean capitalized) {
+    static String randomWord(int len, boolean capitalized) {
         String[] part = { "ger", "ma", "isa", "app", "le", "ni", "ke", "mic",
                 "ro", "soft", "wa", "re", "lo", "gi", "is", "acc", "el", "tes",
                 "la", "ko", "ni", "ka", "so", "ny", "mi", "nol", "ta", "pa",
@@ -75,12 +79,12 @@ public class Generator {
         return sb.toString();
     }
 
-    public static String randomName() {
+    static String randomName() {
         int len = (int) (Math.random() * 4) + 1;
         return randomWord(len, true);
     }
 
-    public static String randomTitle(int words) {
+    static String randomTitle(int words) {
         StringBuffer sb = new StringBuffer();
         int len = (int) (Math.random() * 4) + 1;
         sb.append(randomWord(len, true));
@@ -92,7 +96,7 @@ public class Generator {
         return sb.toString();
     }
 
-    public static String randomHTML(int words) {
+    static String randomHTML(int words) {
         StringBuffer sb = new StringBuffer();
         while (words > 0) {
             sb.append("<h2>");
@@ -110,5 +114,23 @@ public class Generator {
             }
         }
         return sb.toString();
+    }
+
+    static Collection<DashboardNotification> randomNotifications() {
+        DashboardNotification n1 = new DashboardNotification(1);
+        n1.setFirstName(randomFirstName());
+        n1.setLastName(randomLastName());
+        n1.setAction("created a new report");
+        n1.setPrettyTime("25 minutes ago");
+        n1.setContent(randomText(18));
+
+        DashboardNotification n2 = new DashboardNotification(1);
+        n2.setFirstName(randomFirstName());
+        n2.setLastName(randomLastName());
+        n2.setAction("changed the schedule");
+        n2.setPrettyTime("2 days ago");
+        n2.setContent(randomText(10));
+
+        return Arrays.asList(n1, n2);
     }
 }

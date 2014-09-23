@@ -1,23 +1,26 @@
 package com.vaadin.demo.dashboard.view;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.DashboardEdit;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
-import com.vaadin.demo.dashboard.data.DataProvider;
-import com.vaadin.demo.dashboard.data.Generator;
+import com.vaadin.demo.dashboard.domain.DashboardNotification;
+import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.DashboardEditEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsCountUpdatedEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsOpenEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -31,6 +34,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -39,15 +43,26 @@ import com.vaadin.ui.themes.ValoTheme;
 public class DashboardView extends VerticalLayout implements View {
 
     private Label titleLabel;
+    private NotificationsButton notificationsButton;
+    private Window notificationsWindow;
 
     public DashboardView() {
+
         addStyleName("dashboard-view");
         setSizeFull();
 
         addComponent(buildHeader());
+
         Component content = buildContent();
         addComponent(content);
         setExpandRatio(content, 1.0f);
+
+        addLayoutClickListener(new LayoutClickListener() {
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                closeNotificationsPopup();
+            }
+        });
     }
 
     @Override
@@ -75,9 +90,11 @@ public class DashboardView extends VerticalLayout implements View {
         header.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
         header.setExpandRatio(titleLabel, 1);
 
-        Component notifications = buildNotifications();
-        header.addComponent(notifications);
-        header.setComponentAlignment(notifications, Alignment.MIDDLE_RIGHT);
+        notificationsWindow = buildNotificationsPopup();
+        notificationsButton = buildNotificationsButton();
+        header.addComponent(notificationsButton);
+        header.setComponentAlignment(notificationsButton,
+                Alignment.MIDDLE_RIGHT);
 
         Component edit = buildEdit();
         header.addComponent(edit);
@@ -86,8 +103,26 @@ public class DashboardView extends VerticalLayout implements View {
         return header;
     }
 
-    private Component buildNotifications() {
-        return new NotificationsButton();
+    private Window buildNotificationsPopup() {
+        Window notifications = new Window("Notifications");
+        notifications.setWidth("300px");
+        notifications.addStyleName("notifications");
+        notifications.setClosable(false);
+        notifications.setResizable(false);
+        notifications.setDraggable(false);
+        notifications.setCloseShortcut(KeyCode.ESCAPE, null);
+        return notifications;
+    }
+
+    private NotificationsButton buildNotificationsButton() {
+        NotificationsButton notificationsButton = new NotificationsButton();
+        notificationsButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                openNotificationsPopup(event);
+            }
+        });
+        return notificationsButton;
     }
 
     private Component buildEdit() {
@@ -140,7 +175,7 @@ public class DashboardView extends VerticalLayout implements View {
             @Override
             protected String formatPropertyValue(Object rowId, Object colId,
                     Property<?> property) {
-                if (colId.equals("Revenue")) {
+                if (colId.equals("revenue")) {
                     if (property != null && property.getValue() != null) {
                         Double r = (Double) property.getValue();
                         String ret = new DecimalFormat("#.##").format(r);
@@ -153,16 +188,25 @@ public class DashboardView extends VerticalLayout implements View {
             }
         };
         table.setCaption("Top 10 Titles by Revenue");
-        table.setContainerDataSource(DataProvider.getCurrent()
-                .getRevenueByTitle());
 
         table.setPageLength(0);
         table.addStyleName("plain");
-        table.addStyleName("borderless");
+        table.addStyleName(ValoTheme.TABLE_BORDERLESS);
+        table.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         table.setSortEnabled(false);
         table.setColumnAlignment("Revenue", Align.RIGHT);
         table.setRowHeaderMode(RowHeaderMode.INDEX);
         table.setSizeFull();
+
+        Collection<MovieRevenue> movieRevenues = DashboardUI.getDataProvider()
+                .getMovieRevenues();
+        table.setContainerDataSource(new BeanItemContainer<MovieRevenue>(
+                MovieRevenue.class, movieRevenues));
+
+        table.setVisibleColumns("title", "revenue");
+        table.setColumnHeaders("Title", "Revenue");
+
+        table.sort(new Object[] { "revenue" }, new boolean[] { false });
 
         return createContentWrapper(table);
     }
@@ -196,63 +240,62 @@ public class DashboardView extends VerticalLayout implements View {
         return panel;
     }
 
-    private void buildNotifications(ClickEvent event) {
-        Window notifications = new Window("Notifications");
-        VerticalLayout l = new VerticalLayout();
-        l.setMargin(true);
-        l.setSpacing(true);
-        notifications.setContent(l);
-        notifications.setWidth("300px");
-        notifications.addStyleName("notifications");
-        notifications.setClosable(false);
-        notifications.setResizable(false);
-        notifications.setDraggable(false);
-        notifications.setPositionX(event.getClientX() - event.getRelativeX());
-        notifications.setPositionY(event.getClientY() - event.getRelativeY());
-        notifications.setCloseShortcut(KeyCode.ESCAPE, null);
+    private void openNotificationsPopup(ClickEvent event) {
+        VerticalLayout notificationsLayout = new VerticalLayout();
+        notificationsLayout.setMargin(true);
+        notificationsLayout.setSpacing(true);
 
-        Label label = new Label(
-                "<hr><b>"
-                        + Generator.randomFirstName()
-                        + " "
-                        + Generator.randomLastName()
-                        + " created a new report</b><br><span>25 minutes ago</span><br>"
-                        + Generator.randomText(18), ContentMode.HTML);
-        l.addComponent(label);
+        Collection<DashboardNotification> notifications = DashboardUI
+                .getDataProvider().getNotifications();
+        DashboardEventBus.post(new NotificationsCountUpdatedEvent());
 
-        label = new Label("<hr><b>" + Generator.randomFirstName() + " "
-                + Generator.randomLastName()
-                + " changed the schedule</b><br><span>2 days ago</span><br>"
-                + Generator.randomText(10), ContentMode.HTML);
-        l.addComponent(label);
+        for (DashboardNotification notification : notifications) {
+            VerticalLayout notificationLayout = new VerticalLayout();
+            notificationLayout.addStyleName("notification-item");
+            notificationLayout.setWidth(100.0f, Unit.PERCENTAGE);
+
+            Label titleLabel = new Label(notification.getFirstName() + " "
+                    + notification.getLastName() + " "
+                    + notification.getAction());
+            titleLabel.addStyleName("notification-title");
+
+            Label timeLabel = new Label(notification.getPrettyTime());
+            timeLabel.addStyleName("notification-time");
+
+            Label contentLabel = new Label(notification.getContent());
+            contentLabel.addStyleName("notification-content");
+
+            notificationLayout.addComponents(titleLabel, timeLabel,
+                    contentLabel);
+            notificationsLayout.addComponent(notificationLayout);
+        }
+        notificationsWindow.setContent(notificationsLayout);
+
+        // TODO: Use popupview instead?
+        // PopupView pw = new PopupView("", notificationsLayout);
+        // ((AbstractLayout) notificationsButton.getParent()).addComponent(pw);
+        // pw.setPopupVisible(true);
+
+        notificationsWindow.setPositionX(event.getClientX()
+                - event.getRelativeX() - 200);
+        notificationsWindow.setPositionY(event.getClientY()
+                - event.getRelativeY() + 50);
+        UI.getCurrent().addWindow(notificationsWindow);
+        notificationsWindow.focus();
+    }
+
+    private void closeNotificationsPopup() {
+        notificationsWindow.close();
     }
 
     @Override
     public void enter(ViewChangeEvent event) {
-        DashboardEventBus.post(new NotificationsCountUpdatedEvent(2));
+        notificationsButton.updateNotificationsCount(null);
     }
 
     @Subscribe
     public void dashboardEdited(DashboardEditEvent event) {
         titleLabel.setValue(event.getName());
-    }
-
-    @Subscribe
-    public void notificationsOpen(NotificationsOpenEvent event) {
-        // TODO: Handle closing open notifications...should we use popupview
-
-        // buildNotifications(event);
-        // getUI().addWindow(notifications);
-        // notifications.focus();
-        // ((CssLayout) getUI().getContent())
-        // .addLayoutClickListener(new LayoutClickListener() {
-        // @Override
-        // public void layoutClick(LayoutClickEvent event) {
-        // notifications.close();
-        // ((CssLayout) getUI().getContent())
-        // .removeLayoutClickListener(this);
-        // }
-        // });
     }
 
     public static class NotificationsButton extends Button {
@@ -262,15 +305,6 @@ public class DashboardView extends VerticalLayout implements View {
             setIcon(FontAwesome.BELL);
             addStyleName("notifications");
             addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-
-            addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    DashboardEventBus.post(new NotificationsOpenEvent());
-                    DashboardEventBus
-                            .post(new NotificationsCountUpdatedEvent(0));
-                }
-            });
         }
 
         @Override
@@ -286,8 +320,10 @@ public class DashboardView extends VerticalLayout implements View {
         }
 
         @Subscribe
-        public void notificationsOpen(NotificationsCountUpdatedEvent event) {
-            setUnreadCount(event.getCount());
+        public void updateNotificationsCount(
+                NotificationsCountUpdatedEvent event) {
+            setUnreadCount(DashboardUI.getDataProvider()
+                    .getUnreadNotificationsCount());
         }
 
         public void setUnreadCount(int count) {

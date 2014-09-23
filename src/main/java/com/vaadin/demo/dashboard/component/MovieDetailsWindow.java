@@ -2,7 +2,7 @@ package com.vaadin.demo.dashboard.component;
 
 import java.text.SimpleDateFormat;
 
-import com.vaadin.demo.dashboard.data.DataProvider.Movie;
+import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.view.ScheduleView.MovieEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -46,8 +46,8 @@ public class MovieDetailsWindow extends Window {
         details.setMargin(true);
         l.addComponent(details);
 
-        final Image coverImage = new Image("", new ExternalResource(
-                event.getMovie().getPosterUrl()));
+        final Image coverImage = new Image("", new ExternalResource(event
+                .getMovie().getPosterUrl()));
         coverImage.setWidth(190.0f, Unit.PIXELS);
 
         final Button more = new Button("More…");
@@ -126,7 +126,7 @@ public class MovieDetailsWindow extends Window {
                 event.getButton().setVisible(false);
             }
         });
-        
+
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName("footer");
         footer.setWidth("100%");

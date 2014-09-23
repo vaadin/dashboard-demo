@@ -1,14 +1,4 @@
-/**
- * DISCLAIMER
- * 
- * The quality of the code is such that you should not copy any of it as best
- * practice how to build Vaadin applications.
- * 
- * @author jouni@vaadin.com
- * 
- */
-
-package com.vaadin.demo.dashboard.data;
+package com.vaadin.demo.dashboard.data.dummy;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,154 +10,68 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.data.DataProvider;
+import com.vaadin.demo.dashboard.domain.DashboardNotification;
+import com.vaadin.demo.dashboard.domain.Movie;
+import com.vaadin.demo.dashboard.domain.MovieRevenue;
+import com.vaadin.demo.dashboard.domain.Transaction;
+import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
-public class DataProvider {
+public class DummyDataProvider implements DataProvider {
+
+    private static Date lastDataUpdate;
+    private static Collection<Movie> movies;
+    private static Multimap<Long, Transaction> transactions;
+    private static Multimap<Long, MovieRevenue> revenue;
 
     private static Random rand = new Random();
+
+    private final Collection<DashboardNotification> notifications = DummyDataGenerator
+            .randomNotifications();
 
     /**
      * Initialize the data for this application.
      */
-    public DataProvider() {
-        loadMoviesData();
-        loadTheaterData();
-        generateTransactionsData();
+    public DummyDataProvider() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        if (lastDataUpdate == null || lastDataUpdate.before(cal.getTime())) {
+            loadTheaterData();
+            movies = loadMoviesData();
+            transactions = generateTransactionsData();
+            revenue = countRevenues();
+            lastDataUpdate = new Date();
+        }
     }
-
-    /**
-     * =========================================================================
-     * Movies in theaters
-     * =========================================================================
-     */
-
-    /** Simple Movie class */
-    public static class Movie {
-        private final String title;
-        private final String synopsis;
-        private final String thumbUrl;
-        private final String posterUrl;
-        /** In minutes */
-        private final int duration;
-        private Date releaseDate;
-
-        private int score;
-        private double sortScore = 0;
-
-        Movie(String title, String synopsis, String thumbUrl, String posterUrl,
-                JsonObject releaseDates, JsonObject critics) {
-            this.title = title;
-            this.synopsis = synopsis;
-            this.thumbUrl = thumbUrl.replace("_tmb", "_320");
-            this.posterUrl = posterUrl.replace("_tmb", "_640");
-            this.duration = (int) ((1 + Math.round(Math.random())) * 60 + 45 + (Math
-                    .random() * 30));
-            try {
-                String datestr = releaseDates.get("theater").getAsString();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                releaseDate = df.parse(datestr);
-                score = critics.get("critics_score").getAsInt();
-                sortScore = 0.6 / (0.01 + (System.currentTimeMillis() - releaseDate
-                        .getTime()) / (1000 * 60 * 60 * 24 * 5));
-                sortScore += 10.0 / (101 - score);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        public String titleSlug() {
-            return title.toLowerCase().replace(' ', '-').replace(":", "")
-                    .replace("'", "").replace(",", "").replace(".", "");
-        }
-
-        public void reCalculateSortScore(Calendar cal) {
-            if (cal.before(releaseDate)) {
-                sortScore = 0;
-                return;
-            }
-            sortScore = 0.6 / (0.01 + (cal.getTimeInMillis() - releaseDate
-                    .getTime()) / (1000 * 60 * 60 * 24 * 5));
-            sortScore += 10.0 / (101 - score);
-        }
-
-        public Date getReleaseDate() {
-            return releaseDate;
-        }
-
-        public void setReleaseDate(Date releaseDate) {
-            this.releaseDate = releaseDate;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public void setScore(int score) {
-            this.score = score;
-        }
-
-        public double getSortScore() {
-            return sortScore;
-        }
-
-        public void setSortScore(double sortScore) {
-            this.sortScore = sortScore;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getSynopsis() {
-            return synopsis;
-        }
-
-        public String getThumbUrl() {
-            return thumbUrl;
-        }
-
-        public String getPosterUrl() {
-            return posterUrl;
-        }
-
-        public int getDuration() {
-            return duration;
-        }
-
-    }
-
-    /*
-     * List of movies playing currently in theaters
-     */
-    private static ArrayList<Movie> movies = new ArrayList<Movie>();
 
     /**
      * Get a list of movies currently playing in theaters.
      * 
      * @return a list of Movie objects
      */
-    public static ArrayList<Movie> getMovies() {
+    public static Collection<Movie> getMovies() {
         return movies;
     }
 
@@ -175,8 +79,10 @@ public class DataProvider {
      * Initialize the list of movies playing in theaters currently. Uses the
      * Rotten Tomatoes API to get the list. The result is cached to a local file
      * for 24h (daily limit of API calls is 10,000).
+     * 
+     * @return
      */
-    private static void loadMoviesData() {
+    private static Collection<Movie> loadMoviesData() {
 
         File cache;
 
@@ -190,56 +96,52 @@ public class DataProvider {
             cache = new File(baseDirectory + "/movies.txt");
         }
 
-        if (!cache.exists()
-                || System.currentTimeMillis() > cache.lastModified() + 1000
-                        * 60 * 60 * 24) {
-            JsonObject json = null;
-            try {
-                // TODO check for internet connection also, and use the cache
-                // anyway
-                // if no connection is available
-                if (cache.exists()
-                        && System.currentTimeMillis() < cache.lastModified()
-                                + 1000 * 60 * 60 * 24) {
-                    json = readJsonFromFile(cache);
-                } else {
-                    // TODO: Get an API key from
-                    // http://developer.rottentomatoes.com
-                    String apiKey = "xxxxxxxxxxxxxxxxxxx";
-                    json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
-                            + apiKey);
-                    // Store in cache
-                    FileWriter fileWriter = new FileWriter(cache);
-                    fileWriter.write(json.toString());
-                    fileWriter.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        JsonObject json = null;
+        try {
+            // TODO check for internet connection also, and use the cache
+            // anyway
+            // if no connection is available
+            if (cache.exists()
+                    && System.currentTimeMillis() < cache.lastModified() + 1000
+                            * 60 * 60 * 24) {
+                json = readJsonFromFile(cache);
+            } else {
+                // TODO: Get an API key from
+                // http://developer.rottentomatoes.com
+                String apiKey = "2fumdtdh7ewb5c9zrejuh6kt";
+                json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
+                        + apiKey);
+                // Store in cache
+                FileWriter fileWriter = new FileWriter(cache);
+                fileWriter.write(json.toString());
+                fileWriter.close();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            if (json == null) {
-                return;
-            }
-
+        Collection<Movie> result = new ArrayList<Movie>();
+        if (json != null) {
             JsonArray moviesJson;
-            movies.clear();
+
             moviesJson = json.getAsJsonArray("movies");
             for (int i = 0; i < moviesJson.size(); i++) {
                 JsonObject movieJson = moviesJson.get(i).getAsJsonObject();
                 JsonObject posters = movieJson.get("posters").getAsJsonObject();
                 if (!posters.get("profile").getAsString()
                         .contains("poster_default")) {
-                    Movie movie = new Movie(movieJson.get("title")
+                    Movie movie = new Movie(i, movieJson.get("title")
                             .getAsString(), movieJson.get("synopsis")
                             .getAsString(), posters.get("profile")
                             .getAsString(), posters.get("detailed")
                             .getAsString(), movieJson.get("release_dates")
                             .getAsJsonObject(), movieJson.get("ratings")
                             .getAsJsonObject());
-                    movies.add(movie);
+                    result.add(movie);
                 }
             }
         }
+        return result;
     }
 
     /* JSON utility method */
@@ -283,7 +185,7 @@ public class DataProvider {
      */
 
     /* List of countries and cities for them */
-    static HashMap<String, ArrayList<String>> countryToCities = new HashMap<String, ArrayList<String>>();
+    private static HashMap<String, ArrayList<String>> countryToCities = new HashMap<String, ArrayList<String>>();
 
     static List<String> theaters = new ArrayList<String>() {
         private static final long serialVersionUID = 1L;
@@ -317,7 +219,7 @@ public class DataProvider {
         /* First, read the text file into a string */
         StringBuffer fileData = new StringBuffer(2000);
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                DataProvider.class.getResourceAsStream("cities.txt")));
+                DummyDataProvider.class.getResourceAsStream("cities.txt")));
 
         char[] buf = new char[1024];
         int numRead = 0;
@@ -354,228 +256,194 @@ public class DataProvider {
     }
 
     /**
-     * =========================================================================
-     * Transactions data, used in tables and graphs
-     * =========================================================================
+     * Create a list of dummy transactions
+     * 
+     * @return
      */
-
-    /** Container with all the transactions */
-    private TransactionsContainer transactions;
-
-    public TransactionsContainer getTransactions() {
-        return transactions;
-    }
-
-    /** Create a list of dummy transactions */
-    private void generateTransactionsData() {
+    private Multimap<Long, Transaction> generateTransactionsData() {
         GregorianCalendar today = new GregorianCalendar();
-        /*
-         * Data items: timestamp, country, city, theater, room, movie title,
-         * number of seats, price
-         */
-        transactions = new TransactionsContainer();
 
-        /* Amount of items to create initially */
-        for (int i = 1000; i > 0; i--) {
-            // Start from 1st of current month
+        Multimap<Long, Transaction> result = MultimapBuilder.hashKeys()
+                .arrayListValues().build();
+
+        for (Movie movie : movies) {
+            result.putAll(movie.getId(), new ArrayList<Transaction>());
+
             GregorianCalendar c = new GregorianCalendar();
+            int daysSubtractor = rand.nextInt(150) + 30;
+            c.add(Calendar.DAY_OF_YEAR, -daysSubtractor);
 
-            // we will go at most 4 months back
-            int newMonthSubstractor = (int) (5.0 * rand.nextDouble());
-            c.add(Calendar.MONTH, -newMonthSubstractor);
+            while (c.before(today)) {
 
-            int newDay = 1 + (int) (30.0 * rand.nextDouble());
-            c.set(Calendar.DAY_OF_MONTH, newDay);
+                Transaction transaction = new Transaction();
+                transaction.setTitle(movie.getTitle());
 
-            if (today.before(c)) {
-                newDay = 1 + (int) (today.get(Calendar.DAY_OF_MONTH) * rand
-                        .nextDouble());
-                c.set(Calendar.DAY_OF_MONTH, newDay);
-            }
+                // Country
+                Object[] array = countryToCities.keySet().toArray();
+                int i = (int) (Math.random() * (array.length - 1));
+                String country = array[i].toString();
+                transaction.setCountry(country);
 
-            // Randomize time of day
-            c.set(Calendar.HOUR, (int) (rand.nextDouble() * 24.0));
-            c.set(Calendar.MINUTE, (int) (rand.nextDouble() * 60.0));
-            c.set(Calendar.SECOND, (int) (rand.nextDouble() * 60.0));
-            createTransaction(c);
-            // System.out.println(df.format(c.getTime()));
-        }
-        transactions.sort(new String[] { "timestamp" }, new boolean[] { true });
-        updateTotalSum();
+                c.add(Calendar.SECOND, rand.nextInt(1000000) + 5000);
+                transaction.setTime(c.getTime());
 
-    }
-
-    private static double totalSum = 0;
-
-    private void updateTotalSum() {
-        totalSum = 0;
-        for (Object id : transactions.getItemIds()) {
-            Item item = transactions.getItem(id);
-            Object value = item.getItemProperty("Price").getValue();
-            totalSum += Double.parseDouble(value.toString());
-        }
-        /*
-         * try { Number amount = NumberFormat.getCurrencyInstance().parse( "$" +
-         * totalSum); totalSum = amount.doubleValue(); } catch (ParseException
-         * e) { e.printStackTrace(); }
-         */
-    }
-
-    public static double getTotalSum() {
-        return totalSum;
-    }
-
-    private void createTransaction(Calendar cal) {
-        // Country
-        Object[] array = countryToCities.keySet().toArray();
-        int i = (int) (Math.random() * (array.length - 1));
-        String country = array[i].toString();
-
-        for (Movie m : movies) {
-            m.reCalculateSortScore(cal);
-        }
-
-        Collections.sort(movies, new Comparator<Movie>() {
-            @Override
-            public int compare(Movie o1, Movie o2) {
-                return (int) (100.0 * (o2.sortScore - o1.sortScore));
-            }
-        });
-
-        // City
-        ArrayList<String> cities = countryToCities.get(country);
-        String city = cities.get(0);
-
-        // Theater
-        String theater = theaters.get((int) (rand.nextDouble() * (theaters
-                .size() - 1)));
-
-        // Room
-        String room = rooms.get((int) (rand.nextDouble() * (rooms.size() - 1)));
-
-        // Title
-        int randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies.size() / 2.0 - 1));
-        while (randomIndex >= movies.size()) {
-            randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies.size() / 2.0 - 1));
-        }
-        if (movies.get(randomIndex).releaseDate.compareTo(cal.getTime()) >= 0) {
-            // System.out.println("skipped " + movies.get(randomIndex).title);
-            // System.out.println(df.format(movies.get(randomIndex).releaseDate));
-            // System.out.println(df.format(cal.getTime()));
-            // System.out.println();
-            // ++skippedCount;
-            // System.out.println(skippedCount);
-            return;
-        }
-        String title = movies.get(randomIndex).title;
-
-        // Seats
-        int seats = (int) (1 + rand.nextDouble() * 3);
-
-        // Price (approx. USD)
-        double price = seats * (6 + (rand.nextDouble() * 3));
-
-        transactions.addTransaction(cal, country, city, theater, room, title,
-                seats, price);
-
-        // revenue.add(cal.getTime(), title, price);
-
-    }
-
-    public IndexedContainer getRevenueForTitle(String title) {
-        // System.out.println(title);
-        IndexedContainer revenue = new IndexedContainer();
-        revenue.addContainerProperty("timestamp", Date.class, new Date());
-        revenue.addContainerProperty("revenue", Double.class, 0.0);
-        revenue.addContainerProperty("date", String.class, "");
-
-        for (Object id : transactions.getItemIds()) {
-            SimpleDateFormat df = new SimpleDateFormat();
-            df.applyPattern("MM/dd/yyyy");
-
-            Item item = transactions.getItem(id);
-
-            if (title.equals(item.getItemProperty("Title").getValue())) {
-                Date d = (Date) item.getItemProperty("timestamp").getValue();
-
-                Item i = revenue.getItem(df.format(d));
-                if (i == null) {
-                    i = revenue.addItem(df.format(d));
-                    i.getItemProperty("timestamp").setValue(d);
-                    i.getItemProperty("date").setValue(df.format(d));
+                // TODO: Remove
+                for (Movie m : movies) {
+                    m.reCalculateSortScore(c.getTime());
                 }
+
+                // City
+                ArrayList<String> cities = countryToCities.get(country);
+                transaction.setCity(cities.get(0));
+
+                // Theater
+                String theater = theaters
+                        .get((int) (rand.nextDouble() * (theaters.size() - 1)));
+                transaction.setTheater(theater);
+
+                // Room
+                String room = rooms.get((int) (rand.nextDouble() * (rooms
+                        .size() - 1)));
+                transaction.setRoom(room);
+
+                // Title
+                int randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies
+                        .size() / 2.0 - 1));
+                while (randomIndex >= movies.size()) {
+                    randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies
+                            .size() / 2.0 - 1));
+                }
+
+                // Seats
+                int seats = (int) (1 + rand.nextDouble() * 3);
+                transaction.setSeats(seats);
+
+                // Price (approx. USD)
+                double price = seats * (2 + (rand.nextDouble() * 8));
+                transaction.setPrice(price);
+
+                result.get(movie.getId()).add(transaction);
             }
         }
 
-        revenue.sort(new Object[] { "timestamp" }, new boolean[] { true });
-        double index = 0.0;
-        for (Object id : revenue.getItemIds()) {
-            Item item = revenue.getItem(id);
-            item.getItemProperty("revenue").setValue(index++);
-        }
+        return result;
 
-        return revenue;
-    }
-
-    public IndexedContainer getRevenueByTitle() {
-        IndexedContainer revenue = new IndexedContainer();
-        revenue.addContainerProperty("Title", String.class, "");
-        revenue.addContainerProperty("Revenue", Double.class, 0.0);
-
-        for (Object id : transactions.getItemIds()) {
-
-            Item item = transactions.getItem(id);
-
-            String title = item.getItemProperty("Title").getValue().toString();
-
-            if (title == null || "".equals(title))
-                continue;
-
-            Item i = revenue.getItem(title);
-            if (i == null) {
-                i = revenue.addItem(title);
-                i.getItemProperty("Title").setValue(title);
-            }
-            double current = (Double) i.getItemProperty("Revenue").getValue();
-            current += (Double) item.getItemProperty("Price").getValue();
-            i.getItemProperty("Revenue").setValue(current);
-        }
-
-        revenue.sort(new Object[] { "Revenue" }, new boolean[] { false });
-
-        // TODO sometimes causes and IndexOutOfBoundsException
-        if (revenue.getItemIds().size() > 10) {
-            // Truncate to top 10 items
-            List<Object> remove = new ArrayList<Object>();
-            for (Object id : revenue
-                    .getItemIds(10, revenue.getItemIds().size())) {
-                remove.add(id);
-            }
-            for (Object id : remove) {
-                revenue.removeItem(id);
-            }
-        }
-
-        return revenue;
     }
 
     public static Movie getMovieForTitle(String title) {
         for (Movie movie : movies) {
-            if (movie.title.equals(title))
+            if (movie.getTitle().equals(title)) {
                 return movie;
+            }
         }
         return null;
     }
 
-    public static DataProvider getCurrent() {
-        return ((DashboardUI) UI.getCurrent()).dataProvider;
-    }
-
+    @Override
     public User authenticate(String userName, String password) {
         User user = new User();
-        user.setFirstName(Generator.randomFirstName());
-        user.setLastName(Generator.randomLastName());
+        user.setFirstName(DummyDataGenerator.randomFirstName());
+        user.setLastName(DummyDataGenerator.randomLastName());
         user.setRole("admin");
         return user;
     }
+
+    @Override
+    public Collection<Transaction> getTransactions() {
+        return transactions.values();
+    }
+
+    private Multimap<Long, MovieRevenue> countRevenues() {
+        Multimap<Long, MovieRevenue> result = MultimapBuilder.hashKeys()
+                .arrayListValues().build();
+        for (Movie movie : movies) {
+            result.putAll(movie.getId(), countMovieRevenue(movie));
+        }
+        return result;
+    }
+
+    private Collection<MovieRevenue> countMovieRevenue(Movie movie) {
+        Map<Date, Double> dailyIncome = new HashMap<Date, Double>();
+        for (Transaction transaction : transactions.get(movie.getId())) {
+            Date day = getDay(transaction.getTime());
+
+            Double currentValue = dailyIncome.get(day);
+            if (currentValue == null) {
+                currentValue = 0.0;
+            }
+            dailyIncome.put(day, currentValue + transaction.getPrice());
+        }
+
+        Collection<MovieRevenue> result = new ArrayList<MovieRevenue>();
+
+        List<Date> dates = new ArrayList<Date>(dailyIncome.keySet());
+        Collections.sort(dates);
+
+        double revenueSoFar = 0.0;
+        for (Date date : dates) {
+            MovieRevenue movieRevenue = new MovieRevenue();
+            movieRevenue.setTimestamp(date);
+            revenueSoFar += dailyIncome.get(date);
+            movieRevenue.setRevenue(revenueSoFar);
+            movieRevenue.setTitle(movie.getTitle());
+            result.add(movieRevenue);
+        }
+
+        return result;
+    }
+
+    @Override
+    public Collection<MovieRevenue> getRevenueByMovie(long id) {
+        return revenue.get(id);
+    }
+
+    private Date getDay(Date time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(time);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        return cal.getTime();
+    }
+
+    @Override
+    public Collection<MovieRevenue> getMovieRevenues() {
+        Collection<MovieRevenue> result = Lists.newArrayList();
+        for (Movie movie : movies) {
+            List<MovieRevenue> revenueByMovie = Lists
+                    .newArrayList(getRevenueByMovie(movie.getId()));
+            result.add(revenueByMovie.get(revenueByMovie.size() - 1));
+        }
+        return result;
+    }
+
+    @Override
+    public int getUnreadNotificationsCount() {
+        Predicate<DashboardNotification> unreadPredicate = new Predicate<DashboardNotification>() {
+            @Override
+            public boolean apply(DashboardNotification input) {
+                return !input.isRead();
+            }
+        };
+        return Collections2.filter(notifications, unreadPredicate).size();
+    }
+
+    @Override
+    public Collection<DashboardNotification> getNotifications() {
+        for (DashboardNotification notification : notifications) {
+            notification.setRead(true);
+        }
+        return notifications;
+    }
+
+    @Override
+    public double getTotalSum() {
+        double result = 0;
+        for (Transaction transaction : transactions.values()) {
+            result += transaction.getPrice();
+        }
+        return result;
+    }
+
 }

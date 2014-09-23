@@ -3,7 +3,7 @@ package com.vaadin.demo.dashboard.view;
 import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
 
 import com.vaadin.demo.dashboard.component.DashboardMenu;
-import com.vaadin.demo.dashboard.data.User;
+import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
 import com.vaadin.navigator.Navigator;

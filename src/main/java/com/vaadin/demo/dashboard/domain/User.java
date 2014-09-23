@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard.data;
+package com.vaadin.demo.dashboard.domain;
 
 public class User {
     private String role;

@@ -8,7 +8,7 @@
  * 
  */
 
-package com.vaadin.demo.dashboard.data;
+package com.vaadin.demo.dashboard;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

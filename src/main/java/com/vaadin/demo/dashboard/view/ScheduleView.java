@@ -1,12 +1,14 @@
 package com.vaadin.demo.dashboard.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
-import com.vaadin.demo.dashboard.data.DataProvider;
-import com.vaadin.demo.dashboard.data.DataProvider.Movie;
+import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
+import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -77,7 +79,7 @@ public class ScheduleView extends CssLayout implements View,
         catalog.addStyleName("catalog");
         tabs.addComponent(catalog);
 
-        for (final Movie movie : DataProvider.getMovies()) {
+        for (final Movie movie : DummyDataProvider.getMovies()) {
             Image poster = new Image(movie.getTitle(), new ExternalResource(
                     movie.getThumbUrl()));
             CssLayout frame = new CssLayout();
@@ -230,7 +232,7 @@ public class ScheduleView extends CssLayout implements View,
         end.setHours(end.getHours() + endHour);
         end.setMinutes(endMinutes);
         MovieEvent newEvent = new MovieEvent(details.getDropTime(), end,
-                DataProvider.getMovies().get(0));
+                DummyDataProvider.getMovies().iterator().next());
         provider.addEvent(newEvent);
     }
 
@@ -252,7 +254,7 @@ public class ScheduleView extends CssLayout implements View,
 
         // Add all movie cover images as classes to CSSInject
         String styles = "";
-        for (Movie m : DataProvider.getMovies()) {
+        for (Movie m : DummyDataProvider.getMovies()) {
             WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
 
             String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
@@ -272,7 +274,7 @@ public class ScheduleView extends CssLayout implements View,
     }
 
     void createEventsForDay(Date day) {
-        ArrayList<Movie> movies = DataProvider.getMovies();
+        Collection<Movie> movies = DummyDataProvider.getMovies();
         boolean[] used = new boolean[movies.size()];
 
         Date date = new Date(day.getTime());
@@ -281,6 +283,7 @@ public class ScheduleView extends CssLayout implements View,
         date.setMinutes(0);
         date.setSeconds(0);
 
+        Iterator<Movie> iterator = movies.iterator();
         while (date.getHours() < 23) {
             // Get "random" movie
 
@@ -297,7 +300,7 @@ public class ScheduleView extends CssLayout implements View,
                 }
             } while (true);
 
-            Movie m = movies.get(i);
+            Movie m = iterator.next();
 
             Date start = new Date(date.getTime());
             Date end = new Date(start.getTime());

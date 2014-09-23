@@ -1,14 +1,15 @@
 package com.vaadin.demo.dashboard.view;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import com.vaadin.addon.timeline.Timeline;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.data.DataProvider;
-import com.vaadin.demo.dashboard.data.DataProvider.Movie;
+import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
+import com.vaadin.demo.dashboard.domain.Movie;
+import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
@@ -20,7 +21,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public class SalesView extends VerticalLayout implements View {
@@ -47,12 +47,10 @@ public class SalesView extends VerticalLayout implements View {
         toolbar.addStyleName("toolbar");
         addComponent(toolbar);
 
-        final ComboBox movieSelect = new ComboBox();
-        ArrayList<Movie> movies = DataProvider.getMovies();
-        for (Movie m : movies) {
-            movieSelect.addItem(m.getTitle());
-        }
+        Collection<Movie> movies = DummyDataProvider.getMovies();
+        final ComboBox movieSelect = new ComboBox(null, movies);
         movieSelect.setWidth("300px");
+        movieSelect.setItemCaptionPropertyId("title");
         toolbar.addComponent(movieSelect);
         movieSelect.addShortcutListener(new ShortcutListener("Add",
                 KeyCode.ENTER, null) {
@@ -98,39 +96,47 @@ public class SalesView extends VerticalLayout implements View {
 
         // Add first 4 by default
         int i = 0;
-        for (Movie m : DataProvider.getMovies()) {
-            addDataSet(m.getTitle());
-            if (++i > 3)
+        for (Movie m : DummyDataProvider.getMovies()) {
+            addDataSet(m);
+            if (++i > 3) {
                 break;
+            }
         }
 
         Date start = new Date();
         start.setMonth(start.getMonth() - 2);
         Date end = new Date();
-        if (timeline.getGraphDatasources().size() > 0)
+        if (timeline.getGraphDatasources().size() > 0) {
             timeline.setVisibleDateRange(start, end);
+        }
 
     }
 
     private void addSelectedMovie(final ComboBox movieSelect) {
-        if (movieSelect.getValue() != null
-                && !movieSelect.getValue().equals("")) {
-            String title = movieSelect.getValue().toString();
-            addDataSet(title);
-            movieSelect.removeItem(title);
+        if (movieSelect.getValue() != null) {
+            Movie movie = (Movie) movieSelect.getValue();
+            addDataSet(movie);
+            movieSelect.removeItem(movie);
             movieSelect.setValue(null);
         }
     }
 
-    private void addDataSet(String title) {
-        IndexedContainer revenue = ((DashboardUI) UI.getCurrent()).dataProvider
-                .getRevenueForTitle(title);
+    private void addDataSet(Movie movie) {
+
+        Collection<MovieRevenue> transactionsForMovie = DashboardUI
+                .getDataProvider().getRevenueByMovie(movie.getId());
+
+        BeanItemContainer<MovieRevenue> revenue = new BeanItemContainer<MovieRevenue>(
+                MovieRevenue.class, transactionsForMovie);
+
+        revenue.sort(new Object[] { "timestamp" }, new boolean[] { true });
+
         timeline.addGraphDataSource(revenue, "timestamp", "revenue");
         colorIndex = (colorIndex >= colors.length - 1 ? 0 : ++colorIndex);
         timeline.setGraphOutlineColor(revenue, colors[colorIndex]);
         timeline.setBrowserOutlineColor(revenue, colors[colorIndex]);
         timeline.setBrowserFillColor(revenue, colors[colorIndex].brighter());
-        timeline.setGraphLegend(revenue, title);
+        timeline.setGraphLegend(revenue, movie.getTitle());
         timeline.setEventCaptionPropertyId("date");
         timeline.setVerticalAxisLegendUnit(revenue, "$");
     }

@@ -25,20 +25,7 @@ public class QuickTicketsEvent {
 
     }
 
-    public static class NotificationsOpenEvent {
-
-    }
-
     public static class NotificationsCountUpdatedEvent {
-        private final int count;
-
-        public NotificationsCountUpdatedEvent(int count) {
-            this.count = count;
-        }
-
-        public int getCount() {
-            return count;
-        }
     }
 
     public static class DashboardEditEvent {

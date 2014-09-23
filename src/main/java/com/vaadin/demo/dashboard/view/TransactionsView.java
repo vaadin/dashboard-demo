@@ -12,17 +12,19 @@ package com.vaadin.demo.dashboard.view;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.data.DataProvider;
-import com.vaadin.demo.dashboard.data.TransactionsContainer;
+import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -43,22 +45,17 @@ import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
+@SuppressWarnings("serial")
 public class TransactionsView extends VerticalLayout implements View {
-
-    private static final long serialVersionUID = 1L;
 
     Table t;
 
     Object editableId = null;
 
-    TransactionsContainer data;
-
     public TransactionsView() {
-        data = ((DashboardUI) UI.getCurrent()).dataProvider.getTransactions();
-
         setSizeFull();
         addStyleName("transactions");
 
@@ -66,11 +63,10 @@ public class TransactionsView extends VerticalLayout implements View {
             @Override
             protected String formatPropertyValue(Object rowId, Object colId,
                     Property<?> property) {
-                if (colId.equals("Time")) {
+                if (colId.equals("time")) {
                     SimpleDateFormat df = new SimpleDateFormat();
                     df.applyPattern("MM/dd/yyyy hh:mm:ss a");
-                    return df
-                            .format(((Calendar) property.getValue()).getTime());
+                    return df.format(((Date) property.getValue()));
                 } else if (colId.equals("Price")) {
                     if (property != null && property.getValue() != null) {
                         String ret = new DecimalFormat("#.##").format(property
@@ -88,18 +84,20 @@ public class TransactionsView extends VerticalLayout implements View {
         t.setSelectable(true);
         t.setColumnCollapsingAllowed(true);
         t.setColumnReorderingAllowed(true);
-        data.removeAllContainerFilters();
-        t.setContainerDataSource(data);
+        t.setContainerDataSource(createFilterableContainer(DashboardUI
+                .getDataProvider().getTransactions()));
         sortTable();
 
         t.setColumnAlignment("Seats", Align.RIGHT);
         t.setColumnAlignment("Price", Align.RIGHT);
 
-        t.setVisibleColumns(new Object[] { "Time", "Country", "City",
-                "Theater", "Room", "Title", "Seats", "Price" });
+        t.setVisibleColumns("time", "country", "city", "theater", "room",
+                "title", "seats", "price");
+        t.setColumnHeaders("Time", "Country", "City", "Theater", "Room",
+                "Title", "Seats", "Price");
 
         t.setFooterVisible(true);
-        t.setColumnFooter("Time", "Total");
+        t.setColumnFooter("time", "Total");
         updatePriceFooter();
 
         // Allow dragging items to the reports menu
@@ -154,6 +152,7 @@ public class TransactionsView extends VerticalLayout implements View {
         filter.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(final TextChangeEvent event) {
+                Filterable data = (Filterable) t.getContainerDataSource();
                 data.removeAllContainerFilters();
                 data.addContainerFilter(new Filter() {
                     @Override
@@ -165,20 +164,20 @@ public class TransactionsView extends VerticalLayout implements View {
                             return true;
                         }
 
-                        return filterByProperty("Country", item,
+                        return filterByProperty("country", item,
                                 event.getText())
-                                || filterByProperty("City", item,
+                                || filterByProperty("city", item,
                                         event.getText())
-                                || filterByProperty("Title", item,
+                                || filterByProperty("title", item,
                                         event.getText());
 
                     }
 
                     @Override
                     public boolean appliesToProperty(Object propertyId) {
-                        if (propertyId.equals("Country")
-                                || propertyId.equals("City")
-                                || propertyId.equals("Title"))
+                        if (propertyId.equals("country")
+                                || propertyId.equals("city")
+                                || propertyId.equals("title"))
                             return true;
                         return false;
                     }
@@ -204,7 +203,8 @@ public class TransactionsView extends VerticalLayout implements View {
             @Override
             public void handleAction(Object sender, Object target) {
                 filter.setValue("");
-                data.removeAllContainerFilters();
+                ((Filterable) t.getContainerDataSource())
+                        .removeAllContainerFilters();
             }
         });
         toolbar.addComponent(filter);
@@ -235,7 +235,7 @@ public class TransactionsView extends VerticalLayout implements View {
             }
         });
         newReport.setEnabled(false);
-        newReport.addStyleName("small");
+        newReport.addStyleName(ValoTheme.BUTTON_SMALL);
         toolbar.addComponent(newReport);
         toolbar.setComponentAlignment(newReport, Alignment.MIDDLE_LEFT);
 
@@ -304,14 +304,13 @@ public class TransactionsView extends VerticalLayout implements View {
         // }
         // });
 
-        t.addGeneratedColumn("Title", new ColumnGenerator() {
+        t.addGeneratedColumn("title", new ColumnGenerator() {
             @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
-                final String title = source.getItem(itemId)
-                        .getItemProperty(columnId).getValue().toString();
+                final String title = ((Transaction) itemId).getTitle();
                 Button titleLink = new Button(title);
-                titleLink.addStyleName("link");
+                titleLink.addStyleName(ValoTheme.BUTTON_LINK);
                 titleLink.addClickListener(new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -324,6 +323,12 @@ public class TransactionsView extends VerticalLayout implements View {
                 return title;
             }
         });
+    }
+
+    private Filterable createFilterableContainer(
+            Collection<Transaction> transactions) {
+        return new BeanItemContainer<Transaction>(Transaction.class,
+                transactions);
     }
 
     private void sortTable() {
@@ -352,9 +357,9 @@ public class TransactionsView extends VerticalLayout implements View {
     }
 
     void updatePriceFooter() {
-        String ret = new DecimalFormat("#.##").format(DataProvider
-                .getTotalSum());
-        t.setColumnFooter("Price", "$" + ret);
+        String ret = new DecimalFormat("#.##").format(DashboardUI
+                .getDataProvider().getTotalSum());
+        t.setColumnFooter("price", "$" + ret);
 
     }
 

@@ -1,9 +1,10 @@
 package com.vaadin.demo.dashboard.component;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.demo.dashboard.data.User;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsOpenEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
@@ -35,6 +36,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class DashboardMenu extends CustomComponent {
 
     private static final String STYLE_VISIBLE = "valo-menu-visible";
+    private Label notificationsBadge;
 
     public DashboardMenu() {
         addStyleName("valo-menu");
@@ -151,6 +153,18 @@ public class DashboardMenu extends CustomComponent {
                 menuItemButton = reports;
             }
 
+            if (view == QuickTicketsView.DASHBOARD) {
+                CssLayout dashboardWrapper = new CssLayout(menuItemButton);
+                dashboardWrapper.addStyleName("badgewrapper");
+                dashboardWrapper.setWidth(100.0f, Unit.PERCENTAGE);
+                notificationsBadge = new Label();
+                notificationsBadge.addStyleName("badge");
+                notificationsBadge.setWidthUndefined();
+                notificationsBadge.setVisible(false);
+                dashboardWrapper.addComponent(notificationsBadge);
+                menuItemButton = dashboardWrapper;
+            }
+
             menuItemsLayout.addComponent(menuItemButton);
         }
         return menuItemsLayout;
@@ -161,6 +175,7 @@ public class DashboardMenu extends CustomComponent {
     public void attach() {
         super.attach();
         DashboardEventBus.register(this);
+        updateNotificationsCount(null);
     }
 
     @Override
@@ -175,8 +190,11 @@ public class DashboardMenu extends CustomComponent {
     }
 
     @Subscribe
-    public void notificationsOpen(NotificationsOpenEvent event) {
-        // TODO: Clear notificaitons badge
+    public void updateNotificationsCount(NotificationsCountUpdatedEvent event) {
+        int unreadNotificationsCount = DashboardUI.getDataProvider()
+                .getUnreadNotificationsCount();
+        notificationsBadge.setValue(String.valueOf(unreadNotificationsCount));
+        notificationsBadge.setVisible(unreadNotificationsCount > 0);
     }
 
     public class ValoMenuItemButton extends Button {
@@ -188,8 +206,8 @@ public class DashboardMenu extends CustomComponent {
         public ValoMenuItemButton(final QuickTicketsView view) {
             this.view = view;
             setPrimaryStyleName("valo-menu-item");
-            setCaption(view.getViewName());
             setIcon(view.getIcon());
+            setCaption(view.getViewName());
             addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(final ClickEvent event) {

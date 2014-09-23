@@ -6,8 +6,8 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.demo.dashboard.data.DataProvider;
-import com.vaadin.demo.dashboard.data.MyConverterFactory;
-import com.vaadin.demo.dashboard.data.User;
+import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
+import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoginRequestedEvent;
@@ -25,10 +25,10 @@ import com.vaadin.ui.UI;
 
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
+@SuppressWarnings("serial")
 public class DashboardUI extends UI {
-    private static final long serialVersionUID = 1L;
 
-    public DataProvider dataProvider = new DataProvider();
+    private final DataProvider dataProvider = new DummyDataProvider();
     public DashboardEventBus dashboardEventbus = new DashboardEventBus();
 
     @Override
@@ -57,7 +57,7 @@ public class DashboardUI extends UI {
 
     @Subscribe
     public void userLoginRequested(UserLoginRequestedEvent event) {
-        User user = DataProvider.getCurrent().authenticate(event.getUserName(),
+        User user = getDataProvider().authenticate(event.getUserName(),
                 event.getPassword());
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
@@ -97,4 +97,7 @@ public class DashboardUI extends UI {
         // viewNameToMenuButton.get("/reports").addStyleName("selected");
     }
 
+    public static DataProvider getDataProvider() {
+        return ((DashboardUI) getCurrent()).dataProvider;
+    }
 }

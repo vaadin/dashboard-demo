@@ -19,9 +19,8 @@ import java.util.Set;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
-import com.vaadin.demo.dashboard.data.Generator;
+import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -68,6 +67,7 @@ import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class ReportsView extends HorizontalLayout implements View {
 
@@ -536,7 +536,7 @@ public class ReportsView extends HorizontalLayout implements View {
                 final RichTextArea rta = new RichTextArea();
                 rta.setWidth("100%");
                 if (data == null)
-                    rta.setValue(Generator.randomText(30));
+                    rta.setValue(DummyDataGenerator.randomText(30));
                 else
                     rta.setValue(data);
                 l.addComponent(rta);
@@ -593,12 +593,12 @@ public class ReportsView extends HorizontalLayout implements View {
                     }
                 };
                 t.setCaption("Top 10 Titles by Revenue");
-                t.setContainerDataSource(((DashboardUI) getUI()).dataProvider
-                        .getRevenueByTitle());
+                // t.setContainerDataSource(((DashboardUI) getUI()).dataProvider
+                // .getRevenueByTitle());
                 t.setWidth("100%");
                 t.setPageLength(0);
                 t.addStyleName("plain");
-                t.addStyleName("borderless");
+                t.addStyleName(ValoTheme.TABLE_BORDERLESS);
                 t.setSortEnabled(false);
                 t.setColumnAlignment("Revenue", Align.RIGHT);
                 t.setRowHeaderMode(RowHeaderMode.INDEX);
