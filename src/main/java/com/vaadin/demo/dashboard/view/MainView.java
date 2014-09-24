@@ -5,10 +5,12 @@ import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
 import com.vaadin.demo.dashboard.component.DashboardMenu;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
@@ -21,6 +23,7 @@ public class MainView extends HorizontalLayout {
     public MainView() {
         initGATracker();
         setSizeFull();
+        addStyleName("mainview");
 
         addComponent(new DashboardMenu());
 
@@ -32,7 +35,7 @@ public class MainView extends HorizontalLayout {
     }
 
     private void initNavigator(ComponentContainer container) {
-        Navigator navigator = new Navigator(UI.getCurrent(), container);
+        final Navigator navigator = new Navigator(UI.getCurrent(), container);
 
         for (QuickTicketsView view : QuickTicketsView.values()) {
             try {
@@ -45,7 +48,17 @@ public class MainView extends HorizontalLayout {
             }
         }
 
-        navigator.setErrorView(QuickTicketsView.DASHBOARD.getViewClass());
+        navigator.setErrorProvider(new ViewProvider() {
+            @Override
+            public String getViewName(String viewAndParameters) {
+                return QuickTicketsView.DASHBOARD.getViewName();
+            }
+
+            @Override
+            public View getView(String viewName) {
+                return new DashboardView();
+            }
+        });
         navigator.addViewChangeListener(new ViewChangeListener() {
 
             @Override
@@ -60,6 +73,7 @@ public class MainView extends HorizontalLayout {
                 for (QuickTicketsView view : QuickTicketsView.values()) {
                     if (view.getViewName().equals(event.getViewName())) {
                         DashboardEventBus.post(new PostViewChangeEvent(view));
+                        DashboardEventBus.post(new BrowserResizeEvent());
                         break;
                     }
                 }

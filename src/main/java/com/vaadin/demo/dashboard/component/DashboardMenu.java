@@ -17,6 +17,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,6 +26,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -32,7 +34,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.themes.ValoTheme;
 
-//TODO: Make generic
+@SuppressWarnings("serial")
 public class DashboardMenu extends CustomComponent {
 
     private static final String STYLE_VISIBLE = "valo-menu-visible";
@@ -41,6 +43,7 @@ public class DashboardMenu extends CustomComponent {
     public DashboardMenu() {
         addStyleName("valo-menu");
         setSizeUndefined();
+        DashboardEventBus.register(this);
 
         setCompositionRoot(buildContent());
     }
@@ -66,7 +69,8 @@ public class DashboardMenu extends CustomComponent {
         Label logo = new Label("QuickTickets <strong>Dashboard</strong>",
                 ContentMode.HTML);
         logo.setSizeUndefined();
-        CssLayout logoWrapper = new CssLayout(logo);
+        HorizontalLayout logoWrapper = new HorizontalLayout(logo);
+        logoWrapper.setComponentAlignment(logo, Alignment.MIDDLE_CENTER);
         logoWrapper.addStyleName("valo-menu-title");
         return logoWrapper;
     }
@@ -174,14 +178,7 @@ public class DashboardMenu extends CustomComponent {
     @Override
     public void attach() {
         super.attach();
-        DashboardEventBus.register(this);
         updateNotificationsCount(null);
-    }
-
-    @Override
-    public void detach() {
-        super.detach();
-        DashboardEventBus.unregister(this);
     }
 
     @Subscribe

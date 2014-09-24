@@ -41,6 +41,8 @@ import com.vaadin.util.CurrentInstance;
 
 public class DummyDataProvider implements DataProvider {
 
+    /* List of countries and cities for them */
+    private static Multimap<String, String> countryToCities;
     private static Date lastDataUpdate;
     private static Collection<Movie> movies;
     private static Multimap<Long, Transaction> transactions;
@@ -58,12 +60,16 @@ public class DummyDataProvider implements DataProvider {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -1);
         if (lastDataUpdate == null || lastDataUpdate.before(cal.getTime())) {
-            loadTheaterData();
-            movies = loadMoviesData();
-            transactions = generateTransactionsData();
-            revenue = countRevenues();
-            lastDataUpdate = new Date();
+            refreshStaticData();
         }
+    }
+
+    private void refreshStaticData() {
+        countryToCities = loadTheaterData();
+        movies = loadMoviesData();
+        transactions = generateTransactionsData();
+        revenue = countRevenues();
+        lastDataUpdate = new Date();
     }
 
     /**
@@ -184,9 +190,6 @@ public class DummyDataProvider implements DataProvider {
      * =========================================================================
      */
 
-    /* List of countries and cities for them */
-    private static HashMap<String, ArrayList<String>> countryToCities = new HashMap<String, ArrayList<String>>();
-
     static List<String> theaters = new ArrayList<String>() {
         private static final long serialVersionUID = 1L;
         {
@@ -214,7 +217,7 @@ public class DummyDataProvider implements DataProvider {
     /**
      * Parse the list of countries and cities
      */
-    private static HashMap<String, ArrayList<String>> loadTheaterData() {
+    private static Multimap<String, String> loadTheaterData() {
 
         /* First, read the text file into a string */
         StringBuffer fileData = new StringBuffer(2000);
@@ -239,14 +242,15 @@ public class DummyDataProvider implements DataProvider {
          * The list has rows with tab delimited values. We want the second (city
          * name) and last (country name) values, and build a Map from that.
          */
-        countryToCities = new HashMap<String, ArrayList<String>>();
+        Multimap<String, String> countryToCities = MultimapBuilder.hashKeys()
+                .arrayListValues().build();
         for (String line : list.split("\n")) {
             String[] tabs = line.split("\t");
             String city = tabs[1];
             String country = tabs[tabs.length - 2];
 
             if (!countryToCities.containsKey(country)) {
-                countryToCities.put(country, new ArrayList<String>());
+                countryToCities.putAll(country, new ArrayList<String>());
             }
             countryToCities.get(country).add(city);
         }
@@ -284,7 +288,6 @@ public class DummyDataProvider implements DataProvider {
                 String country = array[i].toString();
                 transaction.setCountry(country);
 
-                c.add(Calendar.SECOND, rand.nextInt(1000000) + 5000);
                 transaction.setTime(c.getTime());
 
                 // TODO: Remove
@@ -293,8 +296,8 @@ public class DummyDataProvider implements DataProvider {
                 }
 
                 // City
-                ArrayList<String> cities = countryToCities.get(country);
-                transaction.setCity(cities.get(0));
+                Collection<String> cities = countryToCities.get(country);
+                transaction.setCity(cities.iterator().next());
 
                 // Theater
                 String theater = theaters
@@ -323,6 +326,8 @@ public class DummyDataProvider implements DataProvider {
                 transaction.setPrice(price);
 
                 result.get(movie.getId()).add(transaction);
+
+                c.add(Calendar.SECOND, rand.nextInt(1000000) + 5000);
             }
         }
 
@@ -393,7 +398,7 @@ public class DummyDataProvider implements DataProvider {
     }
 
     @Override
-    public Collection<MovieRevenue> getRevenueByMovie(long id) {
+    public Collection<MovieRevenue> getDailyRevenuesByMovie(long id) {
         return revenue.get(id);
     }
 
@@ -408,11 +413,11 @@ public class DummyDataProvider implements DataProvider {
     }
 
     @Override
-    public Collection<MovieRevenue> getMovieRevenues() {
+    public Collection<MovieRevenue> getTotalMovieRevenues() {
         Collection<MovieRevenue> result = Lists.newArrayList();
         for (Movie movie : movies) {
             List<MovieRevenue> revenueByMovie = Lists
-                    .newArrayList(getRevenueByMovie(movie.getId()));
+                    .newArrayList(getDailyRevenuesByMovie(movie.getId()));
             result.add(revenueByMovie.get(revenueByMovie.size() - 1));
         }
         return result;

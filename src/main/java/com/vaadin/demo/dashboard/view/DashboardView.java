@@ -1,7 +1,11 @@
 package com.vaadin.demo.dashboard.view;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Property;
@@ -15,6 +19,7 @@ import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.DashboardEditEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsCountUpdatedEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -47,9 +52,9 @@ public class DashboardView extends VerticalLayout implements View {
     private Window notificationsWindow;
 
     public DashboardView() {
-
         addStyleName("dashboard-view");
         setSizeFull();
+        DashboardEventBus.register(this);
 
         addComponent(buildHeader());
 
@@ -65,27 +70,16 @@ public class DashboardView extends VerticalLayout implements View {
         });
     }
 
-    @Override
-    public void attach() {
-        super.attach();
-        DashboardEventBus.register(this);
-    }
-
-    @Override
-    public void detach() {
-        super.detach();
-        DashboardEventBus.unregister(this);
-    }
-
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
+        header.addStyleName("viewheader");
         header.setWidth(100.0f, Unit.PERCENTAGE);
         header.setSpacing(true);
         header.setMargin(true);
 
         titleLabel = new Label("My Dashboard");
         titleLabel.setSizeUndefined();
-        titleLabel.addStyleName(ValoTheme.LABEL_H2);
+        titleLabel.addStyleName(ValoTheme.LABEL_H1);
         header.addComponent(titleLabel);
         header.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
         header.setExpandRatio(titleLabel, 1);
@@ -105,7 +99,7 @@ public class DashboardView extends VerticalLayout implements View {
 
     private Window buildNotificationsPopup() {
         Window notifications = new Window("Notifications");
-        notifications.setWidth("300px");
+        notifications.setWidth(300.0f, Unit.PIXELS);
         notifications.addStyleName("notifications");
         notifications.setClosable(false);
         notifications.setResizable(false);
@@ -129,7 +123,7 @@ public class DashboardView extends VerticalLayout implements View {
         Button edit = new Button();
         edit.setIcon(FontAwesome.EDIT);
         edit.addStyleName("icon-edit");
-        edit.addStyleName("icon-only");
+        edit.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         edit.setDescription("Edit Dashboard");
         edit.addClickListener(new ClickListener() {
             @Override
@@ -142,15 +136,23 @@ public class DashboardView extends VerticalLayout implements View {
 
     private Component buildContent() {
         CssLayout content = new CssLayout();
+        content.addStyleName("dashboard-panels-layout");
         content.setWidth(100.0f, Unit.PERCENTAGE);
 
-        content.addComponent(buildTopGrossingMovies());
+        Component topGrossingMovies = buildTopGrossingMovies();
+        topGrossingMovies.addStyleName("margins");
+        content.addComponent(topGrossingMovies);
+
         content.addComponent(buildNotes());
-        content.addComponent(buildTop10TitlesByRevenue());
+
+        Component top10TitlesByRevenue = buildTop10TitlesByRevenue();
+        top10TitlesByRevenue.addStyleName("margins");
+        content.addComponent(top10TitlesByRevenue);
+
         content.addComponent(buildPopularMovies());
 
         Panel dashboardPanel = new Panel(content);
-        dashboardPanel.addStyleName("borderless");
+        dashboardPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
         dashboardPanel.setSizeFull();
         return dashboardPanel;
     }
@@ -175,16 +177,18 @@ public class DashboardView extends VerticalLayout implements View {
             @Override
             protected String formatPropertyValue(Object rowId, Object colId,
                     Property<?> property) {
+                String result = super.formatPropertyValue(rowId, colId,
+                        property);
                 if (colId.equals("revenue")) {
                     if (property != null && property.getValue() != null) {
                         Double r = (Double) property.getValue();
                         String ret = new DecimalFormat("#.##").format(r);
-                        return "$" + ret;
+                        result = "$" + ret;
                     } else {
-                        return "";
+                        result = "";
                     }
                 }
-                return super.formatPropertyValue(rowId, colId, property);
+                return result;
             }
         };
         table.setCaption("Top 10 Titles by Revenue");
@@ -194,19 +198,27 @@ public class DashboardView extends VerticalLayout implements View {
         table.addStyleName(ValoTheme.TABLE_BORDERLESS);
         table.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         table.setSortEnabled(false);
-        table.setColumnAlignment("Revenue", Align.RIGHT);
+        table.setColumnAlignment("revenue", Align.RIGHT);
         table.setRowHeaderMode(RowHeaderMode.INDEX);
         table.setSizeFull();
 
-        Collection<MovieRevenue> movieRevenues = DashboardUI.getDataProvider()
-                .getMovieRevenues();
+        List<MovieRevenue> movieRevenues = new ArrayList<MovieRevenue>(
+                DashboardUI.getDataProvider().getTotalMovieRevenues());
+        Collections.sort(movieRevenues, new Comparator<MovieRevenue>() {
+            @Override
+            public int compare(MovieRevenue o1, MovieRevenue o2) {
+                return o2.getRevenue().compareTo(o1.getRevenue());
+            }
+        });
+
         table.setContainerDataSource(new BeanItemContainer<MovieRevenue>(
-                MovieRevenue.class, movieRevenues));
+                MovieRevenue.class, movieRevenues.subList(0, 10)));
 
         table.setVisibleColumns("title", "revenue");
         table.setColumnHeaders("Title", "Revenue");
 
-        table.sort(new Object[] { "revenue" }, new boolean[] { false });
+        table.setSortContainerPropertyId("revenue");
+        table.setSortAscending(false);
 
         return createContentWrapper(table);
     }
@@ -217,26 +229,10 @@ public class DashboardView extends VerticalLayout implements View {
 
     private Component createContentWrapper(Component content) {
         Panel panel = new Panel(content);
-        panel.setWidthUndefined();
-        panel.setWidth(46.0f, Unit.PERCENTAGE);
+        panel.setWidth(50.0f, Unit.PERCENTAGE);
         panel.setHeight(300.0f, Unit.PIXELS);
         panel.addStyleName("layout-panel");
         panel.setCaption(content.getCaption());
-
-        // Button configure = new Button();
-        // configure.addStyleName("configure");
-        // configure.addStyleName("icon-cog");
-        // configure.addStyleName("icon-only");
-        // configure.addStyleName("borderless");
-        // configure.setDescription("Configure");
-        // configure.addStyleName("small");
-        // configure.addClickListener(new ClickListener() {
-        // @Override
-        // public void buttonClick(ClickEvent event) {
-        // Notification.show("Not implemented in this demo");
-        // }
-        // });
-        // panel.addComponent(configure);
         return panel;
     }
 
@@ -271,11 +267,6 @@ public class DashboardView extends VerticalLayout implements View {
         }
         notificationsWindow.setContent(notificationsLayout);
 
-        // TODO: Use popupview instead?
-        // PopupView pw = new PopupView("", notificationsLayout);
-        // ((AbstractLayout) notificationsButton.getParent()).addComponent(pw);
-        // pw.setPopupVisible(true);
-
         notificationsWindow.setPositionX(event.getClientX()
                 - event.getRelativeX() - 200);
         notificationsWindow.setPositionY(event.getClientY()
@@ -296,6 +287,11 @@ public class DashboardView extends VerticalLayout implements View {
     @Subscribe
     public void dashboardEdited(DashboardEditEvent event) {
         titleLabel.setValue(event.getName());
+    }
+
+    @Subscribe
+    public void viewChanging(ViewChangeRequestedEvent event) {
+        closeNotificationsPopup();
     }
 
     public static class NotificationsButton extends Button {

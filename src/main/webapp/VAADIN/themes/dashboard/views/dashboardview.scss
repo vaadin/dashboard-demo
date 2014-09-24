@@ -2,14 +2,26 @@
 
 	.dashboard-view {
 	
-		.layout-panel {
-		
-			margin: 0 2% 38px;
-			background: #fff;
-			border-radius: 4px;
+		.dashboard-panels-layout {
+			padding: 0 37px 0 57px;
 			
 			.v-ui[width-range~="0-800px"] & {
-				width: 96% !important;
+				padding: 0 20px;
+			}
+		}
+	
+		.layout-panel {
+			background: #fff;
+			border-radius: 4px;
+			margin-bottom: 20px;
+			
+			.v-ui[width-range~="800px-"] &.margins {
+				margin-left: -20px;
+				margin-right: 20px;
+			}
+			
+			.v-ui[width-range~="0-800px"] & {
+				width: 100% !important;
 			}
 			
 			&.notes .v-panel-caption {
@@ -23,7 +35,10 @@
 				background: #fffdf2 url(../img/notes-bg.png) repeat;
 				color: #545145;
 			}
+			
+		
 		}
+		
 		
 	}
 	

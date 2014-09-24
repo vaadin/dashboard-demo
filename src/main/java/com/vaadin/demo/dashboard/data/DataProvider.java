@@ -10,11 +10,11 @@ import com.vaadin.demo.dashboard.domain.User;
 public interface DataProvider {
     public Collection<Transaction> getTransactions();
 
-    public Collection<MovieRevenue> getRevenueByMovie(long id);
+    public Collection<MovieRevenue> getDailyRevenuesByMovie(long id);
+
+    public Collection<MovieRevenue> getTotalMovieRevenues();
 
     public User authenticate(String userName, String password);
-
-    public Collection<MovieRevenue> getMovieRevenues();
 
     public int getUnreadNotificationsCount();
 

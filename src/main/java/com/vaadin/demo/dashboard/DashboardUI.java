@@ -9,14 +9,16 @@ import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoginRequestedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
 import com.vaadin.demo.dashboard.view.LoginView;
 import com.vaadin.demo.dashboard.view.MainView;
-import com.vaadin.demo.dashboard.view.QuickTicketsView;
 import com.vaadin.event.Transferable;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.BrowserWindowResizeEvent;
+import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
@@ -40,6 +42,15 @@ public class DashboardUI extends UI {
         Responsive.makeResponsive(this);
 
         updateContent();
+
+        Page.getCurrent().addBrowserWindowResizeListener(
+                new BrowserWindowResizeListener() {
+                    @Override
+                    public void browserWindowResized(
+                            BrowserWindowResizeEvent event) {
+                        DashboardEventBus.post(new BrowserResizeEvent());
+                    }
+                });
     }
 
     private void updateContent() {
@@ -48,8 +59,8 @@ public class DashboardUI extends UI {
         if (user != null && "admin".equals(user.getRole())) {
             // Authenticated user
             setContent(new MainView());
-            DashboardEventBus.post(new ViewChangeRequestedEvent(
-                    QuickTicketsView.DASHBOARD));
+
+            getNavigator().navigateTo(getNavigator().getState());
         } else {
             setContent(new LoginView());
         }

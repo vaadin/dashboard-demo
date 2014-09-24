@@ -11,10 +11,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class LoginView extends HorizontalLayout {
 
@@ -28,51 +27,35 @@ public class LoginView extends HorizontalLayout {
     }
 
     private Component buildLoginForm() {
-        Notification
-                .show("Welcome to the Dashboard Demo Application",
-                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
-                        Type.HUMANIZED_MESSAGE);
+        // Notification
+        // .show("Welcome to the Dashboard Demo Application",
+        // "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
+        // Type.HUMANIZED_MESSAGE);
 
         final CssLayout loginPanel = new CssLayout();
-        loginPanel.setWidth(550.0f, Unit.PIXELS);
         loginPanel.addStyleName("login-panel");
 
-        HorizontalLayout labels = new HorizontalLayout();
-        labels.setWidth("100%");
-        labels.setMargin(true);
-        labels.addStyleName("labels");
-        loginPanel.addComponent(labels);
+        loginPanel.addComponent(buildLabels());
+        loginPanel.addComponent(buildFields());
+        return loginPanel;
+    }
 
-        Label welcome = new Label("Welcome");
-        welcome.setSizeUndefined();
-        welcome.addStyleName("h4");
-        labels.addComponent(welcome);
-        labels.setComponentAlignment(welcome, Alignment.MIDDLE_LEFT);
-
-        Label title = new Label("QuickTickets Dashboard");
-        title.setSizeUndefined();
-        title.addStyleName("h2");
-        title.addStyleName("light");
-        labels.addComponent(title);
-        labels.setComponentAlignment(title, Alignment.MIDDLE_RIGHT);
-
-        HorizontalLayout fields = new HorizontalLayout();
-        fields.setSpacing(true);
-        fields.setMargin(true);
+    private Component buildFields() {
+        CssLayout fields = new CssLayout();
+        fields.setSizeFull();
         fields.addStyleName("fields");
 
         final TextField username = new TextField("Username");
         username.focus();
-        fields.addComponent(username);
+        fields.addComponent(new HorizontalLayout(username));
 
         final PasswordField password = new PasswordField("Password");
-        fields.addComponent(password);
+        fields.addComponent(new HorizontalLayout(password));
 
         final Button signin = new Button("Sign In");
-        signin.addStyleName("default");
+        signin.addStyleName(ValoTheme.BUTTON_PRIMARY);
         signin.setClickShortcut(KeyCode.ENTER);
         fields.addComponent(signin);
-        fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
 
         signin.addClickListener(new ClickListener() {
             @Override
@@ -81,10 +64,26 @@ public class LoginView extends HorizontalLayout {
                         .getValue(), password.getValue()));
             }
         });
+        return fields;
 
-        loginPanel.addComponent(fields);
+    }
 
-        return loginPanel;
+    private Component buildLabels() {
+        CssLayout labels = new CssLayout();
+        labels.setWidth(100.0f, Unit.PERCENTAGE);
+        labels.addStyleName("labels");
+
+        Label welcome = new Label("Welcome");
+        welcome.setSizeUndefined();
+        welcome.addStyleName(ValoTheme.LABEL_H4);
+        labels.addComponent(welcome);
+
+        Label title = new Label("QuickTickets Dashboard");
+        title.setSizeUndefined();
+        title.addStyleName(ValoTheme.LABEL_H2);
+        title.addStyleName(ValoTheme.LABEL_LIGHT);
+        labels.addComponent(title);
+        return labels;
     }
 
     public interface LoginListener {

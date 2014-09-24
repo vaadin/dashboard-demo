@@ -1,12 +1,82 @@
 @import "../valo/valo.scss";
 @import "views/dashboardview.scss";
 @import "views/schedule.scss";
+@import "views/sales.scss";
+@import "views/transactions.scss";
+@import "views/reports.scss";
 
 @mixin dashboard {
 
 	@include valo;
 	@include dashboard-dashboard-view;
 	@include dashboard-schedule-view;
+	@include dashboard-sales-view;
+	@include dashboard-transactions-view;
+	@include dashboard-reports-view;
+	
+	.viewheader .h1 {
+		margin: 0 !important;
+		
+		.v-ui[width-range~="0-800px"] & {
+			font-size: 30px;
+		}
+	}
+	
+	.mainview {
+		background: #fafafa;
+	}
+	
+	.login-panel {
+		width: 530px;
+		background: #fff;
+		border-radius: 4px;
+		-webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+		-moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+		padding: 1em 1em 2em;
+		
+		.v-ui[width-range~="0-800px"] & {
+			width: 243px;
+		}
+		
+		.labels {
+			margin-bottom: 50px;
+			
+			.h4 {
+				margin: 0;
+				vertical-align: bottom;
+			}
+			
+			.h2 {
+				float: right;
+				margin: 0;
+				font-size: 23px;
+				
+				.v-ui[width-range~="0-800px"] & {
+					font-size: 20px;
+					float: none;
+				}
+			}
+		}
+		
+		.fields {
+		
+			.v-horizontallayout {
+				margin-right: 10px;
+				
+				.v-ui[width-range~="0-800px"] & {
+					display: block;
+				}
+			}
+			
+			.v-button {
+				vertical-align: bottom;
+				margin-top: 20px;
+			}
+			
+		}
+	}
+	
 	
 	/* Shared styles */
 	.valo-menu .badgewrapper {

@@ -10,21 +10,25 @@
 
 package com.vaadin.demo.dashboard.view;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.data.LazyTransactionContainer;
 import com.vaadin.demo.dashboard.domain.Transaction;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -33,11 +37,12 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Alignment;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
@@ -51,108 +56,65 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class TransactionsView extends VerticalLayout implements View {
 
-    Table t;
-
-    Object editableId = null;
+    private final Table table;
+    private Button createReport;
+    private static final DateFormat DATEFORMAT = new SimpleDateFormat(
+            "MM/dd/yyyy hh:mm:ss a");
+    private static final DecimalFormat DECIMALFORMAT = new DecimalFormat("#.##");
+    private static final String[] DEFAULT_COLLAPSIBLE = { "country", "city",
+            "theater", "room", "title", "seats" };
 
     public TransactionsView() {
         setSizeFull();
         addStyleName("transactions");
+        DashboardEventBus.register(this);
 
-        t = new Table() {
-            @Override
-            protected String formatPropertyValue(Object rowId, Object colId,
-                    Property<?> property) {
-                if (colId.equals("time")) {
-                    SimpleDateFormat df = new SimpleDateFormat();
-                    df.applyPattern("MM/dd/yyyy hh:mm:ss a");
-                    return df.format(((Date) property.getValue()));
-                } else if (colId.equals("Price")) {
-                    if (property != null && property.getValue() != null) {
-                        String ret = new DecimalFormat("#.##").format(property
-                                .getValue());
-                        return "$" + ret;
-                    } else {
-                        return "";
-                    }
-                }
-                return super.formatPropertyValue(rowId, colId, property);
-            }
-        };
-        t.setSizeFull();
-        t.addStyleName("borderless");
-        t.setSelectable(true);
-        t.setColumnCollapsingAllowed(true);
-        t.setColumnReorderingAllowed(true);
-        t.setContainerDataSource(createFilterableContainer(DashboardUI
-                .getDataProvider().getTransactions()));
-        sortTable();
+        addComponent(buildToolbar());
 
-        t.setColumnAlignment("Seats", Align.RIGHT);
-        t.setColumnAlignment("Price", Align.RIGHT);
+        table = buildTable();
+        addComponent(table);
+        setExpandRatio(table, 1);
+    }
 
-        t.setVisibleColumns("time", "country", "city", "theater", "room",
-                "title", "seats", "price");
-        t.setColumnHeaders("Time", "Country", "City", "Theater", "Room",
-                "Title", "Seats", "Price");
-
-        t.setFooterVisible(true);
-        t.setColumnFooter("time", "Total");
-        updatePriceFooter();
-
-        // Allow dragging items to the reports menu
-        t.setDragMode(TableDragMode.MULTIROW);
-        t.setMultiSelect(true);
-
-        // EDIT MODE disabled for now
-        // t.setTableFieldFactory(new DefaultFieldFactory() {
-        // @Override
-        // public Field createField(Container container, Object itemId,
-        // Object propertyId, Component uiContext) {
-        // boolean editable = itemId.equals(editableId);
-        // Field f = new TextField();
-        // f.setCaption(null);
-        // f.setWidth("100%");
-        // f.setReadOnly(!editable);
-        // return f;
-        // }
-        // });
-
-        // Double click to edit
-        // t.addItemClickListener(new ItemClickListener() {
-        // @Override
-        // public void itemClick(ItemClickEvent event) {
-        // if (event.getButton() == MouseButton.LEFT
-        // && event.isDoubleClick()) {
-        // editableId = event.getItemId();
-        // t.addStyleName("editable");
-        // t.setEditable(true);
-        // } else if (event.getButton() == MouseButton.LEFT) {
-        // editableId = null;
-        // t.setEditable(false);
-        // t.removeStyleName("editable");
-        // }
-        // }
-        // });
-
-        HorizontalLayout toolbar = new HorizontalLayout();
-        toolbar.setWidth("100%");
-        toolbar.setSpacing(true);
-        toolbar.setMargin(true);
+    private Component buildToolbar() {
+        CssLayout toolbar = new CssLayout();
+        toolbar.addStyleName("viewheader");
+        toolbar.setWidth(100.0f, Unit.PERCENTAGE);
         toolbar.addStyleName("toolbar");
-        addComponent(toolbar);
 
         Label title = new Label("All Transactions");
-        title.addStyleName("h1");
+        title.addStyleName(ValoTheme.LABEL_H1);
         title.setSizeUndefined();
         toolbar.addComponent(title);
-        toolbar.setComponentAlignment(title, Alignment.MIDDLE_LEFT);
 
+        toolbar.addComponent(buildFilter());
+
+        createReport = buildCreateReport();
+        toolbar.addComponent(createReport);
+
+        return toolbar;
+    }
+
+    private Button buildCreateReport() {
+        final Button createReport = new Button("Create Report From Selection");
+        createReport.setHeight(37.0f, Unit.PIXELS);
+        createReport.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                createNewReportFromSelection();
+            }
+        });
+        createReport.setEnabled(false);
+        createReport.addStyleName(ValoTheme.BUTTON_SMALL);
+        return createReport;
+    }
+
+    private Component buildFilter() {
         final TextField filter = new TextField();
         filter.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(final TextChangeEvent event) {
-                Filterable data = (Filterable) t.getContainerDataSource();
+                Filterable data = (Filterable) table.getContainerDataSource();
                 data.removeAllContainerFilters();
                 data.addContainerFilter(new Filter() {
                     @Override
@@ -182,67 +144,80 @@ public class TransactionsView extends VerticalLayout implements View {
                         return false;
                     }
                 });
+                // TODO: Itemsetchange should handle this
+                table.markAsDirtyRecursive();
             }
         });
-        // final ComboBox filter = new ComboBox();
-        // filter.setNewItemsAllowed(true);
-        // filter.setNewItemHandler(new NewItemHandler() {
-        // @Override
-        // public void addNewItem(String newItemCaption) {
-        // filter.addItem(newItemCaption);
-        // }
-        // });
-        // filter.addItem("test");
-        // filter.addItem("finland");
-        // filter.addItem("paranorman");
 
-        // filter.addStyleName("small");
         filter.setInputPrompt("Filter");
         filter.addShortcutListener(new ShortcutListener("Clear",
                 KeyCode.ESCAPE, null) {
             @Override
             public void handleAction(Object sender, Object target) {
                 filter.setValue("");
-                ((Filterable) t.getContainerDataSource())
+                ((Filterable) table.getContainerDataSource())
                         .removeAllContainerFilters();
             }
         });
-        toolbar.addComponent(filter);
-        toolbar.setExpandRatio(filter, 1);
-        toolbar.setComponentAlignment(filter, Alignment.MIDDLE_LEFT);
+        return filter;
+    }
 
-        // Button refresh = new Button("Refresh");
-        // refresh.addClickListener(new ClickListener() {
-        // @Override
-        // public void buttonClick(ClickEvent event) {
-        // updatePriceFooter();
-        // try {
-        // Thread.sleep(3000);
-        // } catch (InterruptedException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // }
-        // });
-        // refresh.addStyleName("small");
-        // toolbar.addComponent(refresh);
-
-        final Button newReport = new Button("Create Report From Selection");
-        newReport.addClickListener(new ClickListener() {
+    private Table buildTable() {
+        final Table table = new Table() {
             @Override
-            public void buttonClick(ClickEvent event) {
-                createNewReportFromSelection();
+            protected String formatPropertyValue(Object rowId, Object colId,
+                    Property<?> property) {
+                String result = super.formatPropertyValue(rowId, colId,
+                        property);
+                if (colId.equals("time")) {
+                    result = DATEFORMAT.format(((Date) property.getValue()));
+                } else if (colId.equals("price")) {
+                    if (property != null && property.getValue() != null) {
+                        return "$" + DECIMALFORMAT.format(property.getValue());
+                    } else {
+                        return "";
+                    }
+                }
+                return result;
             }
-        });
-        newReport.setEnabled(false);
-        newReport.addStyleName(ValoTheme.BUTTON_SMALL);
-        toolbar.addComponent(newReport);
-        toolbar.setComponentAlignment(newReport, Alignment.MIDDLE_LEFT);
+        };
+        table.setSizeFull();
+        table.addStyleName(ValoTheme.TABLE_BORDERLESS);
+        table.setSelectable(true);
 
-        addComponent(t);
-        setExpandRatio(t, 1);
+        table.setColumnCollapsingAllowed(true);
+        table.setColumnCollapsible("time", false);
+        table.setColumnCollapsible("price", false);
 
-        t.addActionHandler(new Handler() {
+        table.setColumnReorderingAllowed(true);
+        table.setContainerDataSource(new LazyTransactionContainer(
+                new ArrayList<Transaction>(DashboardUI.getDataProvider()
+                        .getTransactions())));
+        table.setSortContainerPropertyId("time");
+        table.setSortAscending(false);
+
+        table.setColumnAlignment("Seats", Align.RIGHT);
+        table.setColumnAlignment("Price", Align.RIGHT);
+
+        table.setVisibleColumns("time", "country", "city", "theater", "room",
+                "title", "seats", "price");
+        table.setColumnHeaders("Time", "Country", "City", "Theater", "Room",
+                "Title", "Seats", "Price");
+
+        table.setFooterVisible(true);
+        table.setColumnFooter("time", "Total");
+
+        table.setColumnFooter(
+                "price",
+                "$"
+                        + DECIMALFORMAT.format(DashboardUI.getDataProvider()
+                                .getTotalSum()));
+
+        // Allow dragging items to the reports menu
+        table.setDragMode(TableDragMode.MULTIROW);
+        table.setMultiSelect(true);
+
+        table.addActionHandler(new Handler() {
 
             private final Action report = new Action("Create Report");
 
@@ -275,36 +250,19 @@ public class TransactionsView extends VerticalLayout implements View {
             }
         });
 
-        t.addValueChangeListener(new ValueChangeListener() {
+        table.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if (t.getValue() instanceof Set) {
-                    Set<Object> val = (Set<Object>) t.getValue();
-                    newReport.setEnabled(val.size() > 0);
+                if (table.getValue() instanceof Set) {
+                    Set<Object> val = (Set<Object>) table.getValue();
+                    createReport.setEnabled(val.size() > 0);
                 } else {
                 }
             }
         });
-        t.setImmediate(true);
+        table.setImmediate(true);
 
-        // group rows by month
-        // t.setRowGenerator(new RowGenerator() {
-        // @Override
-        // public GeneratedRow generateRow(Table table, Object itemId) {
-        // if (itemId.toString().startsWith("month")) {
-        // Date date = (Date) table.getItem(itemId)
-        // .getItemProperty("timestamp").getValue();
-        // SimpleDateFormat df = new SimpleDateFormat();
-        // df.applyPattern("MMMM yyyy");
-        // GeneratedRow row = new GeneratedRow(df.format(date));
-        // row.setSpanColumns(true);
-        // return row;
-        // }
-        // return null;
-        // }
-        // });
-
-        t.addGeneratedColumn("title", new ColumnGenerator() {
+        table.addGeneratedColumn("title", new ColumnGenerator() {
             @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
@@ -323,16 +281,28 @@ public class TransactionsView extends VerticalLayout implements View {
                 return title;
             }
         });
+        return table;
     }
 
-    private Filterable createFilterableContainer(
-            Collection<Transaction> transactions) {
-        return new BeanItemContainer<Transaction>(Transaction.class,
-                transactions);
+    private boolean defaultColumnsVisible() {
+        boolean result = true;
+        for (String propertyId : DEFAULT_COLLAPSIBLE) {
+            if (table.isColumnCollapsed(propertyId) == Page.getCurrent()
+                    .getBrowserWindowWidth() < 800) {
+                result = false;
+            }
+        }
+        return result;
     }
 
-    private void sortTable() {
-        t.sort(new Object[] { "timestamp" }, new boolean[] { false });
+    @Subscribe
+    public void browserResized(BrowserResizeEvent event) {
+        if (defaultColumnsVisible()) {
+            for (String propertyId : DEFAULT_COLLAPSIBLE) {
+                table.setColumnCollapsed(propertyId, Page.getCurrent()
+                        .getBrowserWindowWidth() < 800);
+            }
+        }
     }
 
     private boolean filterByProperty(String prop, Item item, String text) {
@@ -353,14 +323,7 @@ public class TransactionsView extends VerticalLayout implements View {
     }
 
     void createNewReportFromSelection() {
-        ((DashboardUI) getUI()).openReports(t);
-    }
-
-    void updatePriceFooter() {
-        String ret = new DecimalFormat("#.##").format(DashboardUI
-                .getDataProvider().getTotalSum());
-        t.setColumnFooter("price", "$" + ret);
-
+        ((DashboardUI) getUI()).openReports(table);
     }
 
     @Override

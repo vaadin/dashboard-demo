@@ -21,6 +21,10 @@ public class QuickTicketsEvent {
         }
     }
 
+    public static class BrowserResizeEvent {
+
+    }
+
     public static class UserLoggedOutEvent {
 
     }

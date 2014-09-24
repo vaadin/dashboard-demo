@@ -6,9 +6,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
 import com.vaadin.demo.dashboard.domain.Movie;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -19,8 +22,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.BrowserWindowResizeEvent;
-import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.ui.Alignment;
@@ -53,8 +54,7 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 
-public class ScheduleView extends CssLayout implements View,
-        BrowserWindowResizeListener {
+public class ScheduleView extends CssLayout implements View {
 
     private final CssLayout catalog;
 
@@ -65,6 +65,7 @@ public class ScheduleView extends CssLayout implements View,
     public ScheduleView() {
         setSizeFull();
         addStyleName("schedule");
+        DashboardEventBus.register(this);
 
         // css = new CSSInject(UI.getCurrent());
 
@@ -97,24 +98,11 @@ public class ScheduleView extends CssLayout implements View,
             catalog.addComponent(frame);
         }
 
-        checkForDayView();
     }
 
     private Calendar cal;
 
     private final MovieEventProvider provider = new MovieEventProvider();
-
-    @Override
-    public void attach() {
-        super.attach();
-        Page.getCurrent().addBrowserWindowResizeListener(this);
-    }
-
-    @Override
-    public void detach() {
-        super.detach();
-        Page.getCurrent().removeBrowserWindowResizeListener(this);
-    }
 
     private Component buildCalendarView() {
         VerticalLayout calendarLayout = new VerticalLayout();
@@ -462,17 +450,13 @@ public class ScheduleView extends CssLayout implements View,
             removeComponent(tray);
     }
 
-    private void checkForDayView() {
+    @Subscribe
+    public void browserWindowResized(BrowserResizeEvent event) {
         if (Page.getCurrent().getBrowserWindowWidth() < 800
                 && cal.getLastVisibleDayOfWeek() > cal
                         .getFirstVisibleDayOfWeek()) {
-            cal.setLastVisibleDayOfWeek(cal.getFirstVisibleDayOfWeek());
+            cal.setEndDate(cal.getStartDate());
         }
-    }
-
-    @Override
-    public void browserWindowResized(BrowserWindowResizeEvent event) {
-        checkForDayView();
     }
 
     @Override
