@@ -1,25 +1,18 @@
 package com.vaadin.demo.dashboard.view;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.DashboardEdit;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
+import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
 import com.vaadin.demo.dashboard.domain.DashboardNotification;
-import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.DashboardEditEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsCountUpdatedEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -35,9 +28,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -49,7 +39,6 @@ public class DashboardView extends VerticalLayout implements View {
 
     private Label titleLabel;
     private NotificationsButton notificationsButton;
-    private Window notificationsWindow;
 
     public DashboardView() {
         addStyleName("dashboard-view");
@@ -65,7 +54,7 @@ public class DashboardView extends VerticalLayout implements View {
         addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
-                closeNotificationsPopup();
+                DashboardEventBus.post(new CloseOpenWindowsEvent());
             }
         });
     }
@@ -84,7 +73,6 @@ public class DashboardView extends VerticalLayout implements View {
         header.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
         header.setExpandRatio(titleLabel, 1);
 
-        notificationsWindow = buildNotificationsPopup();
         notificationsButton = buildNotificationsButton();
         header.addComponent(notificationsButton);
         header.setComponentAlignment(notificationsButton,
@@ -95,17 +83,6 @@ public class DashboardView extends VerticalLayout implements View {
         header.setComponentAlignment(edit, Alignment.MIDDLE_RIGHT);
 
         return header;
-    }
-
-    private Window buildNotificationsPopup() {
-        Window notifications = new Window("Notifications");
-        notifications.setWidth(300.0f, Unit.PIXELS);
-        notifications.addStyleName("notifications");
-        notifications.setClosable(false);
-        notifications.setResizable(false);
-        notifications.setDraggable(false);
-        notifications.setCloseShortcut(KeyCode.ESCAPE, null);
-        return notifications;
     }
 
     private NotificationsButton buildNotificationsButton() {
@@ -173,54 +150,7 @@ public class DashboardView extends VerticalLayout implements View {
     }
 
     private Component buildTop10TitlesByRevenue() {
-        final Table table = new Table() {
-            @Override
-            protected String formatPropertyValue(Object rowId, Object colId,
-                    Property<?> property) {
-                String result = super.formatPropertyValue(rowId, colId,
-                        property);
-                if (colId.equals("revenue")) {
-                    if (property != null && property.getValue() != null) {
-                        Double r = (Double) property.getValue();
-                        String ret = new DecimalFormat("#.##").format(r);
-                        result = "$" + ret;
-                    } else {
-                        result = "";
-                    }
-                }
-                return result;
-            }
-        };
-        table.setCaption("Top 10 Titles by Revenue");
-
-        table.setPageLength(0);
-        table.addStyleName("plain");
-        table.addStyleName(ValoTheme.TABLE_BORDERLESS);
-        table.addStyleName(ValoTheme.TABLE_NO_STRIPES);
-        table.setSortEnabled(false);
-        table.setColumnAlignment("revenue", Align.RIGHT);
-        table.setRowHeaderMode(RowHeaderMode.INDEX);
-        table.setSizeFull();
-
-        List<MovieRevenue> movieRevenues = new ArrayList<MovieRevenue>(
-                DashboardUI.getDataProvider().getTotalMovieRevenues());
-        Collections.sort(movieRevenues, new Comparator<MovieRevenue>() {
-            @Override
-            public int compare(MovieRevenue o1, MovieRevenue o2) {
-                return o2.getRevenue().compareTo(o1.getRevenue());
-            }
-        });
-
-        table.setContainerDataSource(new BeanItemContainer<MovieRevenue>(
-                MovieRevenue.class, movieRevenues.subList(0, 10)));
-
-        table.setVisibleColumns("title", "revenue");
-        table.setColumnHeaders("Title", "Revenue");
-
-        table.setSortContainerPropertyId("revenue");
-        table.setSortAscending(false);
-
-        return createContentWrapper(table);
+        return createContentWrapper(new TopTenMoviesTable());
     }
 
     private Component buildPopularMovies() {
@@ -265,6 +195,14 @@ public class DashboardView extends VerticalLayout implements View {
                     contentLabel);
             notificationsLayout.addComponent(notificationLayout);
         }
+
+        Window notificationsWindow = new Window("Notifications");
+        notificationsWindow.setWidth(300.0f, Unit.PIXELS);
+        notificationsWindow.addStyleName("notifications");
+        notificationsWindow.setClosable(false);
+        notificationsWindow.setResizable(false);
+        notificationsWindow.setDraggable(false);
+        notificationsWindow.setCloseShortcut(KeyCode.ESCAPE, null);
         notificationsWindow.setContent(notificationsLayout);
 
         notificationsWindow.setPositionX(event.getClientX()
@@ -275,10 +213,6 @@ public class DashboardView extends VerticalLayout implements View {
         notificationsWindow.focus();
     }
 
-    private void closeNotificationsPopup() {
-        notificationsWindow.close();
-    }
-
     @Override
     public void enter(ViewChangeEvent event) {
         notificationsButton.updateNotificationsCount(null);
@@ -287,11 +221,6 @@ public class DashboardView extends VerticalLayout implements View {
     @Subscribe
     public void dashboardEdited(DashboardEditEvent event) {
         titleLabel.setValue(event.getName());
-    }
-
-    @Subscribe
-    public void viewChanging(ViewChangeRequestedEvent event) {
-        closeNotificationsPopup();
     }
 
     public static class NotificationsButton extends Button {

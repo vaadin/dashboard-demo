@@ -13,9 +13,10 @@ package com.vaadin.demo.dashboard.view;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+
+import org.vaadin.maddon.FilterableListContainer;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Container.Filter;
@@ -25,7 +26,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.data.LazyTransactionContainer;
+import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
@@ -47,7 +48,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -82,7 +82,7 @@ public class TransactionsView extends VerticalLayout implements View {
         toolbar.setWidth(100.0f, Unit.PERCENTAGE);
         toolbar.addStyleName("toolbar");
 
-        Label title = new Label("All Transactions");
+        Label title = new Label("Recent Transactions");
         title.addStyleName(ValoTheme.LABEL_H1);
         title.setSizeUndefined();
         toolbar.addComponent(title);
@@ -144,8 +144,6 @@ public class TransactionsView extends VerticalLayout implements View {
                         return false;
                     }
                 });
-                // TODO: Itemsetchange should handle this
-                table.markAsDirtyRecursive();
             }
         });
 
@@ -190,9 +188,8 @@ public class TransactionsView extends VerticalLayout implements View {
         table.setColumnCollapsible("price", false);
 
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new LazyTransactionContainer(
-                new ArrayList<Transaction>(DashboardUI.getDataProvider()
-                        .getTransactions())));
+        table.setContainerDataSource(new FilterableListContainer<Transaction>(
+                DashboardUI.getDataProvider().getRecentTransactions(100)));
         table.setSortContainerPropertyId("time");
         table.setSortAscending(false);
 
@@ -217,38 +214,7 @@ public class TransactionsView extends VerticalLayout implements View {
         table.setDragMode(TableDragMode.MULTIROW);
         table.setMultiSelect(true);
 
-        table.addActionHandler(new Handler() {
-
-            private final Action report = new Action("Create Report");
-
-            private final Action discard = new Action("Discard");
-
-            private final Action details = new Action("Movie details");
-
-            @Override
-            public void handleAction(Action action, Object sender, Object target) {
-                if (action == report) {
-                    createNewReportFromSelection();
-                } else if (action == discard) {
-                    Notification.show("Not implemented in this demo");
-                } else if (action == details) {
-                    Item item = ((Table) sender).getItem(target);
-                    if (item != null) {
-                        // TODO: Fix
-                        // Window w = new MovieDetailsWindow(DataProvider
-                        // .getMovieForTitle(item.getItemProperty("Title")
-                        // .getValue().toString()), null);
-                        // UI.getCurrent().addWindow(w);
-                        // w.focus();
-                    }
-                }
-            }
-
-            @Override
-            public Action[] getActions(Object target, Object sender) {
-                return new Action[] { details, report, discard };
-            }
-        });
+        table.addActionHandler(new TransactionsActionHandler());
 
         table.addValueChangeListener(new ValueChangeListener() {
             @Override
@@ -262,25 +228,6 @@ public class TransactionsView extends VerticalLayout implements View {
         });
         table.setImmediate(true);
 
-        table.addGeneratedColumn("title", new ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId,
-                    Object columnId) {
-                final String title = ((Transaction) itemId).getTitle();
-                Button titleLink = new Button(title);
-                titleLink.addStyleName(ValoTheme.BUTTON_LINK);
-                titleLink.addClickListener(new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        // TODO: Fix
-                        // Window w = new MovieDetailsWindow(DataProvider
-                        // .getMovieForTitle(title), null);
-                        // UI.getCurrent().addWindow(w);
-                    }
-                });
-                return title;
-            }
-        });
         return table;
     }
 
@@ -328,8 +275,36 @@ public class TransactionsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-        // TODO Auto-generated method stub
+    }
 
+    private class TransactionsActionHandler implements Handler {
+        private final Action report = new Action("Create Report");
+
+        private final Action discard = new Action("Discard");
+
+        private final Action details = new Action("Movie details");
+
+        @Override
+        public void handleAction(Action action, Object sender, Object target) {
+            if (action == report) {
+                createNewReportFromSelection();
+            } else if (action == discard) {
+                Notification.show("Not implemented in this demo");
+            } else if (action == details) {
+                Item item = ((Table) sender).getItem(target);
+                if (item != null) {
+                    Long movieId = (Long) item.getItemProperty("movieId")
+                            .getValue();
+                    MovieDetailsWindow.open(DashboardUI.getDataProvider()
+                            .getMovie(movieId), null, null);
+                }
+            }
+        }
+
+        @Override
+        public Action[] getActions(Object target, Object sender) {
+            return new Action[] { details, report, discard };
+        }
     }
 
 }

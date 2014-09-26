@@ -32,6 +32,19 @@ public class QuickTicketsEvent {
     public static class NotificationsCountUpdatedEvent {
     }
 
+    public static class ReportsCountUpdatedEvent {
+        private final int count;
+
+        public ReportsCountUpdatedEvent(int count) {
+            this.count = count;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+    }
+
     public static class DashboardEditEvent {
         private final String name;
 
@@ -68,4 +81,8 @@ public class QuickTicketsEvent {
             return view;
         }
     }
+
+    public static class CloseOpenWindowsEvent {
+    }
+
 }

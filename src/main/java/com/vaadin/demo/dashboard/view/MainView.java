@@ -6,7 +6,9 @@ import com.vaadin.demo.dashboard.component.DashboardMenu;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
+import com.vaadin.demo.dashboard.view.ScheduleView.MovieEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -24,6 +26,7 @@ public class MainView extends HorizontalLayout {
         initGATracker();
         setSizeFull();
         addStyleName("mainview");
+        DashboardEventBus.register(this);
 
         addComponent(new DashboardMenu());
 
@@ -74,6 +77,7 @@ public class MainView extends HorizontalLayout {
                     if (view.getViewName().equals(event.getViewName())) {
                         DashboardEventBus.post(new PostViewChangeEvent(view));
                         DashboardEventBus.post(new BrowserResizeEvent());
+                        DashboardEventBus.post(new CloseOpenWindowsEvent());
                         break;
                     }
                 }
@@ -92,16 +96,8 @@ public class MainView extends HorizontalLayout {
         });
     }
 
-    @Override
-    public void attach() {
-        super.attach();
-        DashboardEventBus.register(this);
-    }
+    public void openMovieDetailsPopup(MovieEvent event) {
 
-    @Override
-    public void detach() {
-        super.detach();
-        DashboardEventBus.unregister(this);
     }
 
     private void initGATracker() {

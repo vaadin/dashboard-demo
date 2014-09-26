@@ -5,11 +5,13 @@ import java.util.Locale;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoginRequestedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
@@ -24,8 +26,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
 @Theme("dashboard")
+@Widgetset("com.vaadin.demo.dashboard.DashboardWidgetSet")
 @Title("QuickTickets Dashboard")
 @SuppressWarnings("serial")
 public class DashboardUI extends UI {
@@ -84,6 +88,13 @@ public class DashboardUI extends UI {
     @Subscribe
     public void viewChangeRequested(ViewChangeRequestedEvent event) {
         getNavigator().navigateTo(event.getView().getViewName());
+    }
+
+    @Subscribe
+    public void closeOpenWindows(CloseOpenWindowsEvent event) {
+        for (Window window : getWindows()) {
+            window.close();
+        }
     }
 
     private Transferable items;

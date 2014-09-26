@@ -8,9 +8,26 @@ public class Transaction {
     private String city;
     private String theater;
     private String room;
-    private String title;
     private int seats;
     private double price;
+    private long movieId;
+    private String title;
+
+    public long getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(long movieId) {
+        this.movieId = movieId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Date getTime() {
         return time;
@@ -50,14 +67,6 @@ public class Transaction {
 
     public void setRoom(String room) {
         this.room = room;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public int getSeats() {

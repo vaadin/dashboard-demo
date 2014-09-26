@@ -1,9 +1,11 @@
 package com.vaadin.demo.dashboard.component;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.vaadin.demo.dashboard.domain.Movie;
-import com.vaadin.demo.dashboard.view.ScheduleView.MovieEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -20,6 +22,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -27,11 +30,11 @@ public class MovieDetailsWindow extends Window {
 
     Label synopsis = new Label();
 
-    public MovieDetailsWindow(MovieEvent event) {
+    public MovieDetailsWindow(Movie movie, Date startTime, Date endTime) {
         VerticalLayout l = new VerticalLayout();
         l.setSpacing(true);
 
-        setCaption(event.getMovie().getTitle());
+        setCaption(movie.getTitle());
         setContent(l);
         center();
         setCloseShortcut(KeyCode.ESCAPE, null);
@@ -46,8 +49,8 @@ public class MovieDetailsWindow extends Window {
         details.setMargin(true);
         l.addComponent(details);
 
-        final Image coverImage = new Image("", new ExternalResource(event
-                .getMovie().getPosterUrl()));
+        final Image coverImage = new Image("", new ExternalResource(
+                movie.getPosterUrl()));
         coverImage.setWidth(190.0f, Unit.PIXELS);
 
         final Button more = new Button("More…");
@@ -86,35 +89,36 @@ public class MovieDetailsWindow extends Window {
         details.addComponent(fields);
 
         Label label;
-        if (event != null) {
-            SimpleDateFormat df = new SimpleDateFormat();
-
+        SimpleDateFormat df = new SimpleDateFormat();
+        if (startTime != null) {
             df.applyPattern("dd-mm-yyyy");
-            label = new Label(df.format(event.getStart()));
+            label = new Label(df.format(startTime));
             label.setSizeUndefined();
             label.setCaption("Date");
             fields.addComponent(label);
 
             df.applyPattern("hh:mm a");
-            label = new Label(df.format(event.getStart()));
+            label = new Label(df.format(startTime));
             label.setSizeUndefined();
             label.setCaption("Starts");
             fields.addComponent(label);
+        }
 
-            label = new Label(df.format(event.getEnd()));
+        if (endTime != null) {
+            label = new Label(df.format(endTime));
             label.setSizeUndefined();
             label.setCaption("Ends");
             fields.addComponent(label);
         }
 
-        label = new Label(event.getMovie().getDuration() + " minutes");
+        label = new Label(movie.getDuration() + " minutes");
         label.setSizeUndefined();
         label.setCaption("Duration");
         fields.addComponent(label);
 
-        synopsis.setData(event.getMovie().getSynopsis());
+        synopsis.setData(movie.getSynopsis());
         synopsis.setCaption("Synopsis");
-        updateSynopsis(event.getMovie(), false);
+        updateSynopsis(movie, false);
         fields.addComponent(synopsis);
 
         more.addStyleName("link");
@@ -158,5 +162,12 @@ public class MovieDetailsWindow extends Window {
 
         }
         synopsis.setValue(synopsisText);
+    }
+
+    public static void open(Movie movie, Date startTime, Date endTime) {
+        DashboardEventBus.post(new CloseOpenWindowsEvent());
+        Window w = new MovieDetailsWindow(movie, startTime, endTime);
+        UI.getCurrent().addWindow(w);
+        w.focus();
     }
 }

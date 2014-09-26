@@ -6,6 +6,7 @@ import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ReportsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
 import com.vaadin.demo.dashboard.view.QuickTicketsView;
@@ -39,6 +40,7 @@ public class DashboardMenu extends CustomComponent {
 
     private static final String STYLE_VISIBLE = "valo-menu-visible";
     private Label notificationsBadge;
+    private Label reportsBadge;
 
     public DashboardMenu() {
         addStyleName("valo-menu");
@@ -129,12 +131,12 @@ public class DashboardMenu extends CustomComponent {
         menuItemsLayout.setHeight(100.0f, Unit.PERCENTAGE);
 
         for (final QuickTicketsView view : QuickTicketsView.values()) {
-            Component menuItemButton = new ValoMenuItemButton(view);
+            Component menuItemComponent = new ValoMenuItemButton(view);
 
             if (view == QuickTicketsView.REPORTS) {
                 // Add drop target to reports button
                 DragAndDropWrapper reports = new DragAndDropWrapper(
-                        menuItemButton);
+                        menuItemComponent);
                 reports.setDragStartMode(DragStartMode.NONE);
                 reports.setDropHandler(new DropHandler() {
 
@@ -154,25 +156,35 @@ public class DashboardMenu extends CustomComponent {
                     }
 
                 });
-                menuItemButton = reports;
+                menuItemComponent = reports;
             }
 
             if (view == QuickTicketsView.DASHBOARD) {
-                CssLayout dashboardWrapper = new CssLayout(menuItemButton);
-                dashboardWrapper.addStyleName("badgewrapper");
-                dashboardWrapper.setWidth(100.0f, Unit.PERCENTAGE);
                 notificationsBadge = new Label();
-                notificationsBadge.addStyleName("badge");
-                notificationsBadge.setWidthUndefined();
-                notificationsBadge.setVisible(false);
-                dashboardWrapper.addComponent(notificationsBadge);
-                menuItemButton = dashboardWrapper;
+                menuItemComponent = buildBadgeWrapper(menuItemComponent,
+                        notificationsBadge);
+            }
+            if (view == QuickTicketsView.REPORTS) {
+                reportsBadge = new Label();
+                menuItemComponent = buildBadgeWrapper(menuItemComponent, reportsBadge);
             }
 
-            menuItemsLayout.addComponent(menuItemButton);
+            menuItemsLayout.addComponent(menuItemComponent);
         }
         return menuItemsLayout;
 
+    }
+
+    private Component buildBadgeWrapper(Component menuItemButton,
+            Component badgeLabel) {
+        CssLayout dashboardWrapper = new CssLayout(menuItemButton);
+        dashboardWrapper.addStyleName("badgewrapper");
+        dashboardWrapper.setWidth(100.0f, Unit.PERCENTAGE);
+        badgeLabel.addStyleName("badge");
+        badgeLabel.setWidthUndefined();
+        badgeLabel.setVisible(false);
+        dashboardWrapper.addComponent(notificationsBadge);
+        return dashboardWrapper;
     }
 
     @Override
@@ -192,6 +204,12 @@ public class DashboardMenu extends CustomComponent {
                 .getUnreadNotificationsCount();
         notificationsBadge.setValue(String.valueOf(unreadNotificationsCount));
         notificationsBadge.setVisible(unreadNotificationsCount > 0);
+    }
+
+    @Subscribe
+    public void updateReportsCount(ReportsCountUpdatedEvent event) {
+        reportsBadge.setValue(String.valueOf(event.getCount()));
+        reportsBadge.setVisible(event.getCount() > 0);
     }
 
     public class ValoMenuItemButton extends Button {

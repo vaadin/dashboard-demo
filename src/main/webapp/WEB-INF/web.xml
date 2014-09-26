@@ -16,10 +16,6 @@
 			<param-name>UI</param-name>
 			<param-value>com.vaadin.demo.dashboard.DashboardUI</param-value>
 		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.dashboard.DashboardWidgetSet</param-value>
-		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>QuickTicketsDashboard</servlet-name>

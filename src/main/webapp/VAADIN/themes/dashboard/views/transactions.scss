@@ -6,7 +6,7 @@
 		.h1 {
 			padding-right: 40px;
 			
-			.v-ui[width-range~="0-900px"] & {
+			.v-ui[width-range~="0-1000px"] & {
 				padding-bottom: 10px;
 				display: block;
 			}
@@ -15,7 +15,7 @@
 		.v-textfield {
 			margin-right: 10px;
 			
-			.v-ui[width-range~="0-900px"] & {
+			.v-ui[width-range~="0-1000px"] & {
 				width: 100%;
 			}
 		}
@@ -23,7 +23,7 @@
 		.v-button {
 			float: right;
 			
-			.v-ui[width-range~="0-900px"] & {
+			.v-ui[width-range~="0-1000px"] & {
 				margin-top: 10px;
 				float: none;
 			}

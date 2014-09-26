@@ -14,6 +14,13 @@
 	@include dashboard-transactions-view;
 	@include dashboard-reports-view;
 	
+	.valo-menu-item:focus {
+		color: inherit;
+	}
+	.valo-menu-item.selected {
+		color: #fff;
+	}
+	
 	.viewheader .h1 {
 		margin: 0 !important;
 		
@@ -79,8 +86,14 @@
 	
 	
 	/* Shared styles */
-	.valo-menu .badgewrapper {
-		position: relative;
+	.valo-menu {
+		.badgewrapper {
+			position: relative;
+		}
+		
+		.valo-menu-item-caption {
+			text-transform: uppercase;
+		}
 	}
 	
 	.valo-menu .badge,

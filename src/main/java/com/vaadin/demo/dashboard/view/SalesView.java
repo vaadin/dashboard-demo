@@ -1,16 +1,19 @@
 package com.vaadin.demo.dashboard.view;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-import com.ibm.icu.util.Calendar;
+import org.vaadin.maddon.ListContainer;
+
 import com.vaadin.addon.timeline.Timeline;
+import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.data.dummy.DummyDataProvider;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -52,11 +55,10 @@ public class SalesView extends VerticalLayout implements View {
 
         initMovieSelect();
         // Add first 4 by default
-        int index = 0;
-        for (Movie m : DummyDataProvider.getMovies()) {
-            if (index++ < 4) {
-                addDataSet(m);
-            }
+        List<Movie> subList = new ArrayList<Movie>(DashboardUI
+                .getDataProvider().getMovies()).subList(0, 4);
+        for (Movie m : subList) {
+            addDataSet(m);
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -67,9 +69,8 @@ public class SalesView extends VerticalLayout implements View {
     }
 
     private void initMovieSelect() {
-        Collection<Movie> movies = DummyDataProvider.getMovies();
-        BeanItemContainer<Movie> movieContainer = new BeanItemContainer<Movie>(
-                Movie.class, movies);
+        Collection<Movie> movies = DashboardUI.getDataProvider().getMovies();
+        Container movieContainer = new ListContainer<Movie>(Movie.class, movies);
         movieSelect.setContainerDataSource(movieContainer);
     }
 
@@ -158,7 +159,7 @@ public class SalesView extends VerticalLayout implements View {
         Collection<MovieRevenue> dailyRevenue = DashboardUI.getDataProvider()
                 .getDailyRevenuesByMovie(movie.getId());
 
-        BeanItemContainer<MovieRevenue> dailyRevenueContainer = new BeanItemContainer<MovieRevenue>(
+        ListContainer<MovieRevenue> dailyRevenueContainer = new ListContainer<MovieRevenue>(
                 MovieRevenue.class, dailyRevenue);
 
         dailyRevenueContainer.sort(new Object[] { "timestamp" },

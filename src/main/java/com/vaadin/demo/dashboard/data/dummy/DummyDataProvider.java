@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -21,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
@@ -61,6 +64,7 @@ public class DummyDataProvider implements DataProvider {
         cal.add(Calendar.DAY_OF_YEAR, -1);
         if (lastDataUpdate == null || lastDataUpdate.before(cal.getTime())) {
             refreshStaticData();
+            lastDataUpdate = new Date();
         }
     }
 
@@ -69,7 +73,6 @@ public class DummyDataProvider implements DataProvider {
         movies = loadMoviesData();
         transactions = generateTransactionsData();
         revenue = countRevenues();
-        lastDataUpdate = new Date();
     }
 
     /**
@@ -77,8 +80,9 @@ public class DummyDataProvider implements DataProvider {
      * 
      * @return a list of Movie objects
      */
-    public static Collection<Movie> getMovies() {
-        return movies;
+    @Override
+    public Collection<Movie> getMovies() {
+        return Collections.unmodifiableCollection(movies);
     }
 
     /**
@@ -92,7 +96,6 @@ public class DummyDataProvider implements DataProvider {
 
         File cache;
 
-        // TODO why does this sometimes return null?
         VaadinRequest vaadinRequest = CurrentInstance.get(VaadinRequest.class);
         if (vaadinRequest == null) {
             // PANIC!!!
@@ -137,12 +140,13 @@ public class DummyDataProvider implements DataProvider {
                 if (!posters.get("profile").getAsString()
                         .contains("poster_default")) {
                     Movie movie = new Movie(i, movieJson.get("title")
-                            .getAsString(), movieJson.get("synopsis")
-                            .getAsString(), posters.get("profile")
-                            .getAsString(), posters.get("detailed")
-                            .getAsString(), movieJson.get("release_dates")
-                            .getAsJsonObject(), movieJson.get("ratings")
-                            .getAsJsonObject());
+                            .getAsString(),
+                            movieJson.get("runtime").getAsInt(), movieJson.get(
+                                    "synopsis").getAsString(), posters.get(
+                                    "profile").getAsString(), posters.get(
+                                    "detailed").getAsString(), movieJson.get(
+                                    "release_dates").getAsJsonObject(),
+                            movieJson.get("ratings").getAsJsonObject());
                     result.add(movie);
                 }
             }
@@ -279,53 +283,53 @@ public class DummyDataProvider implements DataProvider {
 
             while (c.before(today)) {
 
-                Transaction transaction = new Transaction();
-                transaction.setTitle(movie.getTitle());
+                int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+                if (hourOfDay > 10 && hourOfDay < 22) {
 
-                // Country
-                Object[] array = countryToCities.keySet().toArray();
-                int i = (int) (Math.random() * (array.length - 1));
-                String country = array[i].toString();
-                transaction.setCountry(country);
+                    Transaction transaction = new Transaction();
+                    transaction.setMovieId(movie.getId());
+                    transaction.setTitle(movie.getTitle());
 
-                transaction.setTime(c.getTime());
+                    // Country
+                    Object[] array = countryToCities.keySet().toArray();
+                    int i = (int) (Math.random() * (array.length - 1));
+                    String country = array[i].toString();
+                    transaction.setCountry(country);
 
-                // TODO: Remove
-                for (Movie m : movies) {
-                    m.reCalculateSortScore(c.getTime());
-                }
+                    transaction.setTime(c.getTime());
 
-                // City
-                Collection<String> cities = countryToCities.get(country);
-                transaction.setCity(cities.iterator().next());
+                    // City
+                    Collection<String> cities = countryToCities.get(country);
+                    transaction.setCity(cities.iterator().next());
 
-                // Theater
-                String theater = theaters
-                        .get((int) (rand.nextDouble() * (theaters.size() - 1)));
-                transaction.setTheater(theater);
+                    // Theater
+                    String theater = theaters
+                            .get((int) (rand.nextDouble() * (theaters.size() - 1)));
+                    transaction.setTheater(theater);
 
-                // Room
-                String room = rooms.get((int) (rand.nextDouble() * (rooms
-                        .size() - 1)));
-                transaction.setRoom(room);
+                    // Room
+                    String room = rooms.get((int) (rand.nextDouble() * (rooms
+                            .size() - 1)));
+                    transaction.setRoom(room);
 
-                // Title
-                int randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies
-                        .size() / 2.0 - 1));
-                while (randomIndex >= movies.size()) {
-                    randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies
+                    // Title
+                    int randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies
                             .size() / 2.0 - 1));
+                    while (randomIndex >= movies.size()) {
+                        randomIndex = (int) (Math.abs(rand.nextGaussian()) * (movies
+                                .size() / 2.0 - 1));
+                    }
+
+                    // Seats
+                    int seats = (int) (1 + rand.nextDouble() * 3);
+                    transaction.setSeats(seats);
+
+                    // Price (approx. USD)
+                    double price = seats * (2 + (rand.nextDouble() * 8));
+                    transaction.setPrice(price);
+
+                    result.get(movie.getId()).add(transaction);
                 }
-
-                // Seats
-                int seats = (int) (1 + rand.nextDouble() * 3);
-                transaction.setSeats(seats);
-
-                // Price (approx. USD)
-                double price = seats * (2 + (rand.nextDouble() * 8));
-                transaction.setPrice(price);
-
-                result.get(movie.getId()).add(transaction);
 
                 c.add(Calendar.SECOND, rand.nextInt(1000000) + 5000);
             }
@@ -354,8 +358,16 @@ public class DummyDataProvider implements DataProvider {
     }
 
     @Override
-    public Collection<Transaction> getTransactions() {
-        return transactions.values();
+    public Collection<Transaction> getRecentTransactions(int count) {
+        List<Transaction> orderedTransactions = Lists.newArrayList(transactions
+                .values());
+        Collections.sort(orderedTransactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction o1, Transaction o2) {
+                return o2.getTime().compareTo(o1.getTime());
+            }
+        });
+        return orderedTransactions.subList(0, 100);
     }
 
     private Multimap<Long, MovieRevenue> countRevenues() {
@@ -399,7 +411,7 @@ public class DummyDataProvider implements DataProvider {
 
     @Override
     public Collection<MovieRevenue> getDailyRevenuesByMovie(long id) {
-        return revenue.get(id);
+        return Collections.unmodifiableCollection(revenue.get(id));
     }
 
     private Date getDay(Date time) {
@@ -414,13 +426,14 @@ public class DummyDataProvider implements DataProvider {
 
     @Override
     public Collection<MovieRevenue> getTotalMovieRevenues() {
-        Collection<MovieRevenue> result = Lists.newArrayList();
-        for (Movie movie : movies) {
-            List<MovieRevenue> revenueByMovie = Lists
-                    .newArrayList(getDailyRevenuesByMovie(movie.getId()));
-            result.add(revenueByMovie.get(revenueByMovie.size() - 1));
-        }
-        return result;
+        return Collections2.transform(movies,
+                new Function<Movie, MovieRevenue>() {
+                    @Override
+                    public MovieRevenue apply(Movie input) {
+                        return Iterables.getLast(getDailyRevenuesByMovie(input
+                                .getId()));
+                    }
+                });
     }
 
     @Override
@@ -439,7 +452,7 @@ public class DummyDataProvider implements DataProvider {
         for (DashboardNotification notification : notifications) {
             notification.setRead(true);
         }
-        return notifications;
+        return Collections.unmodifiableCollection(notifications);
     }
 
     @Override
@@ -449,6 +462,29 @@ public class DummyDataProvider implements DataProvider {
             result += transaction.getPrice();
         }
         return result;
+    }
+
+    @Override
+    public Movie getMovie(final long movieId) {
+        return Iterables.find(movies, new Predicate<Movie>() {
+            @Override
+            public boolean apply(Movie input) {
+                return input.getId() == movieId;
+            }
+        });
+    }
+
+    @Override
+    public Collection<Transaction> getTransactionsBetween(final Date startDate,
+            final Date endDate) {
+        return Collections2.filter(transactions.values(),
+                new Predicate<Transaction>() {
+                    @Override
+                    public boolean apply(Transaction input) {
+                        return !input.getTime().before(startDate)
+                                && !input.getTime().after(endDate);
+                    }
+                });
     }
 
 }

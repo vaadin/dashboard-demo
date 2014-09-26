@@ -1,108 +1,91 @@
 @mixin dashboard-reports-view {
 	
-	.reports .drafts {
-		padding-bottom: 100px;
+	.reports {
+	
+		.drafts {
+			@include user-select(none);	
+			
+			.h1 {
+				color: #fff;
+				text-shadow: 0 2px 4px rgba(0,0,0,.25);
+				margin-bottom: 20px;
+			}	
+		}
 		
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-	}
-	
-	.reports .drafts .v-slot {
-		padding: 0 10px;
-	}
-	
-	.reports .create {
-		padding: 10px 0;
-	}
-	
-	.reports .create .v-slot {
-		border: 1px solid rgba(255,255,255,.1);
-		background: rgba(255,255,255,.05);
-		width: 160px;
-		height: 200px;
-		padding: 0;
-	}
-	
-	.reports .drafts .h1 {
-		color: #fff;
-		text-shadow: 0 2px 4px rgba(0,0,0,.25);
-		margin-bottom: 20px;
-	}
-	
-	.reports .draft-thumb {
-		cursor: pointer;
-		/* TODO remove from base theme */
-		overflow: visible;
-		height: 216px;
-		position: relative;
-		padding: 10px;
-	}
-	
-	.reports .draft-thumb .v-label {
-		/* TODO why on earth does a label have display: inline-block as an inline style */
-		display: block !important;
-		color: #fff;
-		text-shadow: 0 2px 4px rgba(0,0,0,.25);
-		padding-top: 1em;
-		text-align: center;
-		line-height: 18px;
-	}
-	
-	.reports .draft-thumb .v-label span {
-		color: #c1c3c8;
-		font-size: 12px;
-	}
-	
-	.reports .draft-thumb .v-image {
-		@include box-shadow(0 2px 7px 1px rgba(0,0,0,.5));
-	}
-	
-	.reports .draft-thumb .v-image:hover {
-		border: 2px solid #5198df;
-		margin: -2px;
-	}
-	
-	.reports .palette {
-		position: fixed;
-		color: #fff;
-		text-shadow: 0 1px 1px rgba(0,0,0,.5);
-		padding: 14px;
-		width: 17%;
-	}
-	
-	.reports .palette .help {
-		font-size: 12px;
-		color: #cfd1d3;
-		display: block;
-		white-space: normal;
-		padding-top: 1em;
-		width: 140px;
-	}
-	
-	
-	.reports .palette .v-caption {
-		display: none;
-	}
-	
-	.reports .palette .v-ddwrapper {
-		display: block;
-		text-align: center;
+		.create .v-slot {
+			border: 1px solid rgba(255,255,255,.1);
+			background: rgba(255,255,255,.05);
+		}
+		
+		.draft-thumb {
+			cursor: pointer;
+			position: relative;
+			
+			.v-label {
+				display: block !important;
+				color: #fff;
+				text-shadow: 0 2px 4px rgba(0,0,0,.25);
+				text-align: center;
+				line-height: 18px;
+				
+				span {
+					color: #c1c3c8;
+					font-size: 12px;
+				}
+			}
+			
+			.v-image {
+				@include box-shadow(0 2px 7px 1px rgba(0,0,0,.5));
+				
+				&:hover {
+					outline: 2px solid #5198df;
+				}
+			}
+		}
+		
+		.palette {
+			color: #fff;
+			text-shadow: 0 1px 1px rgba(0,0,0,.5);
+			padding: 14px 0;
+			
+			.v-label {
+				font-size: 14px;
+			}
+		}
+		
+		.v-caption-palette {
+			font-size: 12px;
+			color: #cfd1d3;
+			display: block;
+			white-space: normal;
+			padding-top: 1em;
+			width: 140px;
+		}
+		
+		.v-slot-canvas {
+			overflow: auto;
+			
+			.canvas {
+				padding: 2em !important;
+				
+				.title {
+					font-size: 24px;
+					font-weight: 600;
+					border: 1px solid transparent;
+					color: #404346;
+					@include box-shadow(none);
+					width: 100%;
+					text-align: center;
+					cursor: pointer;
+					margin-bottom: 1cm;
+				}
+			}
+		}
 	}
 	
 	.reports .palette .v-image {
 		width: 75px;
 		height: 47px;
-		margin: 2em 0 .3em 0;
-	}
-	
-	.reports .palette .v-label {
-		display: block !important;
-	}
-	
-	.canvas {
-		padding: 2em !important;
 	}
 	
 	.canvas-layout {
@@ -112,21 +95,6 @@
 		padding: 1.5cm 1.5cm 3cm 1.5cm;
 		
 		@include box-shadow(0 2px 20px rgba(0,0,0,.5));
-	/* 	-webkit-box-shadow: 0 2px 20px rgba(0,0,0,.5); */
-	/* 	-moz-box-shadow: 0 2px 20px rgba(0,0,0,.5); */
-	/* 	box-shadow: 0 2px 20px rgba(0,0,0,.5); */
-	}
-	
-	.reports .canvas .title {
-		font-size: 24px;
-		font-weight: 600;
-		border: 1px solid transparent;
-		color: #404346;
-		@include box-shadow(none);
-		width: 100%;
-		text-align: center;
-		cursor: pointer;
-		margin-bottom: 1cm;
 	}
 	
 	.reports .canvas .title:hover {
@@ -224,7 +192,7 @@
 		width: 19px;
 		height: 19px;
 		border: 1px solid #a3a7ab;
-		@include border-radius(2px);
+		border-radius: 2px;
 		background: #73767a;
 		color: #fff;
 		font: inherit;
