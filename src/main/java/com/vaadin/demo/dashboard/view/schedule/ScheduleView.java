@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard.view;
+package com.vaadin.demo.dashboard.view.schedule;
 
 import java.util.Collection;
 import java.util.Date;

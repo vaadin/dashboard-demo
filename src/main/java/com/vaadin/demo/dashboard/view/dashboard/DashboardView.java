@@ -1,10 +1,9 @@
-package com.vaadin.demo.dashboard.view;
+package com.vaadin.demo.dashboard.view.dashboard;
 
 import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.component.DashboardEdit;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;

@@ -2,13 +2,13 @@ package com.vaadin.demo.dashboard.view;
 
 import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
 
-import com.vaadin.demo.dashboard.component.DashboardMenu;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
-import com.vaadin.demo.dashboard.view.ScheduleView.MovieEvent;
+import com.vaadin.demo.dashboard.view.dashboard.DashboardView;
+import com.vaadin.demo.dashboard.view.schedule.ScheduleView.MovieEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -18,6 +18,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 
+@SuppressWarnings("serial")
 public class MainView extends HorizontalLayout {
 
     private GoogleAnalyticsTracker tracker;
@@ -81,13 +82,6 @@ public class MainView extends HorizontalLayout {
                         break;
                     }
                 }
-
-                View newView = event.getNewView();
-                // helpManager.showHelpFor(newView);
-                // if (autoCreateReport && newView instanceof ReportsView) {
-                // ((ReportsView) newView).autoCreate(2, items, transactions);
-                // }
-                // autoCreateReport = false;
 
                 if (tracker != null) {
                     tracker.trackPageview("/dashboard" + event.getViewName());

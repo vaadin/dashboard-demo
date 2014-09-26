@@ -11,6 +11,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
@@ -27,10 +29,10 @@ public class LoginView extends HorizontalLayout {
     }
 
     private Component buildLoginForm() {
-        // Notification
-        // .show("Welcome to the Dashboard Demo Application",
-        // "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
-        // Type.HUMANIZED_MESSAGE);
+        Notification
+                .show("Welcome to the Dashboard Demo Application",
+                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
+                        Type.TRAY_NOTIFICATION);
 
         final CssLayout loginPanel = new CssLayout();
         loginPanel.addStyleName("login-panel");

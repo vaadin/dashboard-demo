@@ -1,5 +1,10 @@
 package com.vaadin.demo.dashboard.view;
 
+import com.vaadin.demo.dashboard.view.dashboard.DashboardView;
+import com.vaadin.demo.dashboard.view.reports.ReportsView;
+import com.vaadin.demo.dashboard.view.sales.SalesView;
+import com.vaadin.demo.dashboard.view.schedule.ScheduleView;
+import com.vaadin.demo.dashboard.view.transactions.TransactionsView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;

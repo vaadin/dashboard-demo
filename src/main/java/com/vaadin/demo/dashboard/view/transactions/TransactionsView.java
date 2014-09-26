@@ -8,7 +8,7 @@
  * 
  */
 
-package com.vaadin.demo.dashboard.view;
+package com.vaadin.demo.dashboard.view.transactions;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;

@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard.view;
+package com.vaadin.demo.dashboard.view.sales;
 
 import java.awt.Color;
 import java.util.ArrayList;

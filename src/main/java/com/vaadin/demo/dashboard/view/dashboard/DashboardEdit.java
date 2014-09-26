@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard.component;
+package com.vaadin.demo.dashboard.view.dashboard;
 
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.DashboardEditEvent;

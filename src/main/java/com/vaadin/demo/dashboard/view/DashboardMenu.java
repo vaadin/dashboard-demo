@@ -1,4 +1,4 @@
-package com.vaadin.demo.dashboard.component;
+package com.vaadin.demo.dashboard.view;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
@@ -9,7 +9,6 @@ import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ReportsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
-import com.vaadin.demo.dashboard.view.QuickTicketsView;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
