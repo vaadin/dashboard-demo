@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.demo.dashboard.component.InlineTextEditor;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
 import com.vaadin.demo.dashboard.domain.Transaction;
@@ -22,9 +23,6 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -33,7 +31,6 @@ import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -74,24 +71,21 @@ public class ReportEditor extends VerticalLayout {
         paletteLayout.addStyleName("palette");
         paletteLayout.setCaption("Drag items to the canvas");
 
-        paletteLayout.addComponent(buildPaletteItem("Text Block",
-                "img/palette-text.png", PaletteItemType.TEXT));
-        paletteLayout.addComponent(buildPaletteItem("Top 10 Movies",
-                "img/palette-grid.png", PaletteItemType.TABLE));
-        paletteLayout.addComponent(buildPaletteItem("Top 4 Revenue",
-                "img/palette-chart.png", PaletteItemType.CHART));
+        paletteLayout.addComponent(buildPaletteItem(PaletteItemType.TEXT));
+        paletteLayout.addComponent(buildPaletteItem(PaletteItemType.TABLE));
+        paletteLayout.addComponent(buildPaletteItem(PaletteItemType.CHART));
         return paletteLayout;
     }
 
-    private Component buildPaletteItem(String title, String imageThemeUrl,
-            PaletteItemType type) {
+    private Component buildPaletteItem(PaletteItemType type) {
         CssLayout wrap = new CssLayout();
         wrap.setWidth(120.0f, Unit.PIXELS);
 
-        Image itemImage = new Image(null, new ThemeResource(imageThemeUrl));
+        Image itemImage = new Image(null, new ThemeResource(
+                type.getImageThemeUrl()));
         wrap.addComponent(itemImage);
 
-        Label caption = new Label(title);
+        Label caption = new Label(type.getTitle());
         caption.setSizeUndefined();
         wrap.addComponent(caption);
 
@@ -168,17 +162,6 @@ public class ReportEditor extends VerticalLayout {
             this.titleLabel.setValue(title);
         }
 
-        // private WrappedComponent getWrappedComponent(Component content) {
-        // if (((AbstractComponent) content).getData() != null) {
-        // CssLayout wrap = new CssLayout();
-        // wrap.setWidth(100.0f, Unit.PERCENTAGE);
-        // wrap.addComponent(content);
-        // return new WrappedComponent(wrap, dropHandler);
-        // } else {
-        // return new WrappedComponent(content, dropHandler);
-        // }
-        // }
-
         public void addComponent(PaletteItemType paletteItemType,
                 Object prefillData) {
             if (placeholder.getParent() != null) {
@@ -192,51 +175,7 @@ public class ReportEditor extends VerticalLayout {
                 Object prefillData) {
             Component result = null;
             if (type == PaletteItemType.TEXT) {
-                // TODO: To its own class and cleanup
-                final CssLayout textLayout = new CssLayout();
-                textLayout.addStyleName("text-editor");
-                textLayout.addStyleName("edit");
-                textLayout.setWidth(100.0f, Unit.PERCENTAGE);
-                final RichTextArea rta = new RichTextArea();
-                rta.setWidth(100.0f, Unit.PERCENTAGE);
-                if (prefillData != null) {
-                    rta.setValue(String.valueOf(prefillData));
-                }
-                textLayout.addComponent(rta);
-                final Label text = new Label();
-                text.setContentMode(ContentMode.HTML);
-                final Button save = new Button("Save");
-                save.addStyleName(ValoTheme.BUTTON_PRIMARY);
-                save.addStyleName(ValoTheme.BUTTON_SMALL);
-                save.addClickListener(new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        if (save.getCaption().equals("Save")) {
-                            textLayout.removeStyleName("edit");
-                            textLayout.removeComponent(rta);
-                            textLayout.addComponent(text, 0);
-                            text.setValue(rta.getValue());
-                            save.setCaption("");
-                            save.removeStyleName(ValoTheme.BUTTON_PRIMARY);
-                            save.addStyleName("icon-edit");
-                            save.setDescription("Edit");
-                        } else {
-                            textLayout.addStyleName("edit");
-                            textLayout.removeComponent(text);
-                            textLayout.addComponent(rta, 0);
-                            rta.focus();
-                            rta.selectAll();
-                            save.setCaption("Save");
-                            save.addStyleName(ValoTheme.BUTTON_PRIMARY);
-                            save.removeStyleName("icon-edit");
-                            save.setDescription(null);
-                        }
-                    }
-                });
-                rta.focus();
-                rta.selectAll();
-                textLayout.addComponent(save);
-                result = textLayout;
+                result = new InlineTextEditor(prefillData);
             } else if (type == PaletteItemType.TABLE) {
                 result = new TopTenMoviesTable();
             } else if (type == PaletteItemType.CHART) {
@@ -398,6 +337,26 @@ public class ReportEditor extends VerticalLayout {
     }
 
     public enum PaletteItemType {
-        TEXT, TABLE, CHART, TRANSACTIONS
+        TEXT("Text Block", "img/palette-text.png"), TABLE("Top 10 Movies",
+                "img/palette-grid.png"), CHART("Top 6 Revenue",
+                "img/palette-chart.png"), TRANSACTIONS("Latest transactions",
+                null);
+
+        private final String title;
+        private final String imageThemeUrl;
+
+        PaletteItemType(String title, String imageThemeUrl) {
+            this.title = title;
+            this.imageThemeUrl = imageThemeUrl;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getImageThemeUrl() {
+            return imageThemeUrl;
+        }
+
     }
 }

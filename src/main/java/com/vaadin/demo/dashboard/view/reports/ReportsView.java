@@ -158,7 +158,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         } else if (reportType == ReportType.TRANSACTIONS) {
             reportEditor
                     .setTitle("Generated report from selected transactions");
-            reportEditor.addWidget(PaletteItemType.TEXT, null);
+            reportEditor.addWidget(PaletteItemType.TEXT, "");
             reportEditor.addWidget(PaletteItemType.TRANSACTIONS, prefillData);
         }
 
