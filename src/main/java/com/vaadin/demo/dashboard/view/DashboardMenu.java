@@ -1,14 +1,17 @@
 package com.vaadin.demo.dashboard.view;
 
+import java.util.Collection;
+
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ReportsCountUpdatedEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
@@ -32,6 +35,8 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -141,12 +146,14 @@ public class DashboardMenu extends CustomComponent {
 
                     @Override
                     public void drop(DragAndDropEvent event) {
-                        // clearMenuSelection();
-                        // viewNameToMenuButton.get("/reports").addStyleName(
-                        // "selected");
-                        // autoCreateReport = true;
-                        // items = event.getTransferable();
-                        // nav.navigateTo("/reports");
+                        UI.getCurrent()
+                                .getNavigator()
+                                .navigateTo(
+                                        QuickTicketsView.REPORTS.getViewName());
+                        Table table = (Table) event.getTransferable()
+                                .getSourceComponent();
+                        DashboardEventBus.post(new TransactionReportEvent(
+                                (Collection<Transaction>) table.getValue()));
                     }
 
                     @Override
@@ -165,7 +172,8 @@ public class DashboardMenu extends CustomComponent {
             }
             if (view == QuickTicketsView.REPORTS) {
                 reportsBadge = new Label();
-                menuItemComponent = buildBadgeWrapper(menuItemComponent, reportsBadge);
+                menuItemComponent = buildBadgeWrapper(menuItemComponent,
+                        reportsBadge);
             }
 
             menuItemsLayout.addComponent(menuItemComponent);
@@ -182,7 +190,7 @@ public class DashboardMenu extends CustomComponent {
         badgeLabel.addStyleName("badge");
         badgeLabel.setWidthUndefined();
         badgeLabel.setVisible(false);
-        dashboardWrapper.addComponent(notificationsBadge);
+        dashboardWrapper.addComponent(badgeLabel);
         return dashboardWrapper;
     }
 
@@ -193,7 +201,7 @@ public class DashboardMenu extends CustomComponent {
     }
 
     @Subscribe
-    public void viewChangeRequestedEvent(ViewChangeRequestedEvent event) {
+    public void postViewChange(PostViewChangeEvent event) {
         getCompositionRoot().removeStyleName(STYLE_VISIBLE);
     }
 
@@ -225,7 +233,8 @@ public class DashboardMenu extends CustomComponent {
             addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(final ClickEvent event) {
-                    DashboardEventBus.post(new ViewChangeRequestedEvent(view));
+                    UI.getCurrent().getNavigator()
+                            .navigateTo(view.getViewName());
                 }
             });
         }

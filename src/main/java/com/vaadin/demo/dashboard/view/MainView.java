@@ -1,111 +1,23 @@
 package com.vaadin.demo.dashboard.view;
 
-import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
-
-import com.vaadin.demo.dashboard.domain.User;
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
-import com.vaadin.demo.dashboard.view.dashboard.DashboardView;
-import com.vaadin.demo.dashboard.view.schedule.ScheduleView.MovieEvent;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.navigator.ViewProvider;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.demo.dashboard.DashboardNavigator;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
 public class MainView extends HorizontalLayout {
 
-    private GoogleAnalyticsTracker tracker;
-
     public MainView() {
-        initGATracker();
         setSizeFull();
         addStyleName("mainview");
-        DashboardEventBus.register(this);
 
         addComponent(new DashboardMenu());
 
-        ComponentContainer content = buildContent();
+        ComponentContainer content = new HorizontalLayout();
+        content.setSizeFull();
         addComponent(content);
         setExpandRatio(content, 1.0f);
 
-        initNavigator(content);
-    }
-
-    private void initNavigator(ComponentContainer container) {
-        final Navigator navigator = new Navigator(UI.getCurrent(), container);
-
-        for (QuickTicketsView view : QuickTicketsView.values()) {
-            try {
-                navigator.addView(view.getViewName(), view.getViewClass()
-                        .newInstance());
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        navigator.setErrorProvider(new ViewProvider() {
-            @Override
-            public String getViewName(String viewAndParameters) {
-                return QuickTicketsView.DASHBOARD.getViewName();
-            }
-
-            @Override
-            public View getView(String viewName) {
-                return new DashboardView();
-            }
-        });
-        navigator.addViewChangeListener(new ViewChangeListener() {
-
-            @Override
-            public boolean beforeViewChange(ViewChangeEvent event) {
-                User user = (User) VaadinSession.getCurrent().getAttribute(
-                        User.class.getName());
-                return "admin".equals(user.getRole());
-            }
-
-            @Override
-            public void afterViewChange(ViewChangeEvent event) {
-                for (QuickTicketsView view : QuickTicketsView.values()) {
-                    if (view.getViewName().equals(event.getViewName())) {
-                        DashboardEventBus.post(new PostViewChangeEvent(view));
-                        DashboardEventBus.post(new BrowserResizeEvent());
-                        DashboardEventBus.post(new CloseOpenWindowsEvent());
-                        break;
-                    }
-                }
-
-                if (tracker != null) {
-                    tracker.trackPageview("/dashboard" + event.getViewName());
-                }
-            }
-        });
-    }
-
-    public void openMovieDetailsPopup(MovieEvent event) {
-
-    }
-
-    private void initGATracker() {
-        // Provide a Google Analytics tracker id here
-        String trackerId = null;// "UA-658457-6";
-        if (trackerId != null) {
-            tracker = new GoogleAnalyticsTracker(trackerId, "none");
-            tracker.extend(UI.getCurrent());
-        }
-    }
-
-    private ComponentContainer buildContent() {
-        ComponentContainer result = new HorizontalLayout();
-        result.setSizeFull();
-        return result;
+        new DashboardNavigator(content);
     }
 }

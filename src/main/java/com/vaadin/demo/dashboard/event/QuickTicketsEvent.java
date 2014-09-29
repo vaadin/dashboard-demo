@@ -1,5 +1,8 @@
 package com.vaadin.demo.dashboard.event;
 
+import java.util.Collection;
+
+import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.view.QuickTicketsView;
 
 public class QuickTicketsEvent {
@@ -45,6 +48,18 @@ public class QuickTicketsEvent {
 
     }
 
+    public static class TransactionReportEvent {
+        private final Collection<Transaction> transactions;
+
+        public TransactionReportEvent(Collection<Transaction> transactions) {
+            this.transactions = transactions;
+        }
+
+        public Collection<Transaction> getTransactions() {
+            return transactions;
+        }
+    }
+
     public static class DashboardEditEvent {
         private final String name;
 
@@ -56,18 +71,6 @@ public class QuickTicketsEvent {
             return name;
         }
 
-    }
-
-    public static class ViewChangeRequestedEvent {
-        private final QuickTicketsView view;
-
-        public ViewChangeRequestedEvent(QuickTicketsView view) {
-            this.view = view;
-        }
-
-        public QuickTicketsView getView() {
-            return view;
-        }
     }
 
     public static class PostViewChangeEvent {

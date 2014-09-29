@@ -6,8 +6,10 @@ import java.util.Date;
 
 import org.vaadin.dialogs.ConfirmDialog;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ReportsCountUpdatedEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.view.reports.ReportEditor.PaletteItemType;
 import com.vaadin.demo.dashboard.view.reports.ReportEditor.ReportEditorListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -41,6 +43,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         setSizeFull();
         addStyleName("reports");
         setCloseHandler(this);
+        DashboardEventBus.register(this);
 
         addTab(buildDrafts());
     }
@@ -162,6 +165,11 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         DashboardEventBus.post(new ReportsCountUpdatedEvent(
                 getComponentCount() - 1));
         setSelectedTab(getComponentCount() - 1);
+    }
+
+    @Subscribe
+    public void createTransactionReport(TransactionReportEvent event) {
+        addReport(ReportType.TRANSACTIONS, event.getTransactions());
     }
 
     @Override

@@ -14,17 +14,14 @@ import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoggedOutEvent;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.UserLoginRequestedEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ViewChangeRequestedEvent;
 import com.vaadin.demo.dashboard.view.LoginView;
 import com.vaadin.demo.dashboard.view.MainView;
-import com.vaadin.event.Transferable;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
@@ -86,37 +83,10 @@ public class DashboardUI extends UI {
     }
 
     @Subscribe
-    public void viewChangeRequested(ViewChangeRequestedEvent event) {
-        getNavigator().navigateTo(event.getView().getViewName());
-    }
-
-    @Subscribe
     public void closeOpenWindows(CloseOpenWindowsEvent event) {
         for (Window window : getWindows()) {
             window.close();
         }
-    }
-
-    private Transferable items;
-
-    // public void updateReportsButtonBadge(String badgeCount) {
-    // viewNameToMenuButton.get("/reports").setHtmlContentAllowed(true);
-    // viewNameToMenuButton.get("/reports").setCaption(
-    // "Reports<span class=\"badge\">" + badgeCount + "</span>");
-    // }
-    //
-    // public void clearDashboardButtonBadge() {
-    // viewNameToMenuButton.get("/dashboard").setCaption("Dashboard");
-    // }
-
-    boolean autoCreateReport = false;
-    Table transactions;
-
-    public void openReports(Table t) {
-        transactions = t;
-        autoCreateReport = true;
-        // nav.navigateTo("/reports");
-        // viewNameToMenuButton.get("/reports").addStyleName("selected");
     }
 
     public static DataProvider getDataProvider() {

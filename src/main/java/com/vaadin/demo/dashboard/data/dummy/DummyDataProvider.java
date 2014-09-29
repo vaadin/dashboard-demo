@@ -367,7 +367,8 @@ public class DummyDataProvider implements DataProvider {
                 return o2.getTime().compareTo(o1.getTime());
             }
         });
-        return orderedTransactions.subList(0, 100);
+        return orderedTransactions.subList(0,
+                Math.min(count, transactions.values().size() - 1));
     }
 
     private Multimap<Long, MovieRevenue> countRevenues() {

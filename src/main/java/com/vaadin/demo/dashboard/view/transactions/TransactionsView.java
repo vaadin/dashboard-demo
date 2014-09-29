@@ -13,6 +13,7 @@ package com.vaadin.demo.dashboard.view.transactions;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -30,6 +31,8 @@ import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
+import com.vaadin.demo.dashboard.event.QuickTicketsEvent.TransactionReportEvent;
+import com.vaadin.demo.dashboard.view.QuickTicketsView;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -50,6 +53,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -76,13 +80,21 @@ public class TransactionsView extends VerticalLayout implements View {
         setExpandRatio(table, 1);
     }
 
+    @Override
+    public void detach() {
+        super.detach();
+        // This view gets re-instantiated every time it's navigated to so we'll
+        // need to clean up references to it on detach.
+        DashboardEventBus.unregister(this);
+    }
+
     private Component buildToolbar() {
         CssLayout toolbar = new CssLayout();
         toolbar.addStyleName("viewheader");
         toolbar.setWidth(100.0f, Unit.PERCENTAGE);
         toolbar.addStyleName("toolbar");
 
-        Label title = new Label("Recent Transactions");
+        Label title = new Label("Latest Transactions");
         title.addStyleName(ValoTheme.LABEL_H1);
         title.setSizeUndefined();
         toolbar.addComponent(title);
@@ -189,7 +201,7 @@ public class TransactionsView extends VerticalLayout implements View {
 
         table.setColumnReorderingAllowed(true);
         table.setContainerDataSource(new FilterableListContainer<Transaction>(
-                DashboardUI.getDataProvider().getRecentTransactions(100)));
+                DashboardUI.getDataProvider().getRecentTransactions(200)));
         table.setSortContainerPropertyId("time");
         table.setSortAscending(false);
 
@@ -269,8 +281,13 @@ public class TransactionsView extends VerticalLayout implements View {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     void createNewReportFromSelection() {
-        ((DashboardUI) getUI()).openReports(table);
+        UI.getCurrent().getNavigator()
+                .navigateTo(QuickTicketsView.REPORTS.getViewName());
+        DashboardEventBus.post(new TransactionReportEvent(
+                (Collection<Transaction>) table.getValue()));
+
     }
 
     @Override

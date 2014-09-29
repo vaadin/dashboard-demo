@@ -249,9 +249,9 @@ public class ReportEditor extends VerticalLayout {
                         "<strong>Selected transactions</strong>",
                         ContentMode.HTML));
                 if (transactions != null) {
+                    CssLayout root = new CssLayout();
+                    root.addStyleName("transaction");
                     for (Transaction transaction : transactions) {
-                        CssLayout root = new CssLayout();
-                        root.addStyleName("transaction");
 
                         SimpleDateFormat df = new SimpleDateFormat();
                         df.applyPattern("MM/dd/yyyy hh:mm:ss a");
@@ -280,6 +280,8 @@ public class ReportEditor extends VerticalLayout {
                         root.addComponent(l);
 
                     }
+                    labels.addComponent(root);
+
                 }
                 result = labels;
             }

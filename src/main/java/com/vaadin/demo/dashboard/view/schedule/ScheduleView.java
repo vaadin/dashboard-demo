@@ -1,12 +1,10 @@
 package com.vaadin.demo.dashboard.view.schedule;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
@@ -68,6 +66,14 @@ public class ScheduleView extends CssLayout implements View {
         tray = buildTray();
 
         injectMovieCoverStyles();
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        // This view gets re-instantiated every time it's navigated to so we'll
+        // need to clean up references to it on detach.
+        DashboardEventBus.unregister(this);
     }
 
     private void injectMovieCoverStyles() {
@@ -254,17 +260,15 @@ public class ScheduleView extends CssLayout implements View {
             Collection<Transaction> transactions = DashboardUI
                     .getDataProvider().getTransactionsBetween(startDate,
                             endDate);
-            return Lists.newArrayList(Iterables.transform(transactions,
-                    new Function<Transaction, CalendarEvent>() {
-                        @Override
-                        public CalendarEvent apply(Transaction input) {
-                            Movie movie = DashboardUI.getDataProvider()
-                                    .getMovie(input.getMovieId());
-                            Date end = new Date(input.getTime().getTime()
-                                    + movie.getDuration() * 60 * 1000);
-                            return new MovieEvent(input.getTime(), end, movie);
-                        }
-                    }));
+            List<CalendarEvent> result = new ArrayList<CalendarEvent>();
+            for (Transaction transaction : transactions) {
+                Movie movie = DashboardUI.getDataProvider().getMovie(
+                        transaction.getMovieId());
+                Date end = new Date(transaction.getTime().getTime()
+                        + movie.getDuration() * 60 * 1000);
+                result.add(new MovieEvent(transaction.getTime(), end, movie));
+            }
+            return result;
         }
     }
 
