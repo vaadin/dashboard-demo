@@ -8,7 +8,14 @@
 		
 		.v-timeline-widget-modelegend {
 			background: transparent;
+			width: 100% !important;
+			overflow: auto;
+			display: inline-block;
+			height: auto !important;
+			padding: 0 10px;
 		}
+		
+		
 		
 		.v-timeline-widget-display .gwt-HTML {
 			left: 0 !important;
