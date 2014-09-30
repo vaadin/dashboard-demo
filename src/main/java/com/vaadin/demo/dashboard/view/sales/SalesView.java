@@ -7,12 +7,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.vaadin.maddon.ListContainer;
-
 import com.vaadin.addon.timeline.Timeline;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.domain.MovieRevenue;
@@ -70,7 +69,8 @@ public class SalesView extends VerticalLayout implements View {
 
     private void initMovieSelect() {
         Collection<Movie> movies = DashboardUI.getDataProvider().getMovies();
-        Container movieContainer = new ListContainer<Movie>(Movie.class, movies);
+        Container movieContainer = new BeanItemContainer<Movie>(Movie.class,
+                movies);
         movieSelect.setContainerDataSource(movieContainer);
     }
 
@@ -159,7 +159,7 @@ public class SalesView extends VerticalLayout implements View {
         Collection<MovieRevenue> dailyRevenue = DashboardUI.getDataProvider()
                 .getDailyRevenuesByMovie(movie.getId());
 
-        ListContainer<MovieRevenue> dailyRevenueContainer = new ListContainer<MovieRevenue>(
+        BeanItemContainer<MovieRevenue> dailyRevenueContainer = new BeanItemContainer<MovieRevenue>(
                 MovieRevenue.class, dailyRevenue);
 
         dailyRevenueContainer.sort(new Object[] { "timestamp" },
