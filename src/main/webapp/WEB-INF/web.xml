@@ -11,7 +11,7 @@
 	</context-param>
 	<servlet>
 		<servlet-name>QuickTicketsDashboard</servlet-name>
-		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+		<servlet-class>com.vaadin.demo.dashboard.DashboardServlet</servlet-class>
 		<init-param>
 			<param-name>UI</param-name>
 			<param-value>com.vaadin.demo.dashboard.DashboardUI</param-value>
