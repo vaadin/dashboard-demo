@@ -51,6 +51,7 @@ public class InlineTextEditor extends CustomComponent {
 
         CssLayout result = new CssLayout(text, editButton);
         result.addStyleName("text-editor");
+        result.setSizeFull();
         return result;
     }
 
@@ -78,6 +79,7 @@ public class InlineTextEditor extends CustomComponent {
 
         CssLayout result = new CssLayout(rta, save);
         result.addStyleName("edit");
+        result.setSizeFull();
         return result;
     }
 
