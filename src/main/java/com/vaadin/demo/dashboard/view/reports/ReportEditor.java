@@ -1,8 +1,6 @@
 package com.vaadin.demo.dashboard.view.reports;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Iterator;
 
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -10,7 +8,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.dashboard.component.InlineTextEditor;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
-import com.vaadin.demo.dashboard.domain.Transaction;
+import com.vaadin.demo.dashboard.component.TransactionsListing;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -20,7 +18,6 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
@@ -181,48 +178,7 @@ public class ReportEditor extends VerticalLayout {
             } else if (type == PaletteItemType.CHART) {
                 result = new TopSixTheatersChart();
             } else if (type == PaletteItemType.TRANSACTIONS) {
-                // TODO: To its own class and cleanup
-                Collection<Transaction> transactions = (Collection<Transaction>) prefillData;
-                CssLayout labels = new CssLayout();
-                labels.addComponent(new Label(
-                        "<strong>Selected transactions</strong>",
-                        ContentMode.HTML));
-                if (transactions != null) {
-                    CssLayout root = new CssLayout();
-                    root.addStyleName("transaction");
-                    for (Transaction transaction : transactions) {
-
-                        SimpleDateFormat df = new SimpleDateFormat();
-                        df.applyPattern("MM/dd/yyyy hh:mm:ss a");
-
-                        Label l = new Label(df.format((transaction.getTime()))
-                                + "<br>" + transaction.getCity() + ", "
-                                + transaction.getCountry());
-                        l.setSizeUndefined();
-                        l.setContentMode(ContentMode.HTML);
-                        l.addStyleName("time");
-                        root.addComponent(l);
-
-                        l = new Label(transaction.getTitle());
-                        l.setSizeUndefined();
-                        l.addStyleName("movie-title");
-                        root.addComponent(l);
-
-                        l = new Label("Seats: "
-                                + transaction.getSeats()
-                                + "<br>"
-                                + "Revenue: $"
-                                + new DecimalFormat("#.##").format(transaction
-                                        .getPrice()), ContentMode.HTML);
-                        l.setSizeUndefined();
-                        l.addStyleName("seats");
-                        root.addComponent(l);
-
-                    }
-                    labels.addComponent(root);
-
-                }
-                result = labels;
+                result = new TransactionsListing(prefillData);
             }
 
             return result;

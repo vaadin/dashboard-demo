@@ -243,6 +243,12 @@
 		width: 47%;
 		margin-right: 2.5%;
 		margin-top: 10px;
+		overflow: hidden;
+		
+		.v-ui[width-range~="0-800px"] & {
+			width: 100%;
+			margin-right: 0;
+		}
 		
 		background: #eee;
 		border: 1px solid #e0e0e0;
