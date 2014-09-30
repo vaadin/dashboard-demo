@@ -64,6 +64,7 @@ public class ScheduleView extends CssLayout implements View {
         addComponent(tabs);
 
         tray = buildTray();
+        addComponent(tray);
 
         injectMovieCoverStyles();
     }
@@ -95,7 +96,6 @@ public class ScheduleView extends CssLayout implements View {
                     + ";}";
         }
 
-        System.out.println(styles);
         Page.getCurrent().getStyles().add(styles);
     }
 
@@ -219,21 +219,25 @@ public class ScheduleView extends CssLayout implements View {
         };
 
         Button confirm = new Button("Confirm");
-        confirm.addStyleName("wide");
         confirm.addStyleName(ValoTheme.BUTTON_PRIMARY);
         confirm.addClickListener(close);
         tray.addComponent(confirm);
         tray.setComponentAlignment(confirm, Alignment.MIDDLE_LEFT);
 
         Button discard = new Button("Discard");
-        discard.addStyleName("wide");
         discard.addClickListener(close);
+        discard.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                calendar.markAsDirty();
+            }
+        });
         tray.addComponent(discard);
         tray.setComponentAlignment(discard, Alignment.MIDDLE_LEFT);
         return tray;
     }
 
-    void setTrayVisible(boolean visible) {
+    private void setTrayVisible(boolean visible) {
         final String styleReveal = "v-animate-reveal";
         if (visible) {
             tray.addStyleName(styleReveal);
