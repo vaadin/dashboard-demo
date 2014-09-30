@@ -277,13 +277,17 @@ public class DummyDataProvider implements DataProvider {
         for (Movie movie : movies) {
             result.putAll(movie.getId(), new ArrayList<Transaction>());
 
-            GregorianCalendar c = new GregorianCalendar();
+            Calendar cal = Calendar.getInstance();
             int daysSubtractor = rand.nextInt(150) + 30;
-            c.add(Calendar.DAY_OF_YEAR, -daysSubtractor);
+            cal.add(Calendar.DAY_OF_YEAR, -daysSubtractor);
 
-            while (c.before(today)) {
+            Calendar lastDayOfWeek = Calendar.getInstance();
+            lastDayOfWeek.add(Calendar.DAY_OF_YEAR,
+                    Calendar.SATURDAY - cal.get(Calendar.DAY_OF_WEEK));
 
-                int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+            while (cal.before(lastDayOfWeek)) {
+
+                int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
                 if (hourOfDay > 10 && hourOfDay < 22) {
 
                     Transaction transaction = new Transaction();
@@ -296,7 +300,7 @@ public class DummyDataProvider implements DataProvider {
                     String country = array[i].toString();
                     transaction.setCountry(country);
 
-                    transaction.setTime(c.getTime());
+                    transaction.setTime(cal.getTime());
 
                     // City
                     Collection<String> cities = countryToCities.get(country);
@@ -331,7 +335,7 @@ public class DummyDataProvider implements DataProvider {
                     result.get(movie.getId()).add(transaction);
                 }
 
-                c.add(Calendar.SECOND, rand.nextInt(1000000) + 5000);
+                cal.add(Calendar.SECOND, rand.nextInt(500000) + 5000);
             }
         }
 
