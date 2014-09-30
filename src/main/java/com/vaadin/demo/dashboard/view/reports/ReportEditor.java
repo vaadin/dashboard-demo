@@ -76,7 +76,7 @@ public class ReportEditor extends VerticalLayout {
 
     private Component buildPaletteItem(PaletteItemType type) {
         CssLayout wrap = new CssLayout();
-        wrap.setWidth(120.0f, Unit.PIXELS);
+        wrap.setWidth(100.0f, Unit.PIXELS);
 
         Image itemImage = new Image(null, new ThemeResource(
                 type.getImageThemeUrl()));

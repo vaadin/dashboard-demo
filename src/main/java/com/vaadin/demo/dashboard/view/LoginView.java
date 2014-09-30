@@ -1,8 +1,9 @@
 package com.vaadin.demo.dashboard.view;
 
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.DashboardEvent.UserLoginRequestedEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -17,6 +18,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
+@SuppressWarnings("serial")
 public class LoginView extends HorizontalLayout {
 
     public LoginView() {
@@ -26,14 +28,16 @@ public class LoginView extends HorizontalLayout {
         Component loginForm = buildLoginForm();
         addComponent(loginForm);
         setComponentAlignment(loginForm, Alignment.MIDDLE_CENTER);
+
+        Notification notification = new Notification(
+                "Welcome to Dashboard Demo", Type.TRAY_NOTIFICATION);
+        notification
+                .setDescription("This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.<br>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.");
+        notification.setHtmlContentAllowed(true);
+        notification.show(Page.getCurrent());
     }
 
     private Component buildLoginForm() {
-        Notification
-                .show("Welcome to the Dashboard Demo Application",
-                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
-                        Type.TRAY_NOTIFICATION);
-
         final CssLayout loginPanel = new CssLayout();
         loginPanel.addStyleName("login-panel");
 

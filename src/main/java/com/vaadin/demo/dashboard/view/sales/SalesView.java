@@ -81,7 +81,7 @@ public class SalesView extends VerticalLayout implements View {
         header.setSpacing(true);
         header.setMargin(true);
 
-        Label titleLabel = new Label("Revenue by Movie Title");
+        Label titleLabel = new Label("Revenue by Movie");
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
         header.addComponent(titleLabel);
@@ -95,7 +95,7 @@ public class SalesView extends VerticalLayout implements View {
         toolbar.addStyleName("toolbar");
 
         movieSelect = new ComboBox();
-        movieSelect.setWidth(300.0f, Unit.PIXELS);
+        movieSelect.setWidth(250.0f, Unit.PIXELS);
         movieSelect.setItemCaptionPropertyId("title");
         movieSelect.addShortcutListener(new ShortcutListener("Add",
                 KeyCode.ENTER, null) {
