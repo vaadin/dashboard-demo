@@ -1,15 +1,13 @@
 package com.vaadin.demo.dashboard.view.dashboard;
 
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -22,12 +20,11 @@ public class DashboardEdit extends Window {
     private final TextField nameField = new TextField("Dashboard Name");
 
     public DashboardEdit(String currentName) {
-        nameField.setValue(currentName);
         setCaption("Edit Dashboard");
         setModal(true);
         setClosable(false);
         setResizable(false);
-        setWidth(350.0f, Unit.PIXELS);
+        setWidth(300.0f, Unit.PIXELS);
 
         addStyleName("edit-dashboard");
 
@@ -36,14 +33,15 @@ public class DashboardEdit extends Window {
 
     private Component buildContent(String currentName) {
         VerticalLayout result = new VerticalLayout();
-        result.setMargin(new MarginInfo(true, false, false, false));
+        result.setMargin(true);
+        result.setSpacing(true);
 
+        nameField.setValue(currentName);
+        nameField.setWidth(100.0f, Unit.PERCENTAGE);
         nameField.selectAll();
         nameField.focus();
-        FormLayout formLayout = new FormLayout(nameField);
-        formLayout.setMargin(true);
 
-        result.addComponent(formLayout);
+        result.addComponent(nameField);
         result.addComponent(buildFooter());
 
         return result;
@@ -51,7 +49,6 @@ public class DashboardEdit extends Window {
 
     private Component buildFooter() {
         HorizontalLayout result = new HorizontalLayout();
-        result.setMargin(true);
         result.setSpacing(true);
         result.addStyleName("footer");
         result.setWidth(100.0f, Unit.PERCENTAGE);

@@ -4,89 +4,101 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.vaadin.demo.dashboard.domain.Movie;
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Responsive;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
+@SuppressWarnings("serial")
 public class MovieDetailsWindow extends Window {
 
-    Label synopsis = new Label();
+    private final Label synopsis = new Label();
 
     public MovieDetailsWindow(Movie movie, Date startTime, Date endTime) {
-        VerticalLayout l = new VerticalLayout();
-        l.setSpacing(true);
+        addStyleName("moviedetailswindow");
+        Responsive.makeResponsive(this);
 
         setCaption(movie.getTitle());
-        setContent(l);
         center();
         setCloseShortcut(KeyCode.ESCAPE, null);
+        setDraggable(false);
         setResizable(false);
         setClosable(false);
+        setWidth(90.0f, Unit.PERCENTAGE);
+        setHeight(90.0f, Unit.PERCENTAGE);
 
-        addStyleName("no-vertical-drag-hints");
-        addStyleName("no-horizontal-drag-hints");
+        VerticalLayout content = new VerticalLayout();
+        content.setMargin(true);
+        content.setSizeFull();
+        setContent(content);
 
-        HorizontalLayout details = new HorizontalLayout();
-        details.setSpacing(true);
-        details.setMargin(true);
-        l.addComponent(details);
+        Panel detailsWrapper = new Panel(buildMovieDetails(movie, startTime,
+                endTime));
+        detailsWrapper.setSizeFull();
+        content.addComponent(detailsWrapper);
+        content.setExpandRatio(detailsWrapper, 1f);
 
-        final Image coverImage = new Image("", new ExternalResource(
-                movie.getPosterUrl()));
-        coverImage.setWidth(190.0f, Unit.PIXELS);
+        content.addComponent(buildFooter());
+    }
 
-        final Button more = new Button("More…");
+    private Component buildFooter() {
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.addStyleName("footer");
+        footer.setWidth(100.0f, Unit.PERCENTAGE);
+        footer.setMargin(true);
 
-        DragAndDropWrapper cover = new DragAndDropWrapper(coverImage);
-        cover.setDragStartMode(DragStartMode.NONE);
-        cover.setWidth("200px");
-        cover.setHeight("270px");
-        cover.addStyleName("cover");
-        cover.setDropHandler(new DropHandler() {
+        Button ok = new Button("Close");
+        ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        ok.addClickListener(new ClickListener() {
             @Override
-            public void drop(DragAndDropEvent event) {
-                DragAndDropWrapper d = (DragAndDropWrapper) event
-                        .getTransferable().getSourceComponent();
-                if (d == event.getTargetDetails().getTarget())
-                    return;
-                Movie m = (Movie) d.getData();
-                coverImage.setSource(new ExternalResource(m.getPosterUrl()));
-                coverImage.setAlternateText(m.getTitle());
-                setCaption(m.getTitle());
-                updateSynopsis(m, false);
-                more.setVisible(true);
-            }
-
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
+            public void buttonClick(ClickEvent event) {
+                close();
             }
         });
-        details.addComponent(cover);
+        footer.addComponent(ok);
+        footer.setComponentAlignment(ok, Alignment.TOP_RIGHT);
+        return footer;
+    }
 
+    private Component buildMovieDetails(Movie movie, Date startTime,
+            Date endTime) {
+        CssLayout details = new CssLayout();
+        details.setWidth(100.0f, Unit.PERCENTAGE);
+        details.addStyleName("details");
+
+        final Image coverImage = new Image(null, new ExternalResource(
+                movie.getPosterUrl()));
+        coverImage.setWidth(190.0f, Unit.PIXELS);
+        coverImage.setWidth(200.0f, Unit.PIXELS);
+        coverImage.setHeight(270.0f, Unit.PIXELS);
+        coverImage.addStyleName("cover");
+        details.addComponent(coverImage);
+
+        details.addComponent(buildDetailsForm(movie, startTime, endTime));
+
+        return details;
+    }
+
+    private Component buildDetailsForm(Movie movie, Date startTime, Date endTime) {
         FormLayout fields = new FormLayout();
-        fields.setWidth("35em");
         fields.setSpacing(true);
         fields.setMargin(true);
-        details.addComponent(fields);
 
         Label label;
         SimpleDateFormat df = new SimpleDateFormat();
@@ -121,7 +133,8 @@ public class MovieDetailsWindow extends Window {
         updateSynopsis(movie, false);
         fields.addComponent(synopsis);
 
-        more.addStyleName("link");
+        final Button more = new Button("More…");
+        more.addStyleName(ValoTheme.BUTTON_LINK);
         fields.addComponent(more);
         more.addClickListener(new ClickListener() {
             @Override
@@ -131,23 +144,7 @@ public class MovieDetailsWindow extends Window {
             }
         });
 
-        HorizontalLayout footer = new HorizontalLayout();
-        footer.addStyleName("footer");
-        footer.setWidth("100%");
-        footer.setMargin(true);
-
-        Button ok = new Button("Close");
-        ok.addStyleName("wide");
-        ok.addStyleName("default");
-        ok.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                close();
-            }
-        });
-        footer.addComponent(ok);
-        footer.setComponentAlignment(ok, Alignment.TOP_RIGHT);
-        l.addComponent(footer);
+        return fields;
     }
 
     public void updateSynopsis(Movie m, boolean expand) {
