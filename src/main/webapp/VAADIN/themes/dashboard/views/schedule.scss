@@ -11,6 +11,27 @@
 			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
 		
+		.v-calendar-event-caption {
+			right: 0;
+			width: auto;
+			font-size: 12px;
+			font-weight: 600;
+			color: #fff;
+			text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+			
+			span {
+				color: #979699;
+			}
+		}
+		
+		.v-calendar-header-day {
+			font-weight: 600;
+			font-size: 11px;
+			text-transform: uppercase;
+			color: #349aff;
+			-webkit-font-smoothing: antialiased;
+		}
+		
 		.tray{
 			position: relative;
 			padding: 10px;
@@ -33,6 +54,35 @@
 			    -webkit-transform: translateY(-100%);
 			    transform: translateY(-100%);
 			}
+		}
+		
+		.catalog {
+			padding: 20px;
+			
+			.frame {
+				cursor: pointer;
+				
+				.v-image {
+					@include box-shadow(0 2px 5px rgba(0,0,0,.5));
+					border-radius: 2px;
+					border: 2px solid rgba(255,255,255,.1);
+				}
+				
+				&:hover .v-image {
+					border-color: #69a5e4;
+				}
+				
+				&:hover .v-label {
+					color: #000;
+				}
+				
+				.v-label {
+					font-size: 13px;
+					color: #6c737a;
+				}
+			}
+			
+			
 		}
 		
 	}

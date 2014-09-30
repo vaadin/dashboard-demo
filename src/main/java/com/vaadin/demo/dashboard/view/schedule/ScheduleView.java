@@ -171,6 +171,7 @@ public class ScheduleView extends CssLayout implements View {
 
         for (final Movie movie : DashboardUI.getDataProvider().getMovies()) {
             VerticalLayout frame = new VerticalLayout();
+            frame.addStyleName("frame");
             frame.setWidthUndefined();
 
             Image poster = new Image(null, new ExternalResource(
