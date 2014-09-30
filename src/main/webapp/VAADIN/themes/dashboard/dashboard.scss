@@ -1,120 +1,22 @@
 @import "../valo/valo.scss";
+@import "common.scss";
+@import "views/login.scss";
 @import "views/dashboardview.scss";
 @import "views/schedule.scss";
 @import "views/sales.scss";
 @import "views/transactions.scss";
 @import "views/reports.scss";
 
+
 @mixin dashboard {
 
 	@include valo;
+	@include dashboard-common;
+	@include dashboard-login-view;
 	@include dashboard-dashboard-view;
 	@include dashboard-schedule-view;
 	@include dashboard-sales-view;
 	@include dashboard-transactions-view;
 	@include dashboard-reports-view;
-	
-	.valo-menu-item:focus {
-		color: inherit;
-	}
-	.valo-menu-item.selected {
-		color: #fff;
-	}
-	
-	.viewheader .h1 {
-		margin: 0 !important;
-		
-		.v-ui[width-range~="0-800px"] & {
-			font-size: 30px;
-		}
-	}
-	
-	.mainview {
-		background: #fafafa;
-	}
-	
-	.login-panel {
-		width: 530px;
-		background: #fff;
-		border-radius: 4px;
-		-webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		-moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		padding: 1em 1em 2em;
-		
-		.v-ui[width-range~="0-800px"] & {
-			width: 243px;
-		}
-		
-		.labels {
-			margin-bottom: 50px;
-			
-			.h4 {
-				margin: 0;
-				vertical-align: bottom;
-			}
-			
-			.h2 {
-				float: right;
-				margin: 0;
-				font-size: 23px;
-				
-				.v-ui[width-range~="0-800px"] & {
-					font-size: 20px;
-					float: none;
-				}
-			}
-		}
-		
-		.fields {
-		
-			.v-horizontallayout {
-				margin-right: 10px;
-				
-				.v-ui[width-range~="0-800px"] & {
-					display: block;
-				}
-			}
-			
-			.v-button {
-				vertical-align: bottom;
-				margin-top: 20px;
-			}
-			
-		}
-	}
-	
-	
-	/* Shared styles */
-	.valo-menu {
-		.badgewrapper {
-			position: relative;
-		}
-		
-		.valo-menu-item-caption {
-			text-transform: uppercase;
-		}
-	}
-	
-	.valo-menu .badge,
-	.dashboard-view .notifications.unread .v-button-caption{
-		display: block;
-		position: absolute;
-		top: 2px;
-		right: 3px;
-		font-size: 11px;
-		line-height: 1;
-		color: #fff;
-		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-		padding: 0.1em 0.4em 0.2em;
-		background: #f16433;
-		background: -moz-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #faa290), color-stop(14%, #f77b62), color-stop(87%, #ec3120), color-stop(100%, #ce2314));
-		background: -webkit-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		background: -o-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		background: -ms-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		border-radius: 2px;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-	}
 	
 }
