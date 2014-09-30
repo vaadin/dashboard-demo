@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;

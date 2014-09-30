@@ -1,7 +1,7 @@
 package com.vaadin.demo.dashboard.view.dashboard;
 
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.DashboardEditEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;

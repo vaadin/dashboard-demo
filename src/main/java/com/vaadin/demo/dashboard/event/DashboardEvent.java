@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.view.QuickTicketsView;
 
-public class QuickTicketsEvent {
+public class DashboardEvent {
 
     public static class UserLoginRequestedEvent {
         private final String userName, password;

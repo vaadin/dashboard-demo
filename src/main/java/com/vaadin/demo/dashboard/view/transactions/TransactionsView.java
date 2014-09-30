@@ -1,13 +1,3 @@
-/**
- * DISCLAIMER
- * 
- * The quality of the code is such that you should not copy any of it as best
- * practice how to build Vaadin applications.
- * 
- * @author jouni@vaadin.com
- * 
- */
-
 package com.vaadin.demo.dashboard.view.transactions;
 
 import java.text.DateFormat;
@@ -29,9 +19,9 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
+import com.vaadin.demo.dashboard.event.DashboardEvent.BrowserResizeEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.view.QuickTicketsView;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;

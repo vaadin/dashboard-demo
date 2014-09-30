@@ -3,9 +3,9 @@ package com.vaadin.demo.dashboard;
 import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
 
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.BrowserResizeEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.CloseOpenWindowsEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.PostViewChangeEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.BrowserResizeEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.PostViewChangeEvent;
 import com.vaadin.demo.dashboard.view.QuickTicketsView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;

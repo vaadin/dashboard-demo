@@ -8,8 +8,8 @@ import org.vaadin.dialogs.ConfirmDialog;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.ReportsCountUpdatedEvent;
-import com.vaadin.demo.dashboard.event.QuickTicketsEvent.TransactionReportEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.ReportsCountUpdatedEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.view.reports.ReportEditor.PaletteItemType;
 import com.vaadin.demo.dashboard.view.reports.ReportEditor.ReportEditorListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
