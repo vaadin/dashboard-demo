@@ -1,7 +1,7 @@
 package com.vaadin.demo.dashboard.domain;
 
 public class DashboardNotification {
-    private final long id;
+    private long id;
     private String content;
     private boolean read;
     private String firstName;
@@ -9,12 +9,12 @@ public class DashboardNotification {
     private String prettyTime;
     private String action;
 
-    public DashboardNotification(long id) {
-        this.id = id;
-    }
-
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getContent() {

@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -139,15 +141,37 @@ public class DummyDataProvider implements DataProvider {
                 JsonObject posters = movieJson.get("posters").getAsJsonObject();
                 if (!posters.get("profile").getAsString()
                         .contains("poster_default")) {
-                    Movie movie = new Movie(i, movieJson.get("title")
-                            .getAsString(),
-                            movieJson.get("runtime").getAsInt(), movieJson.get(
-                                    "synopsis").getAsString(), posters.get(
-                                    "profile").getAsString(), posters.get(
-                                    "detailed").getAsString(), movieJson.get(
-                                    "release_dates").getAsJsonObject(),
-                            movieJson.get("ratings").getAsJsonObject());
+                    Movie movie = new Movie();
+                    movie.setId(i);
+                    movie.setTitle(movieJson.get("title").getAsString());
+                    movie.setDuration(movieJson.get("runtime").getAsInt());
+                    movie.setSynopsis(movieJson.get("synopsis").getAsString());
+                    movie.setThumbUrl(posters.get("profile").getAsString()
+                            .replace("_tmb", "_320"));
+                    movie.setPosterUrl(posters.get("detailed").getAsString()
+                            .replace("_tmb", "_640"));
+
+                    try {
+                        JsonObject releaseDates = movieJson
+                                .get("release_dates").getAsJsonObject();
+                        String datestr = releaseDates.get("theater")
+                                .getAsString();
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        movie.setReleaseDate(df.parse(datestr));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        movie.setScore(movieJson.get("ratings")
+                                .getAsJsonObject().get("critics_score")
+                                .getAsInt());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     result.add(movie);
+
                 }
             }
         }

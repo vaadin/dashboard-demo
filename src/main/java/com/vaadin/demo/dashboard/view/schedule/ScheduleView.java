@@ -91,7 +91,7 @@ public class ScheduleView extends CssLayout implements View {
                 bg = "url(" + m.getPosterUrl() + ")";
             }
 
-            styles += ".v-calendar-event-" + m.titleSlug().replaceAll("&", "_")
+            styles += ".v-calendar-event-" + m.getId()
                     + " .v-calendar-event-content {background-image:" + bg
                     + ";}";
         }
@@ -305,7 +305,7 @@ public class ScheduleView extends CssLayout implements View {
 
         @Override
         public String getStyleName() {
-            return movie.titleSlug().replaceAll("&", "_");
+            return String.valueOf(movie.getId());
         }
 
         @Override

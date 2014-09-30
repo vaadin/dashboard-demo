@@ -117,14 +117,16 @@ public class DummyDataGenerator {
     }
 
     static Collection<DashboardNotification> randomNotifications() {
-        DashboardNotification n1 = new DashboardNotification(1);
+        DashboardNotification n1 = new DashboardNotification();
+        n1.setId(1);
         n1.setFirstName(randomFirstName());
         n1.setLastName(randomLastName());
         n1.setAction("created a new report");
         n1.setPrettyTime("25 minutes ago");
         n1.setContent(randomText(18));
 
-        DashboardNotification n2 = new DashboardNotification(1);
+        DashboardNotification n2 = new DashboardNotification();
+        n2.setId(2);
         n2.setFirstName(randomFirstName());
         n2.setLastName(randomLastName());
         n2.setAction("changed the schedule");
