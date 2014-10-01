@@ -1,12 +1,14 @@
 package com.vaadin.demo.dashboard.event;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionContext;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.ui.UI;
 
-public class DashboardEventBus {
+public class DashboardEventBus implements SubscriberExceptionHandler {
 
-    private final EventBus eventBus = new EventBus();
+    private final EventBus eventBus = new EventBus(this);
 
     public static void post(Object event) {
         getEventBus().post(event);
@@ -22,5 +24,11 @@ public class DashboardEventBus {
 
     private static EventBus getEventBus() {
         return ((DashboardUI) UI.getCurrent()).dashboardEventbus.eventBus;
+    }
+
+    @Override
+    public void handleException(Throwable exception,
+            SubscriberExceptionContext context) {
+        exception.printStackTrace();
     }
 }
