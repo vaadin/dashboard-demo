@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -159,8 +161,8 @@ public class SalesView extends VerticalLayout implements View {
         Collection<MovieRevenue> dailyRevenue = DashboardUI.getDataProvider()
                 .getDailyRevenuesByMovie(movie.getId());
 
-        ListContainer<MovieRevenue> dailyRevenueContainer = new ListContainer<MovieRevenue>(
-                MovieRevenue.class, dailyRevenue);
+        ListContainer<MovieRevenue> dailyRevenueContainer = new TempMovieRevenuesContainer(
+                dailyRevenue);
 
         dailyRevenueContainer.sort(new Object[] { "timestamp" },
                 new boolean[] { true });
@@ -180,5 +182,31 @@ public class SalesView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
+    }
+
+    private class TempMovieRevenuesContainer extends
+            ListContainer<MovieRevenue> {
+
+        public TempMovieRevenuesContainer(Collection<MovieRevenue> collection) {
+            super(MovieRevenue.class, collection);
+        }
+
+        // This is only temporarily overridden until issues with
+        // BeanComparator get resolved.
+        @Override
+        public void sort(Object[] propertyId, boolean[] ascending) {
+            final boolean sortAscending = ascending[0];
+            Collections.sort(getBackingList(), new Comparator<MovieRevenue>() {
+                @Override
+                public int compare(MovieRevenue o1, MovieRevenue o2) {
+                    int result = o1.getTimestamp().compareTo(o2.getTimestamp());
+                    if (!sortAscending) {
+                        result *= -1;
+                    }
+                    return result;
+                }
+            });
+        }
+
     }
 }

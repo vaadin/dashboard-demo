@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
 
@@ -190,8 +192,8 @@ public class TransactionsView extends VerticalLayout implements View {
         table.setColumnCollapsible("price", false);
 
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new FilterableListContainer<Transaction>(
-                DashboardUI.getDataProvider().getRecentTransactions(200)));
+        table.setContainerDataSource(new TempTransactionsContainer(DashboardUI
+                .getDataProvider().getRecentTransactions(200)));
         table.setSortContainerPropertyId("time");
         table.setSortAscending(false);
 
@@ -312,6 +314,53 @@ public class TransactionsView extends VerticalLayout implements View {
         public Action[] getActions(Object target, Object sender) {
             return new Action[] { details, report, discard };
         }
+    }
+
+    private class TempTransactionsContainer extends
+            FilterableListContainer<Transaction> {
+
+        public TempTransactionsContainer(Collection<Transaction> collection) {
+            super(collection);
+        }
+
+        // This is only temporarily overridden until issues with
+        // BeanComparator get resolved.
+        @Override
+        public void sort(Object[] propertyId, boolean[] ascending) {
+            final boolean sortAscending = ascending[0];
+            final Object sortContainerPropertyId = propertyId[0];
+            Collections.sort(getBackingList(), new Comparator<Transaction>() {
+                @Override
+                public int compare(Transaction o1, Transaction o2) {
+                    int result = 0;
+                    if ("time".equals(sortContainerPropertyId)) {
+                        result = o1.getTime().compareTo(o2.getTime());
+                    } else if ("country".equals(sortContainerPropertyId)) {
+                        result = o1.getCountry().compareTo(o2.getCountry());
+                    } else if ("city".equals(sortContainerPropertyId)) {
+                        result = o1.getCity().compareTo(o2.getCity());
+                    } else if ("theater".equals(sortContainerPropertyId)) {
+                        result = o1.getTheater().compareTo(o2.getTheater());
+                    } else if ("room".equals(sortContainerPropertyId)) {
+                        result = o1.getRoom().compareTo(o2.getRoom());
+                    } else if ("title".equals(sortContainerPropertyId)) {
+                        result = o1.getTitle().compareTo(o2.getTitle());
+                    } else if ("seats".equals(sortContainerPropertyId)) {
+                        result = new Integer(o1.getSeats()).compareTo(o2
+                                .getSeats());
+                    } else if ("price".equals(sortContainerPropertyId)) {
+                        result = new Double(o1.getPrice()).compareTo(o2
+                                .getPrice());
+                    }
+
+                    if (!sortAscending) {
+                        result *= -1;
+                    }
+                    return result;
+                }
+            });
+        }
+
     }
 
 }
