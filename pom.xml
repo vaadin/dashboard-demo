@@ -91,6 +91,11 @@
 			<version>2.1.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.peimari</groupId>
+			<artifactId>maddon</artifactId>
+			<version>1.13</version>
+		</dependency>
+		<dependency>
 			<groupId>org.vaadin.addon</groupId>
 			<artifactId>confirmdialog</artifactId>
 			<version>2.1.1</version>

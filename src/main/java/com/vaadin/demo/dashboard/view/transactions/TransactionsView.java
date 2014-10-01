@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
+import org.vaadin.maddon.FilterableListContainer;
+
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
@@ -14,7 +16,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
@@ -189,9 +190,8 @@ public class TransactionsView extends VerticalLayout implements View {
         table.setColumnCollapsible("price", false);
 
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new BeanItemContainer<Transaction>(
-                Transaction.class, DashboardUI.getDataProvider()
-                        .getRecentTransactions(200)));
+        table.setContainerDataSource(new FilterableListContainer<Transaction>(
+                DashboardUI.getDataProvider().getRecentTransactions(200)));
         table.setSortContainerPropertyId("time");
         table.setSortAscending(false);
 
