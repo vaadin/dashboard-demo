@@ -6,12 +6,12 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.PostViewChangeEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ReportsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.UserLoggedOutEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
@@ -57,7 +57,7 @@ public class DashboardMenu extends CustomComponent {
     private Component buildContent() {
         final CssLayout menuContent = new CssLayout();
         menuContent.addStyleName("sidebar");
-        menuContent.addStyleName("valo-menu-part");
+        menuContent.addStyleName(ValoTheme.MENU_PART);
         menuContent.addStyleName("no-vertical-drag-hints");
         menuContent.addStyleName("no-horizontal-drag-hints");
         menuContent.setWidth(null);
@@ -186,8 +186,9 @@ public class DashboardMenu extends CustomComponent {
             Component badgeLabel) {
         CssLayout dashboardWrapper = new CssLayout(menuItemButton);
         dashboardWrapper.addStyleName("badgewrapper");
+        dashboardWrapper.addStyleName(ValoTheme.MENU_ITEM);
         dashboardWrapper.setWidth(100.0f, Unit.PERCENTAGE);
-        badgeLabel.addStyleName("badge");
+        badgeLabel.addStyleName(ValoTheme.MENU_BADGE);
         badgeLabel.setWidthUndefined();
         badgeLabel.setVisible(false);
         dashboardWrapper.addComponent(badgeLabel);
@@ -229,7 +230,8 @@ public class DashboardMenu extends CustomComponent {
             this.view = view;
             setPrimaryStyleName("valo-menu-item");
             setIcon(view.getIcon());
-            setCaption(view.getViewName());
+            setCaption(view.getViewName().substring(0, 1).toUpperCase()
+                    + view.getViewName().substring(1));
             addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(final ClickEvent event) {

@@ -18,6 +18,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Responsive;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -26,6 +27,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
@@ -34,23 +37,29 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class DashboardView extends VerticalLayout implements View {
+public class DashboardView extends Panel implements View {
 
     private Label titleLabel;
     private NotificationsButton notificationsButton;
 
     public DashboardView() {
-        addStyleName("dashboard-view");
+        addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
         DashboardEventBus.register(this);
 
-        addComponent(buildHeader());
+        VerticalLayout root = new VerticalLayout();
+        root.setSizeFull();
+        root.setMargin(true);
+        root.addStyleName("dashboard-view");
+        setContent(root);
+
+        root.addComponent(buildHeader());
 
         Component content = buildContent();
-        addComponent(content);
-        setExpandRatio(content, 1.0f);
+        root.addComponent(content);
+        root.setExpandRatio(content, 1);
 
-        addLayoutClickListener(new LayoutClickListener() {
+        root.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
                 DashboardEventBus.post(new CloseOpenWindowsEvent());
@@ -63,11 +72,12 @@ public class DashboardView extends VerticalLayout implements View {
         header.addStyleName("viewheader");
         header.setWidth(100.0f, Unit.PERCENTAGE);
         header.setSpacing(true);
-        header.setMargin(true);
+        Responsive.makeResponsive(header);
 
         titleLabel = new Label("Dashboard");
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
+        titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         header.addComponent(titleLabel);
         header.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
         header.setExpandRatio(titleLabel, 1);
@@ -112,25 +122,15 @@ public class DashboardView extends VerticalLayout implements View {
 
     private Component buildContent() {
         CssLayout content = new CssLayout();
-        content.addStyleName("dashboard-panels-layout");
-        content.setWidth(100.0f, Unit.PERCENTAGE);
+        content.addStyleName("dashboard-panels");
+        Responsive.makeResponsive(content);
 
-        Component topGrossingMovies = buildTopGrossingMovies();
-        topGrossingMovies.addStyleName("margins");
-        content.addComponent(topGrossingMovies);
-
+        content.addComponent(buildTopGrossingMovies());
         content.addComponent(buildNotes());
-
-        Component top10TitlesByRevenue = buildTop10TitlesByRevenue();
-        top10TitlesByRevenue.addStyleName("margins");
-        content.addComponent(top10TitlesByRevenue);
-
+        content.addComponent(buildTop10TitlesByRevenue());
         content.addComponent(buildPopularMovies());
 
-        Panel dashboardPanel = new Panel(content);
-        dashboardPanel.addStyleName(ValoTheme.PANEL_BORDERLESS);
-        dashboardPanel.setSizeFull();
-        return dashboardPanel;
+        return content;
     }
 
     private Component buildTopGrossingMovies() {
@@ -143,6 +143,7 @@ public class DashboardView extends VerticalLayout implements View {
         TextArea notes = new TextArea("Notes");
         notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
         notes.setSizeFull();
+        notes.addStyleName(ValoTheme.TEXTAREA_BORDERLESS);
         Component panel = createContentWrapper(notes);
         panel.addStyleName("notes");
         return panel;
@@ -157,12 +158,37 @@ public class DashboardView extends VerticalLayout implements View {
     }
 
     private Component createContentWrapper(Component content) {
-        Panel panel = new Panel(content);
-        panel.setWidth(50.0f, Unit.PERCENTAGE);
-        panel.setHeight(300.0f, Unit.PIXELS);
-        panel.addStyleName("layout-panel");
-        panel.setCaption(content.getCaption());
-        return panel;
+        CssLayout slot = new CssLayout();
+        slot.addStyleName("dashboard-panel-slot");
+
+        CssLayout card = new CssLayout();
+        card.addStyleName(ValoTheme.LAYOUT_CARD);
+
+        HorizontalLayout toolbar = new HorizontalLayout();
+        toolbar.addStyleName("dashboard-panel-toolbar");
+        toolbar.setWidth("100%");
+
+        Label caption = new Label(content.getCaption());
+        caption.addStyleName(ValoTheme.LABEL_H4);
+        caption.addStyleName(ValoTheme.LABEL_COLORED);
+        caption.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        content.setCaption(null);
+
+        MenuBar tools = new MenuBar();
+        tools.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        MenuItem root = tools.addItem("", FontAwesome.COG, null);
+        root.addItem("Settings", null);
+        root.addItem("Maximize", null);
+        root.addSeparator();
+        root.addItem("Close", null);
+
+        toolbar.addComponents(caption, tools);
+        toolbar.setExpandRatio(caption, 1);
+        toolbar.setComponentAlignment(caption, Alignment.MIDDLE_LEFT);
+
+        card.addComponents(toolbar, content);
+        slot.addComponent(card);
+        return slot;
     }
 
     private void openNotificationsPopup(ClickEvent event) {

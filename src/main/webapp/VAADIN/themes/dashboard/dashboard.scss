@@ -1,22 +1,21 @@
-@import "../valo/valo.scss";
-@import "common.scss";
-@import "views/login.scss";
-@import "views/dashboardview.scss";
-@import "views/schedule.scss";
-@import "views/sales.scss";
-@import "views/transactions.scss";
-@import "views/reports.scss";
+@import "../valo/valo";
+@import "common";
+@import "views/login";
+@import "views/dashboardview";
+@import "views/schedule";
+@import "views/sales";
+@import "views/transactions";
+@import "views/reports";
 
+$view-padding: round($v-unit-size / 1.5);
 
 @mixin dashboard {
-
-	@include valo;
-	@include dashboard-common;
-	@include dashboard-login-view;
-	@include dashboard-dashboard-view;
-	@include dashboard-schedule-view;
-	@include dashboard-sales-view;
-	@include dashboard-transactions-view;
-	@include dashboard-reports-view;
-	
+  @include valo;
+  @include dashboard-common;
+  @include dashboard-login-view;
+  @include dashboard-dashboard-view;
+  @include dashboard-schedule-view;
+  @include dashboard-sales-view;
+  @include dashboard-transactions-view;
+  @include dashboard-reports-view;
 }

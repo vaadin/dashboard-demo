@@ -1,53 +1,73 @@
 @mixin dashboard-login-view {
 
-	.login-panel {
-		width: 530px;
-		background: #fff;
-		border-radius: 4px;
-		-webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		-moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		padding: 1em 1em 2em;
-		
-		.v-ui[width-range~="0-800px"] & {
-			width: 243px;
-		}
-		
-		.labels {
-			margin-bottom: 50px;
-			
-			.h4 {
-				margin: 0;
-				vertical-align: bottom;
-			}
-			
-			.h2 {
-				float: right;
-				margin: 0;
-				font-size: 23px;
-				
-				.v-ui[width-range~="0-800px"] & {
-					font-size: 20px;
-					float: none;
-				}
-			}
-		}
-		
-		.fields {
-		
-			.v-horizontallayout {
-				margin-right: 10px;
-				
-				.v-ui[width-range~="0-800px"] & {
-					display: block;
-				}
-			}
-			
-			.v-button {
-				vertical-align: bottom;
-				margin-top: 20px;
-			}
-			
-		}
-	}
+  .loginview {
+    @include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -10%), $fallback: $v-window-modality-curtain-background-color);
+  }
+
+  .login-panel {
+    @include valo-panel-style;
+    padding: round($v-unit-size / 1.5) round($v-unit-size / 1.5);
+    min-width: $v-font-size * 13;
+    max-width: 90%;
+    @include animation(valo-animate-in-slide-up 1s 10ms backwards, valo-animate-in-fade 500ms 10ms backwards);
+
+    .labels {
+      display: block;
+      margin-bottom: round($v-unit-size / 2);
+
+      .h4 {
+        margin: 0;
+        vertical-align: baseline;
+      }
+
+      .h3 {
+        margin: 0;
+        float: right;
+      }
+    }
+
+    .fields .v-icon {
+      opacity: 0.3;
+    }
+
+    @include width-range($min: 0, $max: $v-unit-size * 14) {
+      .labels .h3 {
+        float: none;
+        display: block;
+        margin-top: .2em;
+      }
+
+      .fields {
+        display: block;
+
+        .v-slot {
+          display: block;
+
+          .v-widget {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .login-help {
+    margin: 0 round($v-unit-size/4) !important;
+
+    &.v-Notification-animate-in {
+      @include animation(valo-animate-in-fade 500ms 1500ms backwards);
+    }
+
+    p span {
+      // Mimic paragraphs (since notification styles are a bit limiting...)
+      display: block;
+      margin-top: .5em;
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        border-bottom: 1px solid #888;
+      }
+    }
+  }
 }

@@ -1,80 +1,116 @@
 @mixin dashboard-dashboard-view {
 
-	.dashboard-view {
-	
-		.dashboard-panels-layout {
-			padding: 0 37px 0 57px;
-			
-			.v-ui[width-range~="0-800px"] & {
-				padding: 0 20px;
-			}
-		}
-	
-		.layout-panel {
-			background: #fff;
-			border-radius: 4px;
-			margin-bottom: 20px;
-			
-			.v-ui[width-range~="800px-"] &.margins {
-				margin-left: -20px;
-				margin-right: 20px;
-			}
-			
-			.v-ui[width-range~="0-800px"] & {
-				width: 100% !important;
-			}
-			
-			&.notes .v-panel-caption {
-				@include valo-panel-caption-style($background-color: #5d6167);
-			}
-			
-			.v-textarea {
-				border: none;
-				padding: 20px 20px 0;
-				line-height: 20px;
-				background: #fffdf2 url(../img/notes-bg.png) repeat;
-				color: #545145;
-			}
-			
-		
-		}
-		
-		
-	}
-	
-	.notifications.v-window {
-		overflow: visible !important;
-	
-		&:before {
-			content: "";
-			position: absolute;
-			top: -14px;
-			right: 80px;
-			border: 7px solid transparent;
-			width: 0;
-			height: 0;
-			border-bottom-color: #fff;
-			margin-left: -7px;
-		}
-		
-		.v-window-header {
-			color: #f16433;
-		}
-		
-		.notification-item {
-			border-top: 1px solid #ddd;
-			padding-top: 10px;
-			font-size: 13px;
-		}
-		
-		.notification-title {
-			font-weight: bold;
-		}
-		
-		.notification-time {
-			font-size: 12px;
-			color: #979699;
-		}
-		
-	}
+  .dashboard-view.dashboard-view {
+    padding: $view-padding;
+    overflow: visible;
+
+    .dashboard-panel-toolbar {
+      padding: 1px 0 1px round($v-unit-size / 1.8);
+      height: $v-unit-size + 2px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .dashboard-panels {
+      display: block;
+      height: 100%;
+      margin: 0 round($view-padding / -3);
+
+      .card {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        padding: $v-unit-size + 2px round($v-unit-size / 1.8) 0;
+        position: relative;
+
+        .v-table, .v-table-table {
+          background: transparent;
+        }
+      }
+
+      .dashboard-panel-slot {
+        padding: round($view-padding / 3);
+      }
+
+  	  &[width-range~="0-700px"] {
+  	    .dashboard-panel-slot {
+  	      width: 100%;
+  	    }
+  	  }
+
+  	  &[width-range~="701px-"] {
+  	    .dashboard-panel-slot {
+  	      width: 50%;
+  	    }
+  	  }
+
+      &[height-range~="0-500px"] {
+  	    .dashboard-panel-slot {
+  	      height: 100%;
+  	    }
+  	  }
+
+  	  &[height-range~="501px-"] {
+  	    .dashboard-panel-slot {
+  	      height: 50%;
+  	    }
+  	  }
+
+      .notes {
+        .card {
+          padding: $v-unit-size + 2px 0 0;
+        }
+
+        .v-textarea {
+          border-top: valo-border($strength: 0.5);
+          padding: 20px 20px 0;
+          line-height: 20px;
+          font-size: 14px;
+          background: #fffdf2 url(../img/notes-bg.png) repeat;
+          background-attachment: local;
+          color: #545145;
+          overflow: auto;
+        }
+      }
+    }
+
+
+  }
+
+  .notifications.v-window {
+    overflow: visible !important;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      right: 80px;
+      border: 7px solid transparent;
+      width: 0;
+      height: 0;
+      border-bottom-color: #fff;
+      margin-left: -7px;
+    }
+
+    .v-window-header {
+      color: #f16433;
+    }
+
+    .notification-item {
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      font-size: 13px;
+    }
+
+    .notification-title {
+      font-weight: bold;
+    }
+
+    .notification-time {
+      font-size: 12px;
+      color: #979699;
+    }
+
+  }
 }

@@ -34,14 +34,15 @@ public class TopTenMoviesTable extends Table {
     public TopTenMoviesTable() {
         setCaption("Top 10 Titles by Revenue");
 
-        setPageLength(0);
         addStyleName(ValoTheme.TABLE_BORDERLESS);
         addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
+        addStyleName(ValoTheme.TABLE_SMALL);
         setSortEnabled(false);
         setColumnAlignment("revenue", Align.RIGHT);
         setRowHeaderMode(RowHeaderMode.INDEX);
+        setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
         setSizeFull();
-        setHeightUndefined();
 
         List<MovieRevenue> movieRevenues = new ArrayList<MovieRevenue>(
                 DashboardUI.getDataProvider().getTotalMovieRevenues());

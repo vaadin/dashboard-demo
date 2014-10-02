@@ -1,90 +1,90 @@
 @mixin dashboard-schedule-view {
-	
-	.schedule {
-	
-		.v-calendar-event-content {
-			background-repeat: repeat-x, no-repeat;
-			background-size: auto, cover;
-			border: 1px solid #000;
-			-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-			-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-		}
-		
-		.v-calendar-event-caption {
-			right: 0;
-			width: auto;
-			font-size: 12px;
-			font-weight: 600;
-			color: #fff;
-			text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-			
-			span {
-				color: #979699;
-			}
-		}
-		
-		.v-calendar-header-day {
-			font-weight: 600;
-			font-size: 11px;
-			text-transform: uppercase;
-			color: #349aff;
-			-webkit-font-smoothing: antialiased;
-		}
-		
-		.tray{
-			position: relative;
-			padding: 10px;
-			
-			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-			border-top: 1px solid #cdcecf;
-			background: #dfe0e1;
-			background: -moz-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d8d9da), color-stop(10%, #e6e7e8), color-stop(100%, #e0e1e2));
-			background: -webkit-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-			background: -o-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-			background: -ms-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-			
-			-webkit-transition: -webkit-transform 400ms;
-			-ms-transition: -ms-transform 400ms;
-			transition: transform 400ms;
-			
-			&.v-animate-reveal {
-				-ms-transform: translateY(-100%);
-			    -webkit-transform: translateY(-100%);
-			    transform: translateY(-100%);
-			}
-		}
-		
-		.catalog {
-			padding: 20px;
-			
-			.frame {
-				cursor: pointer;
-				
-				.v-image {
-					@include box-shadow(0 2px 5px rgba(0,0,0,.5));
-					border-radius: 2px;
-					border: 2px solid rgba(255,255,255,.1);
-				}
-				
-				&:hover .v-image {
-					border-color: #69a5e4;
-				}
-				
-				&:hover .v-label {
-					color: #000;
-				}
-				
-				.v-label {
-					font-size: 13px;
-					color: #6c737a;
-				}
-			}
-			
-			
-		}
-		
-	}
+
+  .schedule {
+
+    .v-calendar-event-content {
+      background-repeat: repeat-x, no-repeat;
+      background-size: auto, cover;
+      border: 1px solid #000;
+      -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .v-calendar-event-caption {
+      right: 0;
+      width: auto;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+
+      span {
+        color: #979699;
+      }
+    }
+
+    .v-calendar-header-day {
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #349aff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .tray{
+      position: relative;
+      padding: 10px;
+
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+      border-top: 1px solid #cdcecf;
+      background: #dfe0e1;
+      background: -moz-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d8d9da), color-stop(10%, #e6e7e8), color-stop(100%, #e0e1e2));
+      background: -webkit-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
+      background: -o-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
+      background: -ms-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
+
+      -webkit-transition: -webkit-transform 400ms;
+      -ms-transition: -ms-transform 400ms;
+      transition: transform 400ms;
+
+      &.v-animate-reveal {
+        -ms-transform: translateY(-100%);
+          -webkit-transform: translateY(-100%);
+          transform: translateY(-100%);
+      }
+    }
+
+    .catalog {
+      padding: 20px;
+
+      .frame {
+        cursor: pointer;
+
+        .v-image {
+          @include box-shadow(0 2px 5px rgba(0,0,0,.5));
+          border-radius: 2px;
+          border: 2px solid rgba(255,255,255,.1);
+        }
+
+        &:hover .v-image {
+          border-color: #69a5e4;
+        }
+
+        &:hover .v-label {
+          color: #000;
+        }
+
+        .v-label {
+          font-size: 13px;
+          color: #6c737a;
+        }
+      }
+
+
+    }
+
+  }
 
 }

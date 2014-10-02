@@ -3,7 +3,10 @@ package com.vaadin.demo.dashboard.view;
 import com.vaadin.demo.dashboard.event.DashboardEvent.UserLoginRequestedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
+import com.vaadin.server.Responsive;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -13,7 +16,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
@@ -30,15 +32,18 @@ public class LoginView extends HorizontalLayout {
         setComponentAlignment(loginForm, Alignment.MIDDLE_CENTER);
 
         Notification notification = new Notification(
-                "Welcome to Dashboard Demo", Type.TRAY_NOTIFICATION);
+                "Welcome to Dashboard Demo");
         notification
-                .setDescription("This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.<br>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.");
+                .setDescription("<span>This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.</span> <span>No username or password is required, just click the <b>Sign In</b> button to continue.</span>");
         notification.setHtmlContentAllowed(true);
+        notification.setStyleName("tray dark small closable login-help");
+        notification.setPosition(Position.BOTTOM_CENTER);
         notification.show(Page.getCurrent());
     }
 
     private Component buildLoginForm() {
         final CssLayout loginPanel = new CssLayout();
+        Responsive.makeResponsive(loginPanel);
         loginPanel.addStyleName("login-panel");
 
         loginPanel.addComponent(buildLabels());
@@ -47,21 +52,25 @@ public class LoginView extends HorizontalLayout {
     }
 
     private Component buildFields() {
-        CssLayout fields = new CssLayout();
-        fields.setSizeFull();
+        HorizontalLayout fields = new HorizontalLayout();
+        fields.setSpacing(true);
         fields.addStyleName("fields");
 
         final TextField username = new TextField("Username");
+        username.setIcon(FontAwesome.USER);
+        username.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         username.focus();
-        fields.addComponent(new HorizontalLayout(username));
 
         final PasswordField password = new PasswordField("Password");
-        fields.addComponent(new HorizontalLayout(password));
+        password.setIcon(FontAwesome.LOCK);
+        password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 
         final Button signin = new Button("Sign In");
         signin.addStyleName(ValoTheme.BUTTON_PRIMARY);
         signin.setClickShortcut(KeyCode.ENTER);
-        fields.addComponent(signin);
+
+        fields.addComponents(username, password, signin);
+        fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
 
         signin.addClickListener(new ClickListener() {
             @Override
@@ -71,22 +80,21 @@ public class LoginView extends HorizontalLayout {
             }
         });
         return fields;
-
     }
 
     private Component buildLabels() {
         CssLayout labels = new CssLayout();
-        labels.setWidth(100.0f, Unit.PERCENTAGE);
         labels.addStyleName("labels");
 
         Label welcome = new Label("Welcome");
         welcome.setSizeUndefined();
         welcome.addStyleName(ValoTheme.LABEL_H4);
+        welcome.addStyleName(ValoTheme.LABEL_COLORED);
         labels.addComponent(welcome);
 
         Label title = new Label("QuickTickets Dashboard");
         title.setSizeUndefined();
-        title.addStyleName(ValoTheme.LABEL_H2);
+        title.addStyleName(ValoTheme.LABEL_H3);
         title.addStyleName(ValoTheme.LABEL_LIGHT);
         labels.addComponent(title);
         return labels;

@@ -1,89 +1,80 @@
 @mixin dashboard-common {
 
-	.valo-menu {
-		.badgewrapper {
-			position: relative;
-		}
-		
-		.valo-menu-item-caption {
-			text-transform: uppercase;
-		}
-	}
-	
-	.valo-menu .badge,
-	.dashboard-view .notifications.unread .v-button-caption{
-		display: block;
-		position: absolute;
-		top: 2px;
-		right: 3px;
-		font-size: 11px;
-		line-height: 1;
-		color: #fff;
-		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-		padding: 0.1em 0.4em 0.2em;
-		background: #f16433;
-		background: -moz-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #faa290), color-stop(14%, #f77b62), color-stop(87%, #ec3120), color-stop(100%, #ce2314));
-		background: -webkit-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		background: -o-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		background: -ms-linear-gradient(top, #faa290 0%, #f77b62 14%, #ec3120 87%, #ce2314 100%);
-		border-radius: 2px;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-	}
-	
-	.moviedetailswindow {
-		max-height: 450px;
-		max-width: 730px;
-		
-		.footer {
-			padding: 20px;
-		}
-		
-		.details {
-			white-space: nowrap;
-		}
-		
-		.v-formlayout {
-			border-left: 220px solid transparent;
-			position: absolute;
-			left: 0;
-		}
-		
-		.cover {
-			margin: 10px;
-			border-radius: 4px;
-		}
-		
-	}
-	
-	.moviedetailswindow[width-range~="0-500px"] {
-		.details {
-			white-space: normal;
-		}
-		
-		.v-formlayout {
-			border-left: none;
-			position: relative;
-		}
-	}
-		
-	
-	.valo-menu-item:focus {
-		color: inherit;
-	}
-	.valo-menu-item.selected {
-		color: #fff;
-	}
-	
-	.viewheader .h1 {
-		margin: 0 !important;
-		
-		.v-ui[width-range~="0-800px"] & {
-			font-size: 30px;
-		}
-	}
-	
-	.mainview {
-		background: #fafafa;
-	}
+  .valo-menu {
+    .badgewrapper {
+      position: relative;
+      padding: 0 !important;
+    }
+
+    @include animation(valo-animate-in-slide-right 500ms 300ms backwards);
+  }
+
+  .valo-menu-badge,
+  .dashboard-view .notifications.unread .v-button-caption {
+    @include valo-badge-style;
+    position: absolute;
+    right: round($v-unit-size/3);
+    font-size: round($v-font-size * 0.9);
+    pointer-events: none;
+  }
+
+  .dashboard-view .notifications.unread .v-button-caption {
+    display: block;
+    top: round($v-unit-size / -5);
+    right: round($v-unit-size / -5);
+    display: block;
+    z-index: 1;
+  }
+
+  .moviedetailswindow {
+    max-height: 450px;
+    max-width: 730px;
+
+    .footer {
+      padding: 20px;
+    }
+
+    .details {
+      white-space: nowrap;
+    }
+
+    .v-formlayout {
+      border-left: 220px solid transparent;
+      position: absolute;
+      left: 0;
+    }
+
+    .cover {
+      margin: 10px;
+      border-radius: 4px;
+    }
+
+  }
+
+  .moviedetailswindow[width-range~="0-500px"] {
+    .details {
+      white-space: normal;
+    }
+
+    .v-formlayout {
+      border-left: none;
+      position: relative;
+    }
+  }
+
+  .mainview {
+
+  }
+
+  .viewheader {
+     padding-bottom: $view-padding;
+
+    @include width-range($max: 600px) {
+      padding-bottom: round($v-unit-size / 2);
+
+      .h1 {
+        font-size: 30px;
+      }
+    }
+  }
 }
