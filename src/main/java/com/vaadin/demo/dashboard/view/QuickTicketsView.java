@@ -14,7 +14,7 @@ public enum QuickTicketsView {
             "sales", SalesView.class, FontAwesome.BAR_CHART_O, false), TRANSACTIONS(
             "transactions", TransactionsView.class, FontAwesome.TABLE, false), REPORTS(
             "reports", ReportsView.class, FontAwesome.FILE_TEXT_O, true), SCHEDULE(
-            "schdule", ScheduleView.class, FontAwesome.CALENDAR_O, false);
+            "schedule", ScheduleView.class, FontAwesome.CALENDAR_O, false);
 
     private final String viewName;
     private final Class<? extends View> viewClass;
