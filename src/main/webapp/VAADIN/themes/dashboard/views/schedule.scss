@@ -1,6 +1,7 @@
 @mixin dashboard-schedule-view {
 
   .schedule {
+    background: $v-panel-background-color;
 
     .v-calendar-event-content {
       background-repeat: repeat-x, no-repeat;
@@ -25,29 +26,21 @@
     }
 
     .v-calendar-header-day {
-      font-weight: 600;
-      font-size: 11px;
+      font-weight: $v-font-weight + 200;
+      font-size: 0.8em;
       text-transform: uppercase;
-      color: #349aff;
-      -webkit-font-smoothing: antialiased;
+      color: $v-focus-color;
     }
 
     .tray{
       position: relative;
-      padding: 10px;
+      padding: round($view-padding/2) $view-padding;
+      background: $v-overlay-background-color;
+      border-top: valo-border();
 
-      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-      border-top: 1px solid #cdcecf;
-      background: #dfe0e1;
-      background: -moz-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d8d9da), color-stop(10%, #e6e7e8), color-stop(100%, #e0e1e2));
-      background: -webkit-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-      background: -o-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-      background: -ms-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-
-      -webkit-transition: -webkit-transform 400ms;
-      -ms-transition: -ms-transform 400ms;
-      transition: transform 400ms;
+      -webkit-transition: -webkit-transform 400ms 120ms;
+      -ms-transition: -ms-transform 400ms 120ms;
+      transition: transform 400ms 120ms;
 
       &.v-animate-reveal {
         -ms-transform: translateY(-100%);
@@ -57,7 +50,7 @@
     }
 
     .catalog {
-      padding: 20px;
+      padding: $view-padding;
 
       .frame {
         cursor: pointer;
@@ -69,16 +62,13 @@
         }
 
         &:hover .v-image {
-          border-color: #69a5e4;
+          border-color: $v-focus-color;
         }
 
         &:hover .v-label {
-          color: #000;
         }
 
         .v-label {
-          font-size: 13px;
-          color: #6c737a;
         }
       }
 

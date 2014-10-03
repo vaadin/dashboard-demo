@@ -36,10 +36,8 @@ public class MovieDetailsWindow extends Window {
         setCaption(movie.getTitle());
         center();
         setCloseShortcut(KeyCode.ESCAPE, null);
-        // setDraggable(false);
         setResizable(false);
         setClosable(false);
-        // setWidth(90.0f, Unit.PERCENTAGE);
         setHeight(90.0f, Unit.PERCENTAGE);
 
         VerticalLayout content = new VerticalLayout();
@@ -142,6 +140,7 @@ public class MovieDetailsWindow extends Window {
             public void buttonClick(ClickEvent event) {
                 updateSynopsis(null, true);
                 event.getButton().setVisible(false);
+                MovieDetailsWindow.this.focus();
             }
         });
 
@@ -155,8 +154,8 @@ public class MovieDetailsWindow extends Window {
             synopsis.setData(m.getSynopsis());
         }
         if (!expand) {
-            synopsisText = synopsisText.length() > 350 ? synopsisText
-                    .substring(0, 350) + "…" : synopsisText;
+            synopsisText = synopsisText.length() > 300 ? synopsisText
+                    .substring(0, 300) + "…" : synopsisText;
 
         }
         synopsis.setValue(synopsisText);
