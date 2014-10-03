@@ -7,9 +7,9 @@ import java.util.Date;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ReportsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.view.reports.ReportEditor.PaletteItemType;
 import com.vaadin.demo.dashboard.view.reports.ReportEditor.ReportEditorListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -42,6 +42,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
     public ReportsView() {
         setSizeFull();
         addStyleName("reports");
+        addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         setCloseHandler(this);
         DashboardEventBus.register(this);
 

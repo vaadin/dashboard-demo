@@ -57,6 +57,7 @@ public class ScheduleView extends CssLayout implements View {
 
         TabSheet tabs = new TabSheet();
         tabs.setSizeFull();
+        tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
 
         tabs.addComponent(buildCalendarView());
         tabs.addComponent(buildCatalogView());

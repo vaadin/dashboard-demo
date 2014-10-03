@@ -9,6 +9,29 @@
     @include animation(valo-animate-in-slide-right 500ms 300ms backwards);
   }
 
+  .valo-menu-title {
+    line-height: 1;
+  }
+
+  .v-menubar-user-menu > .v-menubar-menuitem {
+    display: block;
+    padding: 0;
+    max-width: 90%;
+    margin: 0 auto;
+
+    .v-menubar-menuitem-caption:after {
+      margin-right: -1em;
+    }
+
+    .v-ui[width-range~="0-800px"] & {
+      max-width: none;
+
+      .v-menubar-menuitem-caption:after {
+        margin-right: .5em;
+      }
+    }
+  }
+
   .valo-menu .valo-menu-badge,
   .dashboard-view .notifications.unread .v-button-caption {
     @include valo-badge-style;

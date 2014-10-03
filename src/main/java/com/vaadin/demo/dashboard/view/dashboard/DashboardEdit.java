@@ -3,7 +3,6 @@ package com.vaadin.demo.dashboard.view.dashboard;
 import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -47,10 +46,10 @@ public class DashboardEdit extends Window {
     }
 
     private Component buildFooter() {
-        HorizontalLayout result = new HorizontalLayout();
-        result.setSpacing(true);
-        result.addStyleName("footer");
-        result.setWidth(100.0f, Unit.PERCENTAGE);
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.setSpacing(true);
+        footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
+        footer.setWidth(100.0f, Unit.PERCENTAGE);
 
         Button cancel = new Button("Cancel");
         cancel.addClickListener(new ClickListener() {
@@ -60,9 +59,6 @@ public class DashboardEdit extends Window {
             }
         });
         cancel.setClickShortcut(KeyCode.ESCAPE, null);
-        result.addComponent(cancel);
-        result.setExpandRatio(cancel, 1.0f);
-        result.setComponentAlignment(cancel, Alignment.TOP_RIGHT);
 
         Button save = new Button("Save");
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -75,7 +71,9 @@ public class DashboardEdit extends Window {
             }
         });
         save.setClickShortcut(KeyCode.ENTER, null);
-        result.addComponent(save);
-        return result;
+
+        footer.addComponents(save, cancel);
+        footer.setExpandRatio(cancel, 1);
+        return footer;
     }
 }
