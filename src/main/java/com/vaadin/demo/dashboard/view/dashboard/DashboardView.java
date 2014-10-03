@@ -28,7 +28,9 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
@@ -70,26 +72,20 @@ public class DashboardView extends Panel implements View {
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setWidth(100.0f, Unit.PERCENTAGE);
         header.setSpacing(true);
-        Responsive.makeResponsive(header);
 
         titleLabel = new Label("Dashboard");
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
         titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         header.addComponent(titleLabel);
-        header.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
-        header.setExpandRatio(titleLabel, 1);
 
         notificationsButton = buildNotificationsButton();
-        header.addComponent(notificationsButton);
-        header.setComponentAlignment(notificationsButton,
-                Alignment.MIDDLE_RIGHT);
-
         Component edit = buildEdit();
-        header.addComponent(edit);
-        header.setComponentAlignment(edit, Alignment.MIDDLE_RIGHT);
+        HorizontalLayout tools = new HorizontalLayout(notificationsButton, edit);
+        tools.setSpacing(true);
+        tools.addStyleName("toolbar");
+        header.addComponent(tools);
 
         return header;
     }
@@ -158,7 +154,7 @@ public class DashboardView extends Panel implements View {
     }
 
     private Component createContentWrapper(Component content) {
-        CssLayout slot = new CssLayout();
+        final CssLayout slot = new CssLayout();
         slot.addStyleName("dashboard-panel-slot");
 
         CssLayout card = new CssLayout();
@@ -176,9 +172,31 @@ public class DashboardView extends Panel implements View {
 
         MenuBar tools = new MenuBar();
         tools.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        MenuItem max = tools.addItem("", FontAwesome.EXPAND, new Command() {
+            int currentIndex = -1;
+
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                if (!slot.getStyleName().contains("max")) {
+                    currentIndex = ((CssLayout) slot.getParent())
+                            .getComponentIndex(slot);
+                    slot.addStyleName("max");
+                    ((CssLayout) slot.getParent()).addComponent(slot, 0);
+                    if (currentIndex > 0) {
+                        currentIndex++;
+                    }
+                    selectedItem.setIcon(FontAwesome.COMPRESS);
+                } else {
+                    slot.removeStyleName("max");
+                    ((CssLayout) slot.getParent()).addComponent(slot,
+                            currentIndex);
+                    selectedItem.setIcon(FontAwesome.EXPAND);
+                }
+            }
+        });
+        max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Settings", null);
-        root.addItem("Maximize", null);
+        root.addItem("Configure", null);
         root.addSeparator();
         root.addItem("Close", null);
 
@@ -196,6 +214,11 @@ public class DashboardView extends Panel implements View {
         notificationsLayout.setMargin(true);
         notificationsLayout.setSpacing(true);
 
+        Label title = new Label("Notifications");
+        title.addStyleName(ValoTheme.LABEL_H3);
+        title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        notificationsLayout.addComponent(title);
+
         Collection<DashboardNotification> notifications = DashboardUI
                 .getDataProvider().getNotifications();
         DashboardEventBus.post(new NotificationsCountUpdatedEvent());
@@ -203,7 +226,6 @@ public class DashboardView extends Panel implements View {
         for (DashboardNotification notification : notifications) {
             VerticalLayout notificationLayout = new VerticalLayout();
             notificationLayout.addStyleName("notification-item");
-            notificationLayout.setWidth(100.0f, Unit.PERCENTAGE);
 
             Label titleLabel = new Label(notification.getFirstName() + " "
                     + notification.getLastName() + " "
@@ -221,7 +243,23 @@ public class DashboardView extends Panel implements View {
             notificationsLayout.addComponent(notificationLayout);
         }
 
-        Window notificationsWindow = new Window("Notifications");
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
+        footer.setWidth("100%");
+        Button showAll = new Button("View All Notifications",
+                new ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        Notification.show("Not implemented in this demo");
+                    }
+                });
+        showAll.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        showAll.addStyleName(ValoTheme.BUTTON_SMALL);
+        footer.addComponent(showAll);
+        footer.setComponentAlignment(showAll, Alignment.TOP_CENTER);
+        notificationsLayout.addComponent(footer);
+
+        Window notificationsWindow = new Window();
         notificationsWindow.setWidth(300.0f, Unit.PIXELS);
         notificationsWindow.addStyleName("notifications");
         notificationsWindow.setClosable(false);
@@ -230,10 +268,8 @@ public class DashboardView extends Panel implements View {
         notificationsWindow.setCloseShortcut(KeyCode.ESCAPE, null);
         notificationsWindow.setContent(notificationsLayout);
 
-        notificationsWindow.setPositionX(event.getClientX()
-                - event.getRelativeX() - 200);
         notificationsWindow.setPositionY(event.getClientY()
-                - event.getRelativeY() + 50);
+                - event.getRelativeY() + 40);
         UI.getCurrent().addWindow(notificationsWindow);
         notificationsWindow.focus();
     }

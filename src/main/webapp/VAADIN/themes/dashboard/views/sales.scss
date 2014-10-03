@@ -2,6 +2,10 @@
 
   .sales {
 
+    .viewheader {
+      padding: $view-padding;
+    }
+
     .v-timeline:focus {
       outline: none;
     }
@@ -14,8 +18,6 @@
       height: auto !important;
       padding: 0 10px;
     }
-
-
 
     .v-timeline-widget-display .gwt-HTML {
       left: 0 !important;
@@ -40,32 +42,6 @@
       font-size: 13px;
     }
 
-    .toolbar {
-
-      padding: 0 37px 20px;
-
-      .v-button.primary,
-      .v-filterselect {
-        margin-right: 10px;
-      }
-
-      .v-filterselect {
-        margin-bottom: 10px;
-
-        .v-ui[width-range~="0-800px"] & {
-          display: block;
-        }
-      }
-
-      .clearbutton {
-        float: right;
-
-        .v-ui[width-range~="0-800px"] & {
-          float: none;
-        }
-      }
-    }
   }
-
 
 }

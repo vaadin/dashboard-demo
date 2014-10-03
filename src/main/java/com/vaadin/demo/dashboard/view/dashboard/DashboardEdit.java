@@ -38,7 +38,6 @@ public class DashboardEdit extends Window {
 
         nameField.setValue(currentName);
         nameField.setWidth(100.0f, Unit.PERCENTAGE);
-        nameField.selectAll();
         nameField.focus();
 
         result.addComponent(nameField);

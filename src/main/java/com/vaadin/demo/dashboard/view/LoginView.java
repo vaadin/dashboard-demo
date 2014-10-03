@@ -18,14 +18,14 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class LoginView extends HorizontalLayout {
+public class LoginView extends VerticalLayout {
 
     public LoginView() {
         setSizeFull();
-        addStyleName("loginview");
 
         Component loginForm = buildLoginForm();
         addComponent(loginForm);

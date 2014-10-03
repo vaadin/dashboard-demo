@@ -33,12 +33,14 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
+import com.vaadin.server.Responsive;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
@@ -81,27 +83,31 @@ public class TransactionsView extends VerticalLayout implements View {
     }
 
     private Component buildToolbar() {
-        CssLayout toolbar = new CssLayout();
-        toolbar.addStyleName("viewheader");
-        toolbar.setWidth(100.0f, Unit.PERCENTAGE);
-        toolbar.addStyleName("toolbar");
+        HorizontalLayout header = new HorizontalLayout();
+        header.addStyleName("viewheader");
+        header.setSpacing(true);
+        Responsive.makeResponsive(header);
 
         Label title = new Label("Latest Transactions");
-        title.addStyleName(ValoTheme.LABEL_H1);
         title.setSizeUndefined();
-        toolbar.addComponent(title);
-
-        toolbar.addComponent(buildFilter());
+        title.addStyleName(ValoTheme.LABEL_H1);
+        title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        header.addComponent(title);
 
         createReport = buildCreateReport();
-        toolbar.addComponent(createReport);
+        HorizontalLayout tools = new HorizontalLayout(buildFilter(),
+                createReport);
+        tools.setSpacing(true);
+        tools.addStyleName("toolbar");
+        header.addComponent(tools);
 
-        return toolbar;
+        return header;
     }
 
     private Button buildCreateReport() {
-        final Button createReport = new Button("Create Report From Selection");
-        createReport.setHeight(37.0f, Unit.PIXELS);
+        final Button createReport = new Button("Create Report");
+        createReport
+                .setDescription("Create a new report from the selected transactions");
         createReport.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -109,7 +115,6 @@ public class TransactionsView extends VerticalLayout implements View {
             }
         });
         createReport.setEnabled(false);
-        createReport.addStyleName(ValoTheme.BUTTON_SMALL);
         return createReport;
     }
 
@@ -143,8 +148,9 @@ public class TransactionsView extends VerticalLayout implements View {
                     public boolean appliesToProperty(Object propertyId) {
                         if (propertyId.equals("country")
                                 || propertyId.equals("city")
-                                || propertyId.equals("title"))
+                                || propertyId.equals("title")) {
                             return true;
+                        }
                         return false;
                     }
                 });
@@ -152,6 +158,8 @@ public class TransactionsView extends VerticalLayout implements View {
         });
 
         filter.setInputPrompt("Filter");
+        filter.setIcon(FontAwesome.SEARCH);
+        filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         filter.addShortcutListener(new ShortcutListener("Clear",
                 KeyCode.ESCAPE, null) {
             @Override
@@ -185,6 +193,8 @@ public class TransactionsView extends VerticalLayout implements View {
         };
         table.setSizeFull();
         table.addStyleName(ValoTheme.TABLE_BORDERLESS);
+        table.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
+        table.addStyleName(ValoTheme.TABLE_COMPACT);
         table.setSelectable(true);
 
         table.setColumnCollapsingAllowed(true);
@@ -258,12 +268,14 @@ public class TransactionsView extends VerticalLayout implements View {
 
     private boolean filterByProperty(String prop, Item item, String text) {
         if (item == null || item.getItemProperty(prop) == null
-                || item.getItemProperty(prop).getValue() == null)
+                || item.getItemProperty(prop).getValue() == null) {
             return false;
+        }
         String val = item.getItemProperty(prop).getValue().toString().trim()
                 .toLowerCase();
-        if (val.startsWith(text.toLowerCase().trim()))
+        if (val.startsWith(text.toLowerCase().trim())) {
             return true;
+        }
         // String[] parts = text.split(" ");
         // for (String part : parts) {
         // if (val.contains(part.toLowerCase()))

@@ -9,7 +9,7 @@
     @include animation(valo-animate-in-slide-right 500ms 300ms backwards);
   }
 
-  .valo-menu-badge,
+  .valo-menu .valo-menu-badge,
   .dashboard-view .notifications.unread .v-button-caption {
     @include valo-badge-style;
     position: absolute;
@@ -27,53 +27,94 @@
   }
 
   .moviedetailswindow {
-    max-height: 450px;
-    max-width: 730px;
+    max-height: round(28 * $v-font-size);
+    width: round(50 * $v-font-size);
+    max-width: 90%;
 
-    .footer {
-      padding: 20px;
-    }
-
-    .details {
-      white-space: nowrap;
-    }
-
-    .v-formlayout {
-      border-left: 220px solid transparent;
-      position: absolute;
-      left: 0;
+    .cover,
+    .v-slot-cover {
+      max-width: 100%;
+      width: 200px;
+      position: relative;
     }
 
     .cover {
-      margin: 10px;
-      border-radius: 4px;
+      @include box-shadow(valo-bevel-and-shadow($shadow: $v-overlay-shadow));
+      border-radius: $v-border-radius;
     }
 
-  }
+    .v-slot-cover {
 
-  .moviedetailswindow[width-range~="0-500px"] {
-    .details {
-      white-space: normal;
+      &:after {
+        content: "";
+        display: block;
+        background: url(img/poster-gloss.png) no-repeat top right;
+        background-size: contain;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     }
 
-    .v-formlayout {
-      border-left: none;
-      position: relative;
-    }
-  }
+    @include width-range($max: round(40 * $v-font-size)) {
+      .v-expand {
+        padding-left: 0 !important;
+      }
 
-  .mainview {
+      .v-slot {
+        display: block;
+      }
+
+      .v-slot-cover {
+        margin: 0 auto !important;
+      }
+    }
+
+    .v-button-link {
+      padding: 0;
+      height: auto;
+    }
 
   }
 
   .viewheader {
-     padding-bottom: $view-padding;
+    padding-bottom: $view-padding;
+    width: 100%;
+    text-align: right;
+    white-space: normal;
 
-    @include width-range($max: 600px) {
+    .v-slot-h1 {
+      float: left;
+    }
+
+    .h1 {
+      white-space: normal;
+    }
+
+    @include width-range($max: 700px) {
       padding-bottom: round($v-unit-size / 2);
+      text-align: left;
+
+      .v-slot-h1 {
+        float: none;
+      }
 
       .h1 {
-        font-size: 30px;
+        font-size: round($v-font-size--h1 * 0.8);
+      }
+
+      > .v-slot {
+        display: block;
+      }
+
+      .toolbar {
+        white-space: normal;
+
+        > .v-spacing {
+          height: round($v-unit-size / 4);
+        }
       }
     }
   }

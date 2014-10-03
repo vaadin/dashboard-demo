@@ -1,3 +1,10 @@
+@include keyframes(notifications-animate-in) {
+  0% {
+    @include transform(scale(0));
+  }
+}
+
+
 @mixin dashboard-dashboard-view {
 
   .dashboard-view.dashboard-view {
@@ -31,6 +38,7 @@
 
       .dashboard-panel-slot {
         padding: round($view-padding / 3);
+        min-height: 250px;
       }
 
   	  &[width-range~="0-700px"] {
@@ -57,6 +65,11 @@
   	    }
   	  }
 
+      .dashboard-panel-slot.max {
+        width: 100%;
+        height: 100%;
+      }
+
       .notes {
         .card {
           padding: $v-unit-size + 2px 0 0;
@@ -75,41 +88,74 @@
       }
     }
 
-
   }
 
   .notifications.v-window {
     overflow: visible !important;
+    // top: 3 * $v-unit-size !important;
+    right: $view-padding;
+    left: auto !important;
+    max-width: 90%;
 
-    &:before {
+    $window-outline: $v-overlay-shadow;
+    @if list-of-lists($window-outline) {
+      $window-outline: last($v-overlay-shadow);
+    }
+    $window-outline: flatten-list(valo-bevel-and-shadow($bevel: null, $shadow: $window-outline));
+    $outline-width: nth($window-outline, length($window-outline) - 1);
+    $outline-color: last($window-outline);
+
+    @include transform-origin(296px - (2 * $v-unit-size - round($v-unit-size / 3)) -7px);
+
+    &.v-window-animate-in {
+      @include animation(notifications-animate-in 260ms cubic-bezier(.68,.37,.51,1.37));
+    }
+
+    &:before,
+    &:after {
       content: "";
       position: absolute;
       top: -14px;
-      right: 80px;
+      right: 2 * $v-unit-size - round($v-unit-size / 3);
       border: 7px solid transparent;
       width: 0;
       height: 0;
-      border-bottom-color: #fff;
-      margin-left: -7px;
+      border-bottom-color: $v-window-background-color;
+    }
+
+
+    &:before {
+      @if type-of($outline-width) == number and $outline-width > 0 {
+        top: -15px - 2 * $outline-width;
+        margin-right: -$outline-width;
+        border-width: 7px + $outline-width;
+        border-bottom-width: 8px;
+        border-bottom-color: $outline-color;
+      } @else {
+        content: none;
+      }
     }
 
     .v-window-header {
-      color: #f16433;
+      color: $v-selection-color;
+    }
+
+    .v-window-outerheader:after,
+    .v-scrollable:before {
+      display: none;
     }
 
     .notification-item {
-      border-top: 1px solid #ddd;
-      padding-top: 10px;
-      font-size: 13px;
+      font-size: round($v-font-size * 0.9);
     }
 
     .notification-title {
-      font-weight: bold;
+      font-weight: $v-font-weight + 200;
     }
 
     .notification-time {
-      font-size: 12px;
-      color: #979699;
+      font-size: round($v-font-size * 0.8);
+      color: valo-font-color($v-window-background-color, .5);
     }
 
   }

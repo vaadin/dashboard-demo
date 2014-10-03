@@ -2,6 +2,16 @@
 
   .loginview {
     @include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -10%), $fallback: $v-window-modality-curtain-background-color);
+    padding-top: 0 !important;
+    @include animation(valo-animate-in-fade 300ms 10ms backwards);
+
+    > .v-loading-indicator {
+      display: none !important;
+    }
+
+    > .v-widget > .v-expand {
+
+    }
   }
 
   .login-panel {
@@ -9,7 +19,7 @@
     padding: round($v-unit-size / 1.5) round($v-unit-size / 1.5);
     min-width: $v-font-size * 13;
     max-width: 90%;
-    @include animation(valo-animate-in-slide-up 1s 10ms backwards, valo-animate-in-fade 500ms 10ms backwards);
+    @include animation(valo-animate-in-slide-up 800ms 10ms backwards, valo-animate-in-fade 600ms 100ms backwards);
 
     .labels {
       display: block;

@@ -14,7 +14,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -37,20 +36,21 @@ public class MovieDetailsWindow extends Window {
         setCaption(movie.getTitle());
         center();
         setCloseShortcut(KeyCode.ESCAPE, null);
-        setDraggable(false);
+        // setDraggable(false);
         setResizable(false);
         setClosable(false);
-        setWidth(90.0f, Unit.PERCENTAGE);
+        // setWidth(90.0f, Unit.PERCENTAGE);
         setHeight(90.0f, Unit.PERCENTAGE);
 
         VerticalLayout content = new VerticalLayout();
-        content.setMargin(true);
         content.setSizeFull();
         setContent(content);
 
         Panel detailsWrapper = new Panel(buildMovieDetails(movie, startTime,
                 endTime));
         detailsWrapper.setSizeFull();
+        detailsWrapper.addStyleName(ValoTheme.PANEL_BORDERLESS);
+        detailsWrapper.addStyleName("scroll-divider");
         content.addComponent(detailsWrapper);
         content.setExpandRatio(detailsWrapper, 1f);
 
@@ -59,9 +59,8 @@ public class MovieDetailsWindow extends Window {
 
     private Component buildFooter() {
         HorizontalLayout footer = new HorizontalLayout();
-        footer.addStyleName("footer");
+        footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth(100.0f, Unit.PERCENTAGE);
-        footer.setMargin(true);
 
         Button ok = new Button("Close");
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -71,6 +70,7 @@ public class MovieDetailsWindow extends Window {
                 close();
             }
         });
+        ok.focus();
         footer.addComponent(ok);
         footer.setComponentAlignment(ok, Alignment.TOP_RIGHT);
         return footer;
@@ -78,19 +78,20 @@ public class MovieDetailsWindow extends Window {
 
     private Component buildMovieDetails(Movie movie, Date startTime,
             Date endTime) {
-        CssLayout details = new CssLayout();
+        HorizontalLayout details = new HorizontalLayout();
         details.setWidth(100.0f, Unit.PERCENTAGE);
-        details.addStyleName("details");
+        details.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
+        details.setMargin(true);
+        details.setSpacing(true);
 
         final Image coverImage = new Image(null, new ExternalResource(
                 movie.getPosterUrl()));
-        coverImage.setWidth(190.0f, Unit.PIXELS);
-        coverImage.setWidth(200.0f, Unit.PIXELS);
-        coverImage.setHeight(270.0f, Unit.PIXELS);
         coverImage.addStyleName("cover");
         details.addComponent(coverImage);
 
-        details.addComponent(buildDetailsForm(movie, startTime, endTime));
+        Component detailsForm = buildDetailsForm(movie, startTime, endTime);
+        details.addComponent(detailsForm);
+        details.setExpandRatio(detailsForm, 1);
 
         return details;
     }
@@ -154,8 +155,8 @@ public class MovieDetailsWindow extends Window {
             synopsis.setData(m.getSynopsis());
         }
         if (!expand) {
-            synopsisText = synopsisText.length() > 300 ? synopsisText
-                    .substring(0, 300) + "…" : synopsisText;
+            synopsisText = synopsisText.length() > 350 ? synopsisText
+                    .substring(0, 350) + "…" : synopsisText;
 
         }
         synopsis.setValue(synopsisText);

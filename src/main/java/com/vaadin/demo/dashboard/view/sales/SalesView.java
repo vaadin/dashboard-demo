@@ -22,6 +22,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Responsive;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -49,7 +50,6 @@ public class SalesView extends VerticalLayout implements View {
         addStyleName("sales");
 
         addComponent(buildHeader());
-        addComponent(buildToolbar());
 
         timeline = buildTimeline();
         addComponent(timeline);
@@ -79,25 +79,24 @@ public class SalesView extends VerticalLayout implements View {
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setWidth(100.0f, Unit.PERCENTAGE);
         header.setSpacing(true);
-        header.setMargin(true);
+        Responsive.makeResponsive(header);
 
         Label titleLabel = new Label("Revenue by Movie");
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
-        header.addComponent(titleLabel);
+        titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        header.addComponents(titleLabel, buildToolbar());
 
         return header;
     }
 
     private Component buildToolbar() {
-        CssLayout toolbar = new CssLayout();
-        toolbar.setWidth(100.0f, Unit.PERCENTAGE);
+        HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.addStyleName("toolbar");
+        toolbar.setSpacing(true);
 
         movieSelect = new ComboBox();
-        movieSelect.setWidth(250.0f, Unit.PIXELS);
         movieSelect.setItemCaptionPropertyId("title");
         movieSelect.addShortcutListener(new ShortcutListener("Add",
                 KeyCode.ENTER, null) {
@@ -106,12 +105,14 @@ public class SalesView extends VerticalLayout implements View {
                 addDataSet((Movie) movieSelect.getValue());
             }
         });
-        toolbar.addComponent(movieSelect);
 
         final Button add = new Button("Add");
         add.setEnabled(false);
         add.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        toolbar.addComponent(add);
+
+        CssLayout group = new CssLayout(movieSelect, add);
+        group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        toolbar.addComponent(group);
 
         movieSelect.addValueChangeListener(new ValueChangeListener() {
             @Override

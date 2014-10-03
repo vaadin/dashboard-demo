@@ -60,10 +60,11 @@ public class DashboardUI extends UI {
         if (user != null && "admin".equals(user.getRole())) {
             // Authenticated user
             setContent(new MainView());
-
+            removeStyleName("loginview");
             getNavigator().navigateTo(getNavigator().getState());
         } else {
             setContent(new LoginView());
+            addStyleName("loginview");
         }
     }
 
