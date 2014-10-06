@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.view.QuickTicketsView;
+import com.vaadin.ui.Component;
 
 public class DashboardEvent {
 
@@ -86,6 +87,30 @@ public class DashboardEvent {
     }
 
     public static class CloseOpenWindowsEvent {
+    }
+
+    public static class MaximizeDashboardPanelEvent {
+        private final Component panel;
+
+        public MaximizeDashboardPanelEvent(Component panel) {
+            this.panel = panel;
+        }
+
+        public Component getPanel() {
+            return panel;
+        }
+    }
+
+    public static class MinimizeDashboardPanelEvent {
+        private final Component panel;
+
+        public MinimizeDashboardPanelEvent(Component panel) {
+            this.panel = panel;
+        }
+
+        public Component getPanel() {
+            return panel;
+        }
     }
 
 }

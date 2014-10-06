@@ -1,6 +1,7 @@
 package com.vaadin.demo.dashboard.view.dashboard;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.vaadin.sparklines.Sparklines;
 
@@ -13,6 +14,8 @@ import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.DashboardNotification;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.MaximizeDashboardPanelEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.MinimizeDashboardPanelEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -46,13 +49,15 @@ public class DashboardView extends Panel implements View {
 
     private Label titleLabel;
     private NotificationsButton notificationsButton;
+    private CssLayout dashboardPanels;
+    private VerticalLayout root;
 
     public DashboardView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
         DashboardEventBus.register(this);
 
-        VerticalLayout root = new VerticalLayout();
+        root = new VerticalLayout();
         root.setSizeFull();
         root.setMargin(true);
         root.addStyleName("dashboard-view");
@@ -167,16 +172,16 @@ public class DashboardView extends Panel implements View {
     }
 
     private Component buildContent() {
-        CssLayout content = new CssLayout();
-        content.addStyleName("dashboard-panels");
-        Responsive.makeResponsive(content);
+        dashboardPanels = new CssLayout();
+        dashboardPanels.addStyleName("dashboard-panels");
+        Responsive.makeResponsive(dashboardPanels);
 
-        content.addComponent(buildTopGrossingMovies());
-        content.addComponent(buildNotes());
-        content.addComponent(buildTop10TitlesByRevenue());
-        content.addComponent(buildPopularMovies());
+        dashboardPanels.addComponent(buildTopGrossingMovies());
+        dashboardPanels.addComponent(buildNotes());
+        dashboardPanels.addComponent(buildTop10TitlesByRevenue());
+        dashboardPanels.addComponent(buildPopularMovies());
 
-        return content;
+        return dashboardPanels;
     }
 
     private Component buildTopGrossingMovies() {
@@ -228,19 +233,24 @@ public class DashboardView extends Panel implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (!slot.getStyleName().contains("max")) {
-                    currentIndex = ((CssLayout) slot.getParent())
-                            .getComponentIndex(slot);
-                    slot.addStyleName("max");
-                    ((CssLayout) slot.getParent()).addComponent(slot, 0);
-                    if (currentIndex > 0) {
-                        currentIndex++;
-                    }
+                    // currentIndex = ((CssLayout) slot.getParent())
+                    // .getComponentIndex(slot);
+                    // slot.addStyleName("max");
+                    // ((CssLayout) slot.getParent()).addComponent(slot, 0);
+                    // if (currentIndex > 0) {
+                    // currentIndex++;
+                    // }
                     selectedItem.setIcon(FontAwesome.COMPRESS);
+                    DashboardEventBus
+                            .post(new MaximizeDashboardPanelEvent(slot));
                 } else {
                     slot.removeStyleName("max");
-                    ((CssLayout) slot.getParent()).addComponent(slot,
-                            currentIndex);
+                    // ((CssLayout) slot.getParent()).addComponent(slot,
+                    // currentIndex);
                     selectedItem.setIcon(FontAwesome.EXPAND);
+
+                    DashboardEventBus
+                            .post(new MinimizeDashboardPanelEvent(slot));
                 }
             }
         });
@@ -376,4 +386,32 @@ public class DashboardView extends Panel implements View {
         }
     }
 
+    @Subscribe
+    public void maximizePanel(MaximizeDashboardPanelEvent event) {
+        for (Iterator<Component> it = dashboardPanels.iterator(); it.hasNext();) {
+            Component c = it.next();
+            c.removeStyleName("max");
+            c.setVisible(false);
+        }
+        event.getPanel().addStyleName("max");
+        event.getPanel().setVisible(true);
+
+        for (Iterator<Component> it = root.iterator(); it.hasNext();) {
+            it.next().setVisible(false);
+        }
+        dashboardPanels.setVisible(true);
+    }
+
+    @Subscribe
+    public void minimizePanel(MinimizeDashboardPanelEvent event) {
+        for (Iterator<Component> it = dashboardPanels.iterator(); it.hasNext();) {
+            Component c = it.next();
+            c.removeStyleName("max");
+            c.setVisible(true);
+        }
+
+        for (Iterator<Component> it = root.iterator(); it.hasNext();) {
+            it.next().setVisible(true);
+        }
+    }
 }
