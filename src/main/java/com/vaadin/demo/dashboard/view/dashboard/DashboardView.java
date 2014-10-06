@@ -75,6 +75,10 @@ public class DashboardView extends Panel implements View {
     }
 
     Component buildSparklines() {
+        String maxColor = DummyDataGenerator.chartColors[2].toString();
+        String minColor = DummyDataGenerator.chartColors[5].toString();
+        String valColor = DummyDataGenerator.chartColors[0].toString();
+
         CssLayout sparks = new CssLayout();
         sparks.addStyleName("sparks");
         sparks.setWidth("100%");
@@ -83,33 +87,33 @@ public class DashboardView extends Panel implements View {
         Sparklines s = new Sparklines(null, 0, 0, 0, 100);
         s.setDescription("Metric #1");
         s.setValue(DummyDataGenerator.randomSparklineValues(20, 20, 80));
-        s.setMaxColor("#8CB206");
-        s.setMinColor("#FB9F00");
-        s.setValueColor("#519BC2");
+        s.setMaxColor(maxColor);
+        s.setMinColor(minColor);
+        s.setValueColor(valColor);
         sparks.addComponent(s);
 
         s = new Sparklines(null, 0, 0, 0, 100);
         s.setDescription("Metric #2");
         s.setValue(DummyDataGenerator.randomSparklineValues(10, 40, 90));
-        s.setMaxColor("#8CB206");
-        s.setMinColor("#FB9F00");
-        s.setValueColor("#519BC2");
+        s.setMaxColor(maxColor);
+        s.setMinColor(minColor);
+        s.setValueColor(valColor);
         sparks.addComponent(s);
 
         s = new Sparklines(null, 0, 0, 0, 100);
         s.setDescription("Metric #3");
         s.setValue(DummyDataGenerator.randomSparklineValues(30, 5, 100));
-        s.setMaxColor("#8CB206");
-        s.setMinColor("#FB9F00");
-        s.setValueColor("#519BC2");
+        s.setMaxColor(maxColor);
+        s.setMinColor(minColor);
+        s.setValueColor(valColor);
         sparks.addComponent(s);
 
         s = new Sparklines(null, 0, 0, 0, 100);
         s.setDescription("Metric #4");
         s.setValue(DummyDataGenerator.randomSparklineValues(15, 20, 70));
-        s.setMaxColor("#8CB206");
-        s.setMinColor("#FB9F00");
-        s.setValueColor("#519BC2");
+        s.setMaxColor(maxColor);
+        s.setMinColor(minColor);
+        s.setValueColor(valColor);
         sparks.addComponent(s);
 
         return sparks;

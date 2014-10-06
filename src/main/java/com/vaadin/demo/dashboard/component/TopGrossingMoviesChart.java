@@ -10,17 +10,11 @@ import com.vaadin.addon.charts.model.ListSeries;
 import com.vaadin.addon.charts.model.PlotOptionsBar;
 import com.vaadin.addon.charts.model.Series;
 import com.vaadin.addon.charts.model.Tooltip;
-import com.vaadin.addon.charts.model.style.Color;
-import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.Movie;
 
 public class TopGrossingMoviesChart extends Chart {
-
-    private static Color[] colors = new Color[] { new SolidColor("#FA9E00"),
-            new SolidColor("#8CB206"), new SolidColor("#519BC2"),
-            new SolidColor("#FACF00"), new SolidColor("#B0DC07"),
-            new SolidColor("#76BCE0") };
 
     public TopGrossingMoviesChart() {
         // TODO this don't actually visualize top grossing movies, but just
@@ -41,7 +35,7 @@ public class TopGrossingMoviesChart extends Chart {
         for (int i = 0; i < 6; i++) {
             Movie movie = movies.get(i);
             PlotOptionsBar opts = new PlotOptionsBar();
-            opts.setColor(colors[5 - i]);
+            opts.setColor(DummyDataGenerator.chartColors[5 - i]);
             opts.setBorderWidth(0);
             opts.setShadow(false);
             opts.setPointPadding(0.4);
