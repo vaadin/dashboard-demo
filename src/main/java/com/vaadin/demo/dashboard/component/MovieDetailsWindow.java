@@ -96,8 +96,8 @@ public class MovieDetailsWindow extends Window {
 
     private Component buildDetailsForm(Movie movie, Date startTime, Date endTime) {
         FormLayout fields = new FormLayout();
-        fields.setSpacing(true);
-        fields.setMargin(true);
+        fields.setSpacing(false);
+        fields.setMargin(false);
 
         Label label;
         SimpleDateFormat df = new SimpleDateFormat();

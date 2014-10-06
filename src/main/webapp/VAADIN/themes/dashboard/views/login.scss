@@ -1,16 +1,12 @@
 @mixin dashboard-login-view {
 
   .loginview {
-    @include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -10%), $fallback: $v-window-modality-curtain-background-color);
+    @include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -2% - valo-gradient-opacity()), $fallback: $v-window-modality-curtain-background-color);
     padding-top: 0 !important;
     @include animation(valo-animate-in-fade 300ms 10ms backwards);
 
     > .v-loading-indicator {
       display: none !important;
-    }
-
-    > .v-widget > .v-expand {
-
     }
   }
 
@@ -20,6 +16,10 @@
     min-width: $v-font-size * 13;
     max-width: 90%;
     @include animation(valo-animate-in-slide-up 800ms 10ms backwards, valo-animate-in-fade 600ms 100ms backwards);
+
+    .v-ui[width-range~="0-800px"] & {
+      @include animation(animate-in-scale-up 500ms 10ms backwards, valo-animate-in-fade 300ms 100ms backwards);
+    }
 
     .labels {
       display: block;
@@ -45,6 +45,8 @@
         float: none;
         display: block;
         margin-top: .2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .fields {

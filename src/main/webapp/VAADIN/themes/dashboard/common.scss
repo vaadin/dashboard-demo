@@ -1,12 +1,22 @@
 @mixin dashboard-common {
 
+  @include keyframes(animate-in-scale-up) {
+    0% {
+      @include transform(scale(0));
+    }
+  }
+
   .valo-menu {
     .badgewrapper {
       position: relative;
       padding: 0 !important;
     }
 
-    @include animation(valo-animate-in-slide-right 500ms 300ms backwards);
+    @include animation(valo-animate-in-slide-right 700ms 700ms backwards);
+
+    .v-ui[width-range~="0-800px"] & {
+      @include animation(none);
+    }
   }
 
   .valo-menu-title {
@@ -25,9 +35,10 @@
 
     .v-ui[width-range~="0-800px"] & {
       max-width: none;
+      margin-right: .5em;
 
       .v-menubar-menuitem-caption:after {
-        margin-right: .5em;
+        margin-right: 0;
       }
     }
   }
@@ -140,5 +151,12 @@
         }
       }
     }
+  }
+
+  .v-caption.v-caption-caption-on-left {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 37px;
+    margin-right: $v-layout-spacing-horizontal;
   }
 }

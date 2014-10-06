@@ -1,15 +1,48 @@
-@include keyframes(notifications-animate-in) {
-  0% {
-    @include transform(scale(0));
-  }
-}
-
-
 @mixin dashboard-dashboard-view {
 
   .dashboard-view.dashboard-view {
     padding: $view-padding;
     overflow: visible;
+
+    .sparks {
+      @include valo-panel-well-style;
+      margin-bottom: $v-layout-spacing-vertical;
+
+      @include width-range($max: 680px) {
+        .v-sparkline {
+          width: 50%;
+        }
+      }
+
+      @include width-range($max: 350px) {
+        .v-sparkline {
+          width: 100%;
+          border-left: none;
+          border-top: valo-border($strength: 0.5);
+
+          &:first-child {
+            border-top: none;
+          }
+        }
+      }
+    }
+
+    .v-sparkline {
+      font-family: inherit;
+      float: left;
+      text-align: center;
+      width: 25%;
+      padding: $v-layout-spacing-vertical $v-layout-spacing-horizontal;
+      border-left: valo-border($strength: 0.5);
+
+      > tbody {
+        display: inline-block;
+      }
+
+      &:first-child {
+        border-left: none;
+      }
+    }
 
     .dashboard-panel-toolbar {
       padding: 1px 0 1px round($v-unit-size / 1.8);
@@ -108,7 +141,7 @@
     @include transform-origin(296px - (2 * $v-unit-size - round($v-unit-size / 3)) -7px);
 
     &.v-window-animate-in {
-      @include animation(notifications-animate-in 260ms cubic-bezier(.68,.37,.51,1.37));
+      @include animation(animate-in-scale-up 260ms cubic-bezier(.68,.37,.51,1.37));
     }
 
     &:before,

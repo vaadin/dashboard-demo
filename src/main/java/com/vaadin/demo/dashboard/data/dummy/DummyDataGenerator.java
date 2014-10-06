@@ -30,14 +30,16 @@ public class DummyDataGenerator {
     static String randomCompanyName() {
 
         String name = randomName();
-        if (Math.random() < 0.03)
+        if (Math.random() < 0.03) {
             name += " Technologies";
-        else if (Math.random() < 0.02)
+        } else if (Math.random() < 0.02) {
             name += " Investment";
-        if (Math.random() < 0.3)
+        }
+        if (Math.random() < 0.3) {
             name += " Inc";
-        else if (Math.random() < 0.2)
+        } else if (Math.random() < 0.2) {
             name += " Ltd.";
+        }
 
         return name;
     }
@@ -50,8 +52,9 @@ public class DummyDataGenerator {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < len; i++) {
             String p = part[(int) (Math.random() * part.length)];
-            if (i == 0 && capitalized)
+            if (i == 0 && capitalized) {
                 p = Character.toUpperCase(p.charAt(0)) + p.substring(1);
+            }
             sb.append(p);
         }
         return sb.toString();
@@ -62,18 +65,20 @@ public class DummyDataGenerator {
         StringBuffer sb = new StringBuffer();
         int sentenceWordsLeft = 0;
         while (words-- > 0) {
-            if (sb.length() > 0)
+            if (sb.length() > 0) {
                 sb.append(' ');
+            }
             if (sentenceWordsLeft == 0 && words > 0) {
                 sentenceWordsLeft = (int) (Math.random() * 15);
                 sb.append(randomWord(1 + (int) (Math.random() * 3), true));
             } else {
                 sentenceWordsLeft--;
                 sb.append(randomWord(1 + (int) (Math.random() * 3), false));
-                if (words > 0 && sentenceWordsLeft > 2 && Math.random() < 0.2)
+                if (words > 0 && sentenceWordsLeft > 2 && Math.random() < 0.2) {
                     sb.append(',');
-                else if (sentenceWordsLeft == 0 || words == 0)
+                } else if (sentenceWordsLeft == 0 || words == 0) {
                     sb.append('.');
+                }
             }
         }
         return sb.toString();
@@ -134,5 +139,18 @@ public class DummyDataGenerator {
         n2.setContent(randomText(10));
 
         return Arrays.asList(n1, n2);
+    }
+
+    public static String randomSparklineValues(int howMany, int min, int max) {
+        String values = "";
+
+        for (int i = 0; i < howMany; i++) {
+            if (i > 0) {
+                values += ",";
+            }
+            values += (int) (min + (Math.random() * (max - min)));
+        }
+
+        return values;
     }
 }

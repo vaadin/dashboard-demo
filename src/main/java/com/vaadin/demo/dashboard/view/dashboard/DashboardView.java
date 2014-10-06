@@ -2,11 +2,14 @@ package com.vaadin.demo.dashboard.view.dashboard;
 
 import java.util.Collection;
 
+import org.vaadin.sparklines.Sparklines;
+
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
+import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.DashboardNotification;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
@@ -57,6 +60,8 @@ public class DashboardView extends Panel implements View {
 
         root.addComponent(buildHeader());
 
+        root.addComponent(buildSparklines());
+
         Component content = buildContent();
         root.addComponent(content);
         root.setExpandRatio(content, 1);
@@ -67,6 +72,47 @@ public class DashboardView extends Panel implements View {
                 DashboardEventBus.post(new CloseOpenWindowsEvent());
             }
         });
+    }
+
+    Component buildSparklines() {
+        CssLayout sparks = new CssLayout();
+        sparks.addStyleName("sparks");
+        sparks.setWidth("100%");
+        Responsive.makeResponsive(sparks);
+
+        Sparklines s = new Sparklines(null, 0, 0, 0, 100);
+        s.setDescription("Metric #1");
+        s.setValue(DummyDataGenerator.randomSparklineValues(20, 20, 80));
+        s.setMaxColor("#8CB206");
+        s.setMinColor("#FB9F00");
+        s.setValueColor("#519BC2");
+        sparks.addComponent(s);
+
+        s = new Sparklines(null, 0, 0, 0, 100);
+        s.setDescription("Metric #2");
+        s.setValue(DummyDataGenerator.randomSparklineValues(10, 40, 90));
+        s.setMaxColor("#8CB206");
+        s.setMinColor("#FB9F00");
+        s.setValueColor("#519BC2");
+        sparks.addComponent(s);
+
+        s = new Sparklines(null, 0, 0, 0, 100);
+        s.setDescription("Metric #3");
+        s.setValue(DummyDataGenerator.randomSparklineValues(30, 5, 100));
+        s.setMaxColor("#8CB206");
+        s.setMinColor("#FB9F00");
+        s.setValueColor("#519BC2");
+        sparks.addComponent(s);
+
+        s = new Sparklines(null, 0, 0, 0, 100);
+        s.setDescription("Metric #4");
+        s.setValue(DummyDataGenerator.randomSparklineValues(15, 20, 70));
+        s.setMaxColor("#8CB206");
+        s.setMinColor("#FB9F00");
+        s.setValueColor("#519BC2");
+        sparks.addComponent(s);
+
+        return sparks;
     }
 
     private Component buildHeader() {

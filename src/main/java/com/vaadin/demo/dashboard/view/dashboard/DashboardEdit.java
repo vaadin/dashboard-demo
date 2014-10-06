@@ -3,6 +3,7 @@ package com.vaadin.demo.dashboard.view.dashboard;
 import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -16,7 +17,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class DashboardEdit extends Window {
 
-    private final TextField nameField = new TextField("Dashboard Name");
+    private final TextField nameField = new TextField("Name");
 
     public DashboardEdit(String currentName) {
         setCaption("Edit Dashboard");
@@ -36,7 +37,7 @@ public class DashboardEdit extends Window {
         result.setSpacing(true);
 
         nameField.setValue(currentName);
-        nameField.setWidth(100.0f, Unit.PERCENTAGE);
+        nameField.addStyleName("caption-on-left");
         nameField.focus();
 
         result.addComponent(nameField);
@@ -72,8 +73,9 @@ public class DashboardEdit extends Window {
         });
         save.setClickShortcut(KeyCode.ENTER, null);
 
-        footer.addComponents(save, cancel);
+        footer.addComponents(cancel, save);
         footer.setExpandRatio(cancel, 1);
+        footer.setComponentAlignment(cancel, Alignment.TOP_RIGHT);
         return footer;
     }
 }
