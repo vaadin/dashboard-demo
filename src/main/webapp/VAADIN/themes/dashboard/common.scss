@@ -112,6 +112,10 @@
     }
 
   }
+  
+  .vaadin-chart {
+  	transform: translateZ(0);
+  }
 
   .viewheader {
     padding-bottom: $view-padding;
