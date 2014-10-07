@@ -17,10 +17,18 @@
     .v-ui[width-range~="0-800px"] & {
       @include animation(none);
     }
+
+    .valo-menu-item {
+      overflow: hidden;
+    }
   }
 
   .valo-menu-title {
     line-height: 1;
+  }
+
+  .v-menubar-user-menu:after {
+    display: none;
   }
 
   .v-menubar-user-menu > .v-menubar-menuitem {

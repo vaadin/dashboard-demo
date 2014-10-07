@@ -1,7 +1,7 @@
 @mixin dashboard-login-view {
 
   .loginview {
-    @include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -2% - valo-gradient-opacity()), $fallback: $v-window-modality-curtain-background-color);
+    @include radial-gradient(circle at 50% 50%, scale-color($v-app-background-color, $lightness: -2%), scale-color($v-app-background-color, $lightness: -2% - valo-gradient-opacity()), $fallback: $v-app-background-color);
     padding-top: 0 !important;
     @include animation(valo-animate-in-fade 300ms 10ms backwards);
 
