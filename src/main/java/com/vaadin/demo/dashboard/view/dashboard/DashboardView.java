@@ -51,6 +51,7 @@ public class DashboardView extends Panel implements View {
     private NotificationsButton notificationsButton;
     private CssLayout dashboardPanels;
     private VerticalLayout root;
+    private Window notificationsWindow;
 
     public DashboardView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -319,19 +320,25 @@ public class DashboardView extends Panel implements View {
         footer.setComponentAlignment(showAll, Alignment.TOP_CENTER);
         notificationsLayout.addComponent(footer);
 
-        Window notificationsWindow = new Window();
-        notificationsWindow.setWidth(300.0f, Unit.PIXELS);
-        notificationsWindow.addStyleName("notifications");
-        notificationsWindow.setClosable(false);
-        notificationsWindow.setResizable(false);
-        notificationsWindow.setDraggable(false);
-        notificationsWindow.setCloseShortcut(KeyCode.ESCAPE, null);
-        notificationsWindow.setContent(notificationsLayout);
+        if (notificationsWindow == null) {
+            notificationsWindow = new Window();
+            notificationsWindow.setWidth(300.0f, Unit.PIXELS);
+            notificationsWindow.addStyleName("notifications");
+            notificationsWindow.setClosable(false);
+            notificationsWindow.setResizable(false);
+            notificationsWindow.setDraggable(false);
+            notificationsWindow.setCloseShortcut(KeyCode.ESCAPE, null);
+            notificationsWindow.setContent(notificationsLayout);
+        }
 
-        notificationsWindow.setPositionY(event.getClientY()
-                - event.getRelativeY() + 40);
-        UI.getCurrent().addWindow(notificationsWindow);
-        notificationsWindow.focus();
+        if (!notificationsWindow.isAttached()) {
+            notificationsWindow.setPositionY(event.getClientY()
+                    - event.getRelativeY() + 40);
+            UI.getCurrent().addWindow(notificationsWindow);
+            notificationsWindow.focus();
+        } else {
+            notificationsWindow.close();
+        }
     }
 
     @Override
