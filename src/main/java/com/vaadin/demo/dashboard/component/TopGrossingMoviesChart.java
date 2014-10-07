@@ -9,7 +9,6 @@ import com.vaadin.addon.charts.model.Credits;
 import com.vaadin.addon.charts.model.ListSeries;
 import com.vaadin.addon.charts.model.PlotOptionsBar;
 import com.vaadin.addon.charts.model.Series;
-import com.vaadin.addon.charts.model.Tooltip;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.Movie;
@@ -48,12 +47,6 @@ public class TopGrossingMoviesChart extends Chart {
 
         Credits c = new Credits("");
         getConfiguration().setCredits(c);
-
-        Tooltip tooltip = new Tooltip();
-        tooltip.setPointFormat("{series.name}: {point.percentage}%");
-        tooltip.setValueDecimals(1);
-        tooltip.setEnabled(false);
-        getConfiguration().setTooltip(tooltip);
 
         PlotOptionsBar opts = new PlotOptionsBar();
         opts.setGroupPadding(0);

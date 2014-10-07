@@ -41,6 +41,12 @@
       margin-right: -1em;
     }
 
+    img.v-icon {
+      @if is-dark-color($valo-menu-background-color) {
+        border: none;
+      }
+    }
+
     .v-ui[width-range~="0-800px"] & {
       max-width: none;
       margin-right: .5em;

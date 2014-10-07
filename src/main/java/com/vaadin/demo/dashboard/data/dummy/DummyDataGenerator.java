@@ -143,14 +143,11 @@ public class DummyDataGenerator {
         return Arrays.asList(n1, n2);
     }
 
-    public static String randomSparklineValues(int howMany, int min, int max) {
-        String values = "";
+    public static int[] randomSparklineValues(int howMany, int min, int max) {
+        int[] values = new int[howMany];
 
         for (int i = 0; i < howMany; i++) {
-            if (i > 0) {
-                values += ",";
-            }
-            values += (int) (min + (Math.random() * (max - min)));
+            values[i] = (int) (min + (Math.random() * (max - min)));
         }
 
         return values;

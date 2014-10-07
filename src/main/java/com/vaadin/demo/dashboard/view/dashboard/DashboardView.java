@@ -3,10 +3,9 @@ package com.vaadin.demo.dashboard.view.dashboard;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.vaadin.sparklines.Sparklines;
-
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.component.SparklineChart;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
@@ -63,6 +62,7 @@ public class DashboardView extends Panel implements View {
         root.setMargin(true);
         root.addStyleName("dashboard-view");
         setContent(root);
+        Responsive.makeResponsive(root);
 
         root.addComponent(buildHeader());
 
@@ -81,45 +81,25 @@ public class DashboardView extends Panel implements View {
     }
 
     Component buildSparklines() {
-        String maxColor = DummyDataGenerator.chartColors[2].toString();
-        String minColor = DummyDataGenerator.chartColors[5].toString();
-        String valColor = DummyDataGenerator.chartColors[0].toString();
-
         CssLayout sparks = new CssLayout();
         sparks.addStyleName("sparks");
         sparks.setWidth("100%");
         Responsive.makeResponsive(sparks);
 
-        Sparklines s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #1");
-        s.setValue(DummyDataGenerator.randomSparklineValues(20, 20, 80));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        SparklineChart s = new SparklineChart("Traffic", "K", "",
+                DummyDataGenerator.chartColors[0], 20, 20, 80);
         sparks.addComponent(s);
 
-        s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #2");
-        s.setValue(DummyDataGenerator.randomSparklineValues(10, 40, 90));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        s = new SparklineChart("Revenue / Day", "M", "$",
+                DummyDataGenerator.chartColors[2], 30, 89, 150);
         sparks.addComponent(s);
 
-        s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #3");
-        s.setValue(DummyDataGenerator.randomSparklineValues(30, 5, 100));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        s = new SparklineChart("Response Time", "ms", "",
+                DummyDataGenerator.chartColors[3], 10, 30, 300);
         sparks.addComponent(s);
 
-        s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #4");
-        s.setValue(DummyDataGenerator.randomSparklineValues(15, 20, 70));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        s = new SparklineChart("Server Load", "%", "",
+                DummyDataGenerator.chartColors[5], 50, 10, 100);
         sparks.addComponent(s);
 
         return sparks;
@@ -202,7 +182,9 @@ public class DashboardView extends Panel implements View {
     }
 
     private Component buildTop10TitlesByRevenue() {
-        return createContentWrapper(new TopTenMoviesTable());
+        Component contentWrapper = createContentWrapper(new TopTenMoviesTable());
+        contentWrapper.addStyleName("top10-revenue");
+        return contentWrapper;
     }
 
     private Component buildPopularMovies() {
@@ -211,9 +193,11 @@ public class DashboardView extends Panel implements View {
 
     private Component createContentWrapper(Component content) {
         final CssLayout slot = new CssLayout();
+        slot.setWidth("100%");
         slot.addStyleName("dashboard-panel-slot");
 
         CssLayout card = new CssLayout();
+        card.setWidth("100%");
         card.addStyleName(ValoTheme.LAYOUT_CARD);
 
         HorizontalLayout toolbar = new HorizontalLayout();
