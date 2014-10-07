@@ -29,7 +29,7 @@ public class DummyDataGenerator {
         return names[(int) (Math.random() * names.length)];
     }
 
-    static String randomCompanyName() {
+    public static String randomCompanyName() {
 
         String name = randomName();
         if (Math.random() < 0.03) {
@@ -46,7 +46,7 @@ public class DummyDataGenerator {
         return name;
     }
 
-    static String randomWord(int len, boolean capitalized) {
+    public static String randomWord(int len, boolean capitalized) {
         String[] part = { "ger", "ma", "isa", "app", "le", "ni", "ke", "mic",
                 "ro", "soft", "wa", "re", "lo", "gi", "is", "acc", "el", "tes",
                 "la", "ko", "ni", "ka", "so", "ny", "mi", "nol", "ta", "pa",

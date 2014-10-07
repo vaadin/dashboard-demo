@@ -233,22 +233,12 @@ public class DashboardView extends Panel implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (!slot.getStyleName().contains("max")) {
-                    // currentIndex = ((CssLayout) slot.getParent())
-                    // .getComponentIndex(slot);
-                    // slot.addStyleName("max");
-                    // ((CssLayout) slot.getParent()).addComponent(slot, 0);
-                    // if (currentIndex > 0) {
-                    // currentIndex++;
-                    // }
                     selectedItem.setIcon(FontAwesome.COMPRESS);
                     DashboardEventBus
                             .post(new MaximizeDashboardPanelEvent(slot));
                 } else {
                     slot.removeStyleName("max");
-                    // ((CssLayout) slot.getParent()).addComponent(slot,
-                    // currentIndex);
                     selectedItem.setIcon(FontAwesome.EXPAND);
-
                     DashboardEventBus
                             .post(new MinimizeDashboardPanelEvent(slot));
                 }
@@ -256,9 +246,19 @@ public class DashboardView extends Panel implements View {
         });
         max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Configure", null);
+        root.addItem("Configure", new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Not implemented in this demo");
+            }
+        });
         root.addSeparator();
-        root.addItem("Close", null);
+        root.addItem("Close", new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Not implemented in this demo");
+            }
+        });
 
         toolbar.addComponents(caption, tools);
         toolbar.setExpandRatio(caption, 1);
