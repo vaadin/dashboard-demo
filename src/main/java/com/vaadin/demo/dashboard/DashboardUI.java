@@ -78,7 +78,6 @@ public class DashboardUI extends UI {
 
     @Subscribe
     public void userLoggedOut(UserLoggedOutEvent event) {
-        VaadinSession.getCurrent().setAttribute(User.class.getName(), null);
         VaadinSession.getCurrent().close();
         Page.getCurrent().reload();
     }
