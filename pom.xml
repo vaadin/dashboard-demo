@@ -95,16 +95,6 @@
 			<artifactId>maddon</artifactId>
 			<version>1.13</version>
 		</dependency>
-    <dependency>
-      <groupId>org.vaadin.addons</groupId>
-      <artifactId>gwt-graphics</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.vaadin.addons</groupId>
-      <artifactId>sparklines</artifactId>
-      <version>7.0.2</version>
-    </dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-web</artifactId>

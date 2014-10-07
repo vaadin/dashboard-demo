@@ -20,7 +20,10 @@ $v-included-components: remove($v-included-components, treetable);
 $v-included-components: remove($v-included-components, twincolselect);
 
 // Main layout padding
-$view-padding: round($v-unit-size / 1.5);
+$view-padding: round($v-unit-size / 1.5) !default;
+
+// Slight adjustment to menu background-color
+$valo-menu-background-color: #414B56;
 
 @mixin dashboard {
   @include valo;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.ChartType;
+import com.vaadin.addon.charts.model.Credits;
 import com.vaadin.addon.charts.model.DataSeries;
 import com.vaadin.addon.charts.model.DataSeriesItem;
 import com.vaadin.addon.charts.model.PlotOptionsPie;
@@ -42,6 +43,9 @@ public class TopSixTheatersChart extends Chart {
         opts.setBorderWidth(0);
         opts.setShadow(false);
         getConfiguration().setPlotOptions(opts);
+
+        Credits c = new Credits("");
+        getConfiguration().setCredits(c);
     }
 
 }

@@ -11,6 +11,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -42,12 +43,15 @@ public class LoginView extends VerticalLayout {
     }
 
     private Component buildLoginForm() {
-        final CssLayout loginPanel = new CssLayout();
+        final VerticalLayout loginPanel = new VerticalLayout();
+        loginPanel.setSizeUndefined();
+        loginPanel.setSpacing(true);
         Responsive.makeResponsive(loginPanel);
         loginPanel.addStyleName("login-panel");
 
         loginPanel.addComponent(buildLabels());
         loginPanel.addComponent(buildFields());
+        loginPanel.addComponent(new CheckBox("Remember me", true));
         return loginPanel;
     }
 

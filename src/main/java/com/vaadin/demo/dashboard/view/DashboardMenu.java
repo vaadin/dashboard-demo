@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.component.ProfilePreferencesWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.NotificationsCountUpdatedEvent;
@@ -34,7 +35,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
@@ -84,7 +84,7 @@ public class DashboardMenu extends CustomComponent {
     private Component buildUserMenu() {
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
-        User user = (User) VaadinSession.getCurrent().getAttribute(
+        final User user = (User) VaadinSession.getCurrent().getAttribute(
                 User.class.getName());
         final MenuItem settingsItem = settings.addItem(user.getFirstName()
                 + " " + user.getLastName(), new ThemeResource(
@@ -92,13 +92,13 @@ public class DashboardMenu extends CustomComponent {
         settingsItem.addItem("Edit Profile", new Command() {
             @Override
             public void menuSelected(MenuItem selectedItem) {
-                Notification.show("Not implemented in this demo");
+                ProfilePreferencesWindow.open(user, false);
             }
         });
         settingsItem.addItem("Preferences", new Command() {
             @Override
             public void menuSelected(MenuItem selectedItem) {
-                Notification.show("Not implemented in this demo");
+                ProfilePreferencesWindow.open(user, true);
             }
         });
         settingsItem.addSeparator();

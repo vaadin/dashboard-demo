@@ -17,10 +17,18 @@
     .v-ui[width-range~="0-800px"] & {
       @include animation(none);
     }
+
+    .valo-menu-item {
+      overflow: hidden;
+    }
   }
 
   .valo-menu-title {
     line-height: 1;
+  }
+
+  .v-menubar-user-menu:after {
+    display: none;
   }
 
   .v-menubar-user-menu > .v-menubar-menuitem {
@@ -31,6 +39,12 @@
 
     .v-menubar-menuitem-caption:after {
       margin-right: -1em;
+    }
+
+    img.v-icon {
+      @if is-dark-color($valo-menu-background-color) {
+        border: none;
+      }
     }
 
     .v-ui[width-range~="0-800px"] & {
@@ -58,6 +72,68 @@
     right: round($v-unit-size / -5);
     display: block;
     z-index: 1;
+  }
+
+  .profile-window {
+    max-height: round(30 * $v-font-size);
+    width: round(50 * $v-font-size);
+    max-width: 90%;
+
+    .v-tabsheet-content > div > .v-scrollable > .v-layout {
+      padding-left: $v-layout-margin-left;
+      padding-right: $v-layout-margin-right;
+    }
+
+    @include width-range($max: 700px) {
+      .profile-form > .v-expand {
+        padding-left: 0 !important;
+
+        > .v-slot {
+          display: block;
+          margin-left: 0 !important;
+        }
+        > .v-spacing {
+          height: $v-layout-spacing-vertical;
+        }
+      }
+    }
+
+    @include width-range($max: 600px) {
+      .v-tabsheet-content > div > .v-scrollable > .v-layout {
+        padding-left: round($v-layout-margin-left / 2);
+        padding-right: round($v-layout-margin-left / 2);
+      }
+      .v-formlayout > table,
+      .v-formlayout > table > tbody,
+      .v-formlayout-row {
+        display: block;
+      }
+      .v-formlayout > table > tbody {
+        .v-formlayout-captioncell,
+        .v-formlayout-errorcell,
+        .v-formlayout-contentcell {
+          display: inline-block;
+          height: auto;
+        }
+        .v-formlayout-captioncell,
+        .v-formlayout-errorcell {
+          border-bottom: none;
+          line-height: 1;
+          padding-left: 0;
+          padding-top: $v-layout-spacing-vertical;
+          text-align: left;
+        }
+        .v-caption-h4 {
+          height: 0;
+        }
+        .v-label-h4 {
+          position: static;
+        }
+        .v-horizontallayout {
+          height: auto !important;
+        }
+      }
+    }
   }
 
   .moviedetailswindow {

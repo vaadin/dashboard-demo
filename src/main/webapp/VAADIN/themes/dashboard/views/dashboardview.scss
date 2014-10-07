@@ -5,20 +5,26 @@
     overflow: visible;
 
     .sparks {
-      @include valo-panel-well-style;
-      margin-bottom: $v-layout-spacing-vertical;
+      @include valo-panel-style;
+      margin-bottom: round($view-padding / 3);
 
       @include width-range($max: 680px) {
-        .v-sparkline {
+        .spark {
           width: 50%;
+        }
+        .spark:nth-child(2n+1) {
+          border-left: none;
+        }
+        .spark:nth-child(n+3) {
+          border-top: valo-border($strength: 0.3);
         }
       }
 
-      @include width-range($max: 350px) {
-        .v-sparkline {
+      @include width-range($max: 270px) {
+        .spark {
           width: 100%;
           border-left: none;
-          border-top: valo-border($strength: 0.5);
+          border-top: valo-border($strength: 0.3);
 
           &:first-child {
             border-top: none;
@@ -27,13 +33,13 @@
       }
     }
 
-    .v-sparkline {
-      font-family: inherit;
+    .spark {
       float: left;
       text-align: center;
       width: 25%;
       padding: $v-layout-spacing-vertical $v-layout-spacing-horizontal;
-      border-left: valo-border($strength: 0.5);
+      border-left: valo-border($strength: 0.3);
+      line-height: 1.35;
 
       > tbody {
         display: inline-block;
@@ -58,10 +64,9 @@
       margin: 0 round($view-padding / -3);
 
       .card {
-        width: 100%;
         height: 100%;
         overflow: hidden;
-        padding: $v-unit-size + 2px round($v-unit-size / 1.8) 0;
+        padding: $v-unit-size + 2px round($view-padding / 2) 0;
         position: relative;
 
         .v-table, .v-table-table {
@@ -69,38 +74,68 @@
         }
       }
 
+      .top10-revenue {
+        .card {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .v-table-table {
+          @include box-shadow(none);
+        }
+
+        .v-table-cell-wrapper {
+          padding-left: round($view-padding / 2);
+          padding-right: round($view-padding / 2);
+        }
+
+        .v-table-cell-content {
+          border-color: first-color(valo-border($strength: 0.3));
+        }
+
+        .v-table-cell-content-rowheader {
+          color: valo-font-color($v-app-background-color, 0.4);
+
+          .v-table-cell-wrapper {
+            padding-right: 0;
+          }
+        }
+      }
+
       .dashboard-panel-slot {
         padding: round($view-padding / 3);
-        min-height: 250px;
+        min-height: 220px;
       }
 
   	  &[width-range~="0-700px"] {
   	    .dashboard-panel-slot {
-  	      width: 100%;
+  	      width: 100% !important;
   	    }
   	  }
 
   	  &[width-range~="701px-"] {
   	    .dashboard-panel-slot {
-  	      width: 50%;
+  	      width: 50% !important;
   	    }
   	  }
 
-      &[height-range~="0-500px"] {
+      &[height-range~="0-440px"] {
   	    .dashboard-panel-slot {
   	      height: 100%;
   	    }
   	  }
 
-  	  &[height-range~="501px-"] {
+  	  &[height-range~="441px-"] {
   	    .dashboard-panel-slot {
   	      height: 50%;
   	    }
   	  }
 
       .dashboard-panel-slot.max {
-        width: 100%;
+        width: 100% !important;
         height: 100%;
+        padding-top: 0;
+        padding-bottom: 0;
       }
 
       .notes {
@@ -112,7 +147,7 @@
           border-top: valo-border($strength: 0.5);
           padding: 20px 20px 0;
           line-height: 20px;
-          font-size: 14px;
+          font-size: 13px;
           background: #fffdf2 url(../img/notes-bg.png) repeat;
           background-attachment: local;
           color: #545145;
@@ -121,6 +156,13 @@
       }
     }
 
+  }
+
+  .dashboard-view {
+    @include width-range($max: 480px) {
+      padding-left: round($view-padding / 2);
+      padding-right: round($view-padding / 2);
+    }
   }
 
   .notifications.v-window {
@@ -192,4 +234,6 @@
     }
 
   }
+
+
 }

@@ -3,10 +3,9 @@ package com.vaadin.demo.dashboard.view.dashboard;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.vaadin.sparklines.Sparklines;
-
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.component.SparklineChart;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
@@ -51,6 +50,7 @@ public class DashboardView extends Panel implements View {
     private NotificationsButton notificationsButton;
     private CssLayout dashboardPanels;
     private VerticalLayout root;
+    private Window notificationsWindow;
 
     public DashboardView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -62,6 +62,7 @@ public class DashboardView extends Panel implements View {
         root.setMargin(true);
         root.addStyleName("dashboard-view");
         setContent(root);
+        Responsive.makeResponsive(root);
 
         root.addComponent(buildHeader());
 
@@ -80,45 +81,25 @@ public class DashboardView extends Panel implements View {
     }
 
     Component buildSparklines() {
-        String maxColor = DummyDataGenerator.chartColors[2].toString();
-        String minColor = DummyDataGenerator.chartColors[5].toString();
-        String valColor = DummyDataGenerator.chartColors[0].toString();
-
         CssLayout sparks = new CssLayout();
         sparks.addStyleName("sparks");
         sparks.setWidth("100%");
         Responsive.makeResponsive(sparks);
 
-        Sparklines s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #1");
-        s.setValue(DummyDataGenerator.randomSparklineValues(20, 20, 80));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        SparklineChart s = new SparklineChart("Traffic", "K", "",
+                DummyDataGenerator.chartColors[0], 20, 20, 80);
         sparks.addComponent(s);
 
-        s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #2");
-        s.setValue(DummyDataGenerator.randomSparklineValues(10, 40, 90));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        s = new SparklineChart("Revenue / Day", "M", "$",
+                DummyDataGenerator.chartColors[2], 30, 89, 150);
         sparks.addComponent(s);
 
-        s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #3");
-        s.setValue(DummyDataGenerator.randomSparklineValues(30, 5, 100));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        s = new SparklineChart("Response Time", "ms", "",
+                DummyDataGenerator.chartColors[3], 10, 30, 300);
         sparks.addComponent(s);
 
-        s = new Sparklines(null, 0, 0, 0, 100);
-        s.setDescription("Metric #4");
-        s.setValue(DummyDataGenerator.randomSparklineValues(15, 20, 70));
-        s.setMaxColor(maxColor);
-        s.setMinColor(minColor);
-        s.setValueColor(valColor);
+        s = new SparklineChart("Server Load", "%", "",
+                DummyDataGenerator.chartColors[5], 50, 10, 100);
         sparks.addComponent(s);
 
         return sparks;
@@ -201,7 +182,9 @@ public class DashboardView extends Panel implements View {
     }
 
     private Component buildTop10TitlesByRevenue() {
-        return createContentWrapper(new TopTenMoviesTable());
+        Component contentWrapper = createContentWrapper(new TopTenMoviesTable());
+        contentWrapper.addStyleName("top10-revenue");
+        return contentWrapper;
     }
 
     private Component buildPopularMovies() {
@@ -210,9 +193,11 @@ public class DashboardView extends Panel implements View {
 
     private Component createContentWrapper(Component content) {
         final CssLayout slot = new CssLayout();
+        slot.setWidth("100%");
         slot.addStyleName("dashboard-panel-slot");
 
         CssLayout card = new CssLayout();
+        card.setWidth("100%");
         card.addStyleName(ValoTheme.LAYOUT_CARD);
 
         HorizontalLayout toolbar = new HorizontalLayout();
@@ -233,22 +218,12 @@ public class DashboardView extends Panel implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (!slot.getStyleName().contains("max")) {
-                    // currentIndex = ((CssLayout) slot.getParent())
-                    // .getComponentIndex(slot);
-                    // slot.addStyleName("max");
-                    // ((CssLayout) slot.getParent()).addComponent(slot, 0);
-                    // if (currentIndex > 0) {
-                    // currentIndex++;
-                    // }
                     selectedItem.setIcon(FontAwesome.COMPRESS);
                     DashboardEventBus
                             .post(new MaximizeDashboardPanelEvent(slot));
                 } else {
                     slot.removeStyleName("max");
-                    // ((CssLayout) slot.getParent()).addComponent(slot,
-                    // currentIndex);
                     selectedItem.setIcon(FontAwesome.EXPAND);
-
                     DashboardEventBus
                             .post(new MinimizeDashboardPanelEvent(slot));
                 }
@@ -256,9 +231,19 @@ public class DashboardView extends Panel implements View {
         });
         max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Configure", null);
+        root.addItem("Configure", new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Not implemented in this demo");
+            }
+        });
         root.addSeparator();
-        root.addItem("Close", null);
+        root.addItem("Close", new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Not implemented in this demo");
+            }
+        });
 
         toolbar.addComponents(caption, tools);
         toolbar.setExpandRatio(caption, 1);
@@ -319,19 +304,25 @@ public class DashboardView extends Panel implements View {
         footer.setComponentAlignment(showAll, Alignment.TOP_CENTER);
         notificationsLayout.addComponent(footer);
 
-        Window notificationsWindow = new Window();
-        notificationsWindow.setWidth(300.0f, Unit.PIXELS);
-        notificationsWindow.addStyleName("notifications");
-        notificationsWindow.setClosable(false);
-        notificationsWindow.setResizable(false);
-        notificationsWindow.setDraggable(false);
-        notificationsWindow.setCloseShortcut(KeyCode.ESCAPE, null);
-        notificationsWindow.setContent(notificationsLayout);
+        if (notificationsWindow == null) {
+            notificationsWindow = new Window();
+            notificationsWindow.setWidth(300.0f, Unit.PIXELS);
+            notificationsWindow.addStyleName("notifications");
+            notificationsWindow.setClosable(false);
+            notificationsWindow.setResizable(false);
+            notificationsWindow.setDraggable(false);
+            notificationsWindow.setCloseShortcut(KeyCode.ESCAPE, null);
+            notificationsWindow.setContent(notificationsLayout);
+        }
 
-        notificationsWindow.setPositionY(event.getClientY()
-                - event.getRelativeY() + 40);
-        UI.getCurrent().addWindow(notificationsWindow);
-        notificationsWindow.focus();
+        if (!notificationsWindow.isAttached()) {
+            notificationsWindow.setPositionY(event.getClientY()
+                    - event.getRelativeY() + 40);
+            UI.getCurrent().addWindow(notificationsWindow);
+            notificationsWindow.focus();
+        } else {
+            notificationsWindow.close();
+        }
     }
 
     @Override

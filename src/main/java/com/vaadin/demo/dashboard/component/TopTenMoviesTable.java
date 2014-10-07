@@ -58,6 +58,8 @@ public class TopTenMoviesTable extends Table {
 
         setVisibleColumns("title", "revenue");
         setColumnHeaders("Title", "Revenue");
+        setColumnExpandRatio("title", 2);
+        setColumnExpandRatio("revenue", 1);
 
         setSortContainerPropertyId("revenue");
         setSortAscending(false);

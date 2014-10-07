@@ -13,10 +13,7 @@
     .v-timeline-widget-modelegend {
       background: transparent;
       width: 100% !important;
-      overflow: auto;
-      display: inline-block;
-      height: auto !important;
-      padding: 0 10px;
+      font-size: 12px;
     }
 
     .v-timeline-widget-display .gwt-HTML {
@@ -31,15 +28,32 @@
       background: transparent;
     }
 
+    .v-timeline-widget-legend {
+      margin-top: 0;
+    }
+
     .v-timeline-widget-legend-value {
-      font-size: 12px;
-      line-height: 16px;
+      font-size: 10px;
       color: #979699;
-      height: 18px !important;
     }
 
     .v-timeline-widget-legend-label {
       font-size: 13px;
+    }
+
+    .v-timeline-widget-display-hscale,
+    .v-timeline-widget-display-hscale-left {
+      font-size: 11px;
+      @include box-sizing(border-box);
+      padding: 0 3px;
+      border-color: #ccc;
+    }
+
+    .v-timeline-widget-browser-scale-label {
+      color: rgba(0,0,0,.7);
+      font-size: 11px;
+      top: auto !important;
+      bottom: 14px;
     }
 
   }
