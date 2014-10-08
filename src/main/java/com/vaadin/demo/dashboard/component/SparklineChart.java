@@ -70,6 +70,7 @@ public class SparklineChart extends VerticalLayout {
         Chart spark = new Chart();
         spark.getConfiguration().setTitle("");
         spark.getConfiguration().getChart().setType(ChartType.LINE);
+        spark.getConfiguration().getChart().setAnimation(false);
         spark.setWidth("120px");
         spark.setHeight("40px");
 
@@ -98,6 +99,7 @@ public class SparklineChart extends VerticalLayout {
         opts.setDashStyle(DashStyle.SOLID);
         opts.setMarker(new Marker(false));
         opts.setEnableMouseTracking(false);
+        opts.setAnimation(false);
         spark.getConfiguration().setPlotOptions(opts);
 
         XAxis xAxis = spark.getConfiguration().getxAxis();

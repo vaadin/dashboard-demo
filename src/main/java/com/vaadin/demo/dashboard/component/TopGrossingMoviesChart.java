@@ -23,6 +23,7 @@ public class TopGrossingMoviesChart extends Chart {
         setCaption("Top Grossing Movies");
         getConfiguration().setTitle("");
         getConfiguration().getChart().setType(ChartType.BAR);
+        getConfiguration().getChart().setAnimation(false);
         getConfiguration().getxAxis().getLabels().setEnabled(false);
         getConfiguration().getxAxis().setTickWidth(0);
         setSizeFull();
@@ -38,6 +39,7 @@ public class TopGrossingMoviesChart extends Chart {
             opts.setBorderWidth(0);
             opts.setShadow(false);
             opts.setPointPadding(0.4);
+            opts.setAnimation(false);
             ListSeries item = new ListSeries(movie.getTitle(), movie.getScore());
             item.setPlotOptions(opts);
             series.add(item);

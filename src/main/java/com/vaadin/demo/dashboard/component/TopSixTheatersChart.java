@@ -23,6 +23,7 @@ public class TopSixTheatersChart extends Chart {
         setCaption("Popular Movies");
         getConfiguration().setTitle("");
         getConfiguration().getChart().setType(ChartType.PIE);
+        getConfiguration().getChart().setAnimation(false);
         setWidth("100%");
         setHeight("90%");
 
@@ -42,6 +43,7 @@ public class TopSixTheatersChart extends Chart {
         PlotOptionsPie opts = new PlotOptionsPie();
         opts.setBorderWidth(0);
         opts.setShadow(false);
+        opts.setAnimation(false);
         getConfiguration().setPlotOptions(opts);
 
         Credits c = new Credits("");
