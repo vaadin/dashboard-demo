@@ -7,6 +7,8 @@
   }
 
   .valo-menu {
+    border-right: none;
+
     .badgewrapper {
       position: relative;
       padding: 0 !important;
@@ -91,7 +93,7 @@
 
   .profile-window {
     max-height: round(30 * $v-font-size);
-    width: round(50 * $v-font-size);
+    width: round(45 * $v-font-size);
     max-width: 90%;
 
     .v-tabsheet-content > div > .v-scrollable > .v-layout {
@@ -153,7 +155,7 @@
 
   .moviedetailswindow {
     max-height: round(30 * $v-font-size);
-    width: round(50 * $v-font-size);
+    width: round(45 * $v-font-size);
     max-width: 90%;
 
     .cover,
@@ -203,7 +205,7 @@
     }
 
   }
-  
+
   .vaadin-chart {
   	transform: translateZ(0);
   }
@@ -253,5 +255,52 @@
     vertical-align: middle;
     line-height: 37px;
     margin-right: $v-layout-spacing-horizontal;
+  }
+
+
+  // iOS7 & iOS8 status bar needs more space
+  .v-ios7,
+  .v-ios8 {
+    .v-ui {
+      @include box-sizing(border-box);
+      padding-top: 20px;
+      background-color: $valo-menu-background-color;
+
+      > .v-widget {
+        position: relative !important;
+      }
+    }
+    .valo-menu-title {
+      padding-top: 10px;
+    }
+    .view-content {
+      border-top-left-radius: $v-border-radius;
+      background-color: $v-app-background-color;
+    }
+  }
+
+  .v-ios7 & .v-ui[width-range~="0-800px"],
+  .v-ios8 & .v-ui[width-range~="0-800px"] {
+    padding-top: 20px + $v-unit-size;
+
+    .v-loading-indicator {
+      top: 20px + $v-unit-size - 3px;
+      height: 3px;
+    }
+
+    .valo-menu-title {
+      height: 20px + $v-unit-size !important;
+      padding-top: 20px;
+    }
+    .valo-menu-toggle,
+    .user-menu {
+      margin-top: 20px;
+    }
+    .valo-menuitems {
+      top: 20px + $v-unit-size;
+    }
+    .view-content {
+      border-radius: 0;
+    }
   }
 }

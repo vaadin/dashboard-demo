@@ -29,7 +29,15 @@ public class DashboardSessionInitListener implements SessionInitListener {
                         .attr("content", "yes");
                 head.appendElement("meta")
                         .attr("name", "apple-mobile-web-app-status-bar-style")
-                        .attr("content", "black");
+                        .attr("content", "black-translucent");
+
+                String contextPath = response.getRequest().getContextPath();
+                head.appendElement("link")
+                        .attr("rel", "apple-touch-icon")
+                        .attr("href",
+                                contextPath
+                                        + "/VAADIN/themes/dashboard/img/app-icon.png");
+
             }
 
             @Override

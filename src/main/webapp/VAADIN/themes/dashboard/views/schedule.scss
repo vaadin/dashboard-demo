@@ -65,10 +65,10 @@
           border-color: $v-focus-color;
         }
 
-        &:hover .v-label {
-        }
-
         .v-label {
+          font-size: $v-font-size--small;
+          line-height: 1.2;
+          margin: 0.5em 0 1em;
         }
       }
 
