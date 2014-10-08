@@ -87,19 +87,19 @@ public class DashboardView extends Panel implements View {
         Responsive.makeResponsive(sparks);
 
         SparklineChart s = new SparklineChart("Traffic", "K", "",
-                DummyDataGenerator.chartColors[0], 20, 20, 80);
+                DummyDataGenerator.chartColors[0], 22, 20, 80);
         sparks.addComponent(s);
 
         s = new SparklineChart("Revenue / Day", "M", "$",
-                DummyDataGenerator.chartColors[2], 30, 89, 150);
+                DummyDataGenerator.chartColors[2], 8, 89, 150);
         sparks.addComponent(s);
 
         s = new SparklineChart("Response Time", "ms", "",
-                DummyDataGenerator.chartColors[3], 10, 30, 300);
+                DummyDataGenerator.chartColors[3], 10, 30, 120);
         sparks.addComponent(s);
 
         s = new SparklineChart("Server Load", "%", "",
-                DummyDataGenerator.chartColors[5], 50, 10, 100);
+                DummyDataGenerator.chartColors[5], 50, 21, 100);
         sparks.addComponent(s);
 
         return sparks;
