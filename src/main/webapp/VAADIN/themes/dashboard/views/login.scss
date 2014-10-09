@@ -17,10 +17,6 @@
     max-width: 90%;
     @include animation(valo-animate-in-slide-up 800ms 10ms backwards, valo-animate-in-fade 600ms 100ms backwards);
 
-    .v-ui[width-range~="0-800px"] & {
-      @include animation(animate-in-scale-up 500ms 10ms backwards, valo-animate-in-fade 300ms 100ms backwards);
-    }
-
     > .v-spacing {
       height: round($v-unit-size / 2);
     }
@@ -64,6 +60,10 @@
         }
       }
     }
+  }
+
+  .v-ui[width-range~="0-800px"] .login-panel {
+    @include animation(animate-in-scale-up 500ms 10ms backwards, valo-animate-in-fade 300ms 100ms backwards);
   }
 
   .login-help {
