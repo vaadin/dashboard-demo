@@ -235,5 +235,12 @@
 
   }
 
+  // Need to use normal media queries because Responsive doesn't work for overlay elements just yet
+  @media screen and (max-width: 480px) {
+    .notifications.v-window {
+      right: round($view-padding / 2);
+    }
+  }
+
 
 }

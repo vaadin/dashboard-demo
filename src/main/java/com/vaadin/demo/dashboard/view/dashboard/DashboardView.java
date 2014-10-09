@@ -94,12 +94,12 @@ public class DashboardView extends Panel implements View {
                 DummyDataGenerator.chartColors[2], 8, 89, 150);
         sparks.addComponent(s);
 
-        s = new SparklineChart("Response Time", "ms", "",
+        s = new SparklineChart("Checkout Time", "s", "",
                 DummyDataGenerator.chartColors[3], 10, 30, 120);
         sparks.addComponent(s);
 
-        s = new SparklineChart("Server Load", "%", "",
-                DummyDataGenerator.chartColors[5], 50, 21, 100);
+        s = new SparklineChart("Theater Fill Rate", "%", "",
+                DummyDataGenerator.chartColors[5], 50, 34, 100);
         sparks.addComponent(s);
 
         return sparks;
