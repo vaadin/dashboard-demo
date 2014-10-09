@@ -13,30 +13,31 @@
       position: relative;
       padding: 0 !important;
     }
+  }
 
-    .v-ui[width-range~="801px-"] & {
+  .valo-menu-item {
+    overflow: hidden;
+  }
+
+  .v-ui[width-range~="0-800px"] {
+    .valo-menu-title {
+      @include valo-gradient($color: $valo-menu-background-color);
+      border-bottom-color: first-color(valo-border($color: $valo-menu-background-color));
+    }
+    .valo-menu .v-menubar-user-menu {
+      color: inherit;
+    }
+  }
+
+  .v-ui[width-range~="801px-"] {
+    .valo-menu {
       @include animation(valo-animate-in-slide-right 700ms 700ms backwards);
-
-      .valo-menu-title {
-        background: transparent;
-        @include box-shadow(none);
-        border-bottom: none;
-      }
     }
 
-    .valo-menu-item {
-      overflow: hidden;
-    }
-
-    .v-ui[width-range~="0-800px"] & {
-      .valo-menu-title {
-        @include valo-gradient($color: $valo-menu-background-color);
-        border-bottom-color: first-color(valo-border($color: $valo-menu-background-color));
-      }
-
-      .user-menu {
-        color: inherit;
-      }
+    .valo-menu-title {
+      background: transparent;
+      @include box-shadow(none);
+      border-bottom: none;
     }
   }
 
@@ -63,8 +64,10 @@
         border: none;
       }
     }
+  }
 
-    .v-ui[width-range~="0-800px"] & {
+  .v-ui[width-range~="0-800px"] {
+    .v-menubar-user-menu > .v-menubar-menuitem {
       max-width: none;
       margin-right: .5em;
 

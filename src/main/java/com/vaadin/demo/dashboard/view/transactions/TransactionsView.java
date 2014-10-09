@@ -273,7 +273,7 @@ public class TransactionsView extends VerticalLayout implements View {
         }
         String val = item.getItemProperty(prop).getValue().toString().trim()
                 .toLowerCase();
-        if (val.startsWith(text.toLowerCase().trim())) {
+        if (val.contains(text.toLowerCase().trim())) {
             return true;
         }
         // String[] parts = text.split(" ");
