@@ -9,6 +9,8 @@ import com.vaadin.demo.dashboard.component.InlineTextEditor;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
 import com.vaadin.demo.dashboard.component.TransactionsListing;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -16,17 +18,16 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.server.ThemeResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -61,32 +62,34 @@ public class ReportEditor extends VerticalLayout {
 
     private Component buildPalette() {
         HorizontalLayout paletteLayout = new HorizontalLayout();
-        paletteLayout.setMargin(true);
         paletteLayout.setSpacing(true);
         paletteLayout.setWidthUndefined();
-        paletteLayout.setHeight(100.0f, Unit.PIXELS);
         paletteLayout.addStyleName("palette");
-        paletteLayout.setCaption("Drag items to the canvas");
 
         paletteLayout.addComponent(buildPaletteItem(PaletteItemType.TEXT));
         paletteLayout.addComponent(buildPaletteItem(PaletteItemType.TABLE));
         paletteLayout.addComponent(buildPaletteItem(PaletteItemType.CHART));
+
+        paletteLayout.addLayoutClickListener(new LayoutClickListener() {
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                if (event.getChildComponent() != null) {
+                    PaletteItemType data = (PaletteItemType) ((DragAndDropWrapper) event
+                            .getChildComponent()).getData();
+                    addWidget(data, null);
+                }
+            }
+        });
+
         return paletteLayout;
     }
 
     private Component buildPaletteItem(PaletteItemType type) {
-        CssLayout wrap = new CssLayout();
-        wrap.setWidth(100.0f, Unit.PIXELS);
-
-        Image itemImage = new Image(null, new ThemeResource(
-                type.getImageThemeUrl()));
-        wrap.addComponent(itemImage);
-
-        Label caption = new Label(type.getTitle());
+        Label caption = new Label(type.getIcon().getHtml() + type.getTitle(),
+                ContentMode.HTML);
         caption.setSizeUndefined();
-        wrap.addComponent(caption);
 
-        DragAndDropWrapper ddWrap = new DragAndDropWrapper(wrap);
+        DragAndDropWrapper ddWrap = new DragAndDropWrapper(caption);
         ddWrap.setSizeUndefined();
         ddWrap.setDragStartMode(DragStartMode.WRAPPER);
         ddWrap.setData(type);
@@ -156,7 +159,7 @@ public class ReportEditor extends VerticalLayout {
         }
 
         public void setTitle(String title) {
-            this.titleLabel.setValue(title);
+            titleLabel.setValue(title);
         }
 
         public void addComponent(PaletteItemType paletteItemType,
@@ -293,25 +296,25 @@ public class ReportEditor extends VerticalLayout {
     }
 
     public enum PaletteItemType {
-        TEXT("Text Block", "img/palette-text.png"), TABLE("Top 10 Movies",
-                "img/palette-grid.png"), CHART("Top 6 Revenue",
-                "img/palette-chart.png"), TRANSACTIONS("Latest transactions",
+        TEXT("Text Block", FontAwesome.FONT), TABLE("Top 10 Movies",
+                FontAwesome.TABLE), CHART("Top 6 Revenue",
+                FontAwesome.BAR_CHART_O), TRANSACTIONS("Latest transactions",
                 null);
 
         private final String title;
-        private final String imageThemeUrl;
+        private final FontAwesome icon;
 
-        PaletteItemType(String title, String imageThemeUrl) {
+        PaletteItemType(String title, FontAwesome icon) {
             this.title = title;
-            this.imageThemeUrl = imageThemeUrl;
+            this.icon = icon;
         }
 
         public String getTitle() {
             return title;
         }
 
-        public String getImageThemeUrl() {
-            return imageThemeUrl;
+        public FontAwesome getIcon() {
+            return icon;
         }
 
     }

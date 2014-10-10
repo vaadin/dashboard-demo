@@ -38,7 +38,6 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -318,7 +317,7 @@ public class DashboardView extends Panel implements View {
         if (!notificationsWindow.isAttached()) {
             notificationsWindow.setPositionY(event.getClientY()
                     - event.getRelativeY() + 40);
-            UI.getCurrent().addWindow(notificationsWindow);
+            DashboardUI.getCurrent().addWindow(notificationsWindow);
             notificationsWindow.focus();
         } else {
             notificationsWindow.close();

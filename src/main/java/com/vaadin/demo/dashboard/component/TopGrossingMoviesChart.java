@@ -26,6 +26,7 @@ public class TopGrossingMoviesChart extends Chart {
         getConfiguration().getChart().setAnimation(false);
         getConfiguration().getxAxis().getLabels().setEnabled(false);
         getConfiguration().getxAxis().setTickWidth(0);
+        getConfiguration().getyAxis().setTitle("");
         setSizeFull();
 
         List<Movie> movies = new ArrayList<Movie>(DashboardUI.getDataProvider()

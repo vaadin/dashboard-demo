@@ -149,18 +149,18 @@ public class ProfilePreferencesWindow extends Window {
         email.setValue(firstName.toLowerCase() + "." + lastName.toLowerCase()
                 + "@" + DummyDataGenerator.randomCompanyName().toLowerCase()
                 + ".com");
-        email.setWidth("50%");
+        email.setWidth("100%");
         email.setRequired(true);
         details.addComponent(email);
 
         TextField location = new TextField("Location");
         location.setValue(DummyDataGenerator.randomWord(5, true));
-        location.setWidth("50%");
+        location.setWidth("100%");
         location.setComponentError(new UserError("This address doesn't exist"));
         details.addComponent(location);
 
         TextField phone = new TextField("Phone");
-        phone.setWidth("50%");
+        phone.setWidth("100%");
         details.addComponent(phone);
 
         HorizontalLayout wrap = new HorizontalLayout();
