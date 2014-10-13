@@ -2,7 +2,8 @@ package com.vaadin.demo.dashboard.component;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -18,7 +19,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class InlineTextEditor extends CustomComponent {
 
     private final Property<String> property = new ObjectProperty<String>(
-            DummyDataGenerator.randomText(30));
+            "Enter text here...");
     private final Component editor;
     private final Component readOnly;
 
@@ -52,6 +53,14 @@ public class InlineTextEditor extends CustomComponent {
         CssLayout result = new CssLayout(text, editButton);
         result.addStyleName("text-editor");
         result.setSizeFull();
+        result.addLayoutClickListener(new LayoutClickListener() {
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                if (event.getChildComponent() == text && event.isDoubleClick()) {
+                    setCompositionRoot(editor);
+                }
+            }
+        });
         return result;
     }
 

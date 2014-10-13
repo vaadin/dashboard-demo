@@ -167,8 +167,9 @@ public class ReportEditor extends VerticalLayout {
             if (placeholder.getParent() != null) {
                 layout.removeComponent(placeholder);
             }
-            layout.addComponent(new WrappedComponent(
-                    createComponentFromPaletteItem(paletteItemType, prefillData)));
+            layout.addComponent(
+                    new WrappedComponent(createComponentFromPaletteItem(
+                            paletteItemType, prefillData)), 1);
         }
 
         private Component createComponentFromPaletteItem(PaletteItemType type,
