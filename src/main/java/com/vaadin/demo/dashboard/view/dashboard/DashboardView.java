@@ -212,7 +212,6 @@ public class DashboardView extends Panel implements View {
         MenuBar tools = new MenuBar();
         tools.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         MenuItem max = tools.addItem("", FontAwesome.EXPAND, new Command() {
-            int currentIndex = -1;
 
             @Override
             public void menuSelected(MenuItem selectedItem) {
@@ -317,7 +316,7 @@ public class DashboardView extends Panel implements View {
         if (!notificationsWindow.isAttached()) {
             notificationsWindow.setPositionY(event.getClientY()
                     - event.getRelativeY() + 40);
-            DashboardUI.getCurrent().addWindow(notificationsWindow);
+            getUI().addWindow(notificationsWindow);
             notificationsWindow.focus();
         } else {
             notificationsWindow.close();

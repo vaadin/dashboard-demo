@@ -1,10 +1,10 @@
-@mixin dashboard-common {
-
-  @include keyframes(animate-in-scale-up) {
-    0% {
-      @include transform(scale(0));
-    }
+@include keyframes(animate-in-scale-up) {
+  0% {
+    @include transform(scale(0));
   }
+}
+
+@mixin dashboard-common {
 
   .valo-menu {
     border-right: none;
