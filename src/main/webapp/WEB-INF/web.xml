@@ -29,6 +29,18 @@
 
 	<filter-mapping>
 		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CompressionFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CompressionFilter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CompressionFilter</filter-name>
+		<url-pattern>/UIDL/*</url-pattern>
 	</filter-mapping>
 </web-app>
