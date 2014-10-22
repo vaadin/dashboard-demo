@@ -50,7 +50,7 @@ public class DashboardNavigator extends Navigator {
                 }
 
                 if (tracker != null) {
-                    tracker.trackPageview("/dashboard" + event.getViewName());
+                    tracker.trackPageview("/dashboard/" + event.getViewName());
                 }
             }
         });
