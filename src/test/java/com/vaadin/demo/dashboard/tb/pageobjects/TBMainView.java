@@ -1,5 +1,7 @@
 package com.vaadin.demo.dashboard.tb.pageobjects;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.demo.dashboard.view.DashboardMenu;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CustomComponentElement;
 import com.vaadin.testbench.elements.MenuBarElement;
 
@@ -53,16 +56,32 @@ public class TBMainView extends TestBenchTestCase {
         new WebDriverWait(driver, 10).until(ExpectedConditions
                 .elementToBeClickable(caption));
         caption.click();
-        WebElement signOut = driver
+        WebElement edit = driver
                 .findElement(By
                         .cssSelector(".v-menubar-popup .v-menubar-menuitem:first-child"));
-        signOut.click();
+        edit.click();
 
         return new TBProfileWindow(driver);
     }
 
     public String getUserFullName() {
         return getDashboardMenu().findElement(
-                By.cssSelector(".v-menubar-menuitem-caption")).getText();
+                By.className("v-menubar-menuitem-caption")).getText();
+    }
+
+    public TBDashboardView openDashboardView() {
+        getDashboardMenu().$(ButtonElement.class).caption("Dashboard").first()
+                .click();
+        return new TBDashboardView(driver);
+    }
+
+    public int getUnreadNotificationsCount() {
+        int result = 0;
+        List<WebElement> badges = getDashboardMenu().findElements(
+                By.className("valo-menu-badge"));
+        if (!badges.isEmpty()) {
+            result = Integer.parseInt(badges.get(0).getText());
+        }
+        return result;
     }
 }

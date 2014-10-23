@@ -45,10 +45,13 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class DashboardView extends Panel implements View {
 
+    public static final String EDIT_ID = "dashboard-edit";
+    public static final String TITLE_ID = "dashboard-title";
+
     private Label titleLabel;
     private NotificationsButton notificationsButton;
     private CssLayout dashboardPanels;
-    private VerticalLayout root;
+    private final VerticalLayout root;
     private Window notificationsWindow;
 
     public DashboardView() {
@@ -110,6 +113,7 @@ public class DashboardView extends Panel implements View {
         header.setSpacing(true);
 
         titleLabel = new Label("Dashboard");
+        titleLabel.setId(TITLE_ID);
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
         titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
@@ -117,6 +121,7 @@ public class DashboardView extends Panel implements View {
 
         notificationsButton = buildNotificationsButton();
         Component edit = buildEdit();
+        edit.setId(EDIT_ID);
         HorizontalLayout tools = new HorizontalLayout(notificationsButton, edit);
         tools.setSpacing(true);
         tools.addStyleName("toolbar");
@@ -335,9 +340,11 @@ public class DashboardView extends Panel implements View {
 
     public static class NotificationsButton extends Button {
         private static final String STYLE_UNREAD = "unread";
+        public static final String ID = "dashboard-notifications";
 
         public NotificationsButton() {
             setIcon(FontAwesome.BELL);
+            setId(ID);
             addStyleName("notifications");
             addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         }
