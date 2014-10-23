@@ -29,7 +29,7 @@ public class DummyDataGenerator {
         return names[(int) (Math.random() * names.length)];
     }
 
-    public static String randomCompanyName() {
+    static String randomCompanyName() {
 
         String name = randomName();
         if (Math.random() < 0.03) {

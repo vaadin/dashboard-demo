@@ -9,6 +9,7 @@ import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.PostViewChangeEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ReportsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.UserLoggedOutEvent;
@@ -42,12 +43,15 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class DashboardMenu extends CustomComponent {
 
+    public static final String ID = "dashboard-menu";
     private static final String STYLE_VISIBLE = "valo-menu-visible";
     private Label notificationsBadge;
     private Label reportsBadge;
+    private MenuItem settingsItem;
 
     public DashboardMenu() {
         addStyleName("valo-menu");
+        setId(ID);
         setSizeUndefined();
         DashboardEventBus.register(this);
 
@@ -81,14 +85,18 @@ public class DashboardMenu extends CustomComponent {
         return logoWrapper;
     }
 
+    private User getCurrentUser() {
+        return (User) VaadinSession.getCurrent().getAttribute(
+                User.class.getName());
+    }
+
     private Component buildUserMenu() {
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
-        final User user = (User) VaadinSession.getCurrent().getAttribute(
-                User.class.getName());
-        final MenuItem settingsItem = settings.addItem(user.getFirstName()
-                + " " + user.getLastName(), new ThemeResource(
+        final User user = getCurrentUser();
+        settingsItem = settings.addItem("", new ThemeResource(
                 "img/profile-pic-300px.jpg"), null);
+        updateUserName(null);
         settingsItem.addItem("Edit Profile", new Command() {
             @Override
             public void menuSelected(MenuItem selectedItem) {
@@ -218,6 +226,12 @@ public class DashboardMenu extends CustomComponent {
     public void updateReportsCount(ReportsCountUpdatedEvent event) {
         reportsBadge.setValue(String.valueOf(event.getCount()));
         reportsBadge.setVisible(event.getCount() > 0);
+    }
+
+    @Subscribe
+    public void updateUserName(ProfileUpdatedEvent event) {
+        User user = getCurrentUser();
+        settingsItem.setText(user.getFirstName() + " " + user.getLastName());
     }
 
     public class ValoMenuItemButton extends Button {

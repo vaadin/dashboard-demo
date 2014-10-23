@@ -1,8 +1,11 @@
 package com.vaadin.demo.dashboard.component;
 
-import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
@@ -16,7 +19,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
@@ -24,6 +26,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
@@ -36,11 +39,33 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class ProfilePreferencesWindow extends Window {
 
-    private final Label synopsis = new Label();
+    public static final String ID = "profilepreferenceswindow";
 
-    public ProfilePreferencesWindow(String firstName, String lastName,
-            boolean preferencesTabOpen) {
+    private final BeanFieldGroup<User> fieldGroup;
+    @PropertyId("firstName")
+    private TextField firstNameField;
+    @PropertyId("lastName")
+    private TextField lastNameField;
+    @PropertyId("title")
+    private ComboBox titleField;
+    @PropertyId("male")
+    private OptionGroup sexField;
+    @PropertyId("email")
+    private TextField emailField;
+    @PropertyId("location")
+    private TextField locationField;
+    @PropertyId("phone")
+    private TextField phoneField;
+    @PropertyId("newsletterSubscription")
+    private OptionalSelect<Integer> newsletterField;
+    @PropertyId("website")
+    private TextField websiteField;
+    @PropertyId("bio")
+    private TextArea bioField;
+
+    public ProfilePreferencesWindow(User user, boolean preferencesTabOpen) {
         addStyleName("profile-window");
+        setId(ID);
         Responsive.makeResponsive(this);
 
         setModal(true);
@@ -62,7 +87,7 @@ public class ProfilePreferencesWindow extends Window {
         content.addComponent(detailsWrapper);
         content.setExpandRatio(detailsWrapper, 1f);
 
-        detailsWrapper.addComponent(buildProfileTab(firstName, lastName));
+        detailsWrapper.addComponent(buildProfileTab());
         detailsWrapper.addComponent(buildPreferencesTab());
 
         if (preferencesTabOpen) {
@@ -70,6 +95,10 @@ public class ProfilePreferencesWindow extends Window {
         }
 
         content.addComponent(buildFooter());
+
+        fieldGroup = new BeanFieldGroup<User>(User.class);
+        fieldGroup.bindMemberFields(this);
+        fieldGroup.setItemDataSource(user);
     }
 
     private Component buildPreferencesTab() {
@@ -89,11 +118,11 @@ public class ProfilePreferencesWindow extends Window {
         return root;
     }
 
-    private Component buildProfileTab(String firstName, String lastName) {
+    private Component buildProfileTab() {
         HorizontalLayout root = new HorizontalLayout();
         root.setCaption("Profile");
         root.setIcon(FontAwesome.USER);
-        root.setWidth("100%");
+        root.setWidth(100.0f, Unit.PERCENTAGE);
         root.setSpacing(true);
         root.setMargin(true);
         root.addStyleName("profile-form");
@@ -103,7 +132,7 @@ public class ProfilePreferencesWindow extends Window {
         pic.setSpacing(true);
         Image profilePic = new Image(null, new ThemeResource(
                 "img/profile-pic-300px.jpg"));
-        profilePic.setWidth("100px");
+        profilePic.setWidth(100.0f, Unit.PIXELS);
         pic.addComponent(profilePic);
 
         Button upload = new Button("Change…", new ClickListener() {
@@ -122,82 +151,72 @@ public class ProfilePreferencesWindow extends Window {
         root.addComponent(details);
         root.setExpandRatio(details, 1);
 
-        details.addComponent(new TextField("First Name", firstName));
-        details.addComponent(new TextField("Last Name", lastName));
+        firstNameField = new TextField("First Name");
+        details.addComponent(firstNameField);
+        lastNameField = new TextField("Last Name");
+        details.addComponent(lastNameField);
 
-        ComboBox title = new ComboBox("Title");
-        title.setInputPrompt("Please specify");
-        title.addItem("Mr.");
-        title.addItem("Mrs.");
-        title.addItem("Ms.");
-        title.setNewItemsAllowed(true);
-        details.addComponent(title);
+        titleField = new ComboBox("Title");
+        titleField.setInputPrompt("Please specify");
+        titleField.addItem("Mr.");
+        titleField.addItem("Mrs.");
+        titleField.addItem("Ms.");
+        titleField.setNewItemsAllowed(true);
+        details.addComponent(titleField);
 
-        OptionGroup sex = new OptionGroup("Sex");
-        sex.addItem("Female");
-        sex.addItem("Male");
-        sex.select("Male");
-        sex.addStyleName("horizontal");
-        details.addComponent(sex);
+        sexField = new OptionGroup("Sex");
+        sexField.addItem(Boolean.FALSE);
+        sexField.setItemCaption(Boolean.FALSE, "Female");
+        sexField.addItem(Boolean.TRUE);
+        sexField.setItemCaption(Boolean.TRUE, "Male");
+        sexField.addStyleName("horizontal");
+        details.addComponent(sexField);
 
         Label section = new Label("Contact Info");
         section.addStyleName(ValoTheme.LABEL_H4);
         section.addStyleName(ValoTheme.LABEL_COLORED);
         details.addComponent(section);
 
-        TextField email = new TextField("Email");
-        email.setValue(firstName.toLowerCase() + "." + lastName.toLowerCase()
-                + "@" + DummyDataGenerator.randomCompanyName().toLowerCase()
-                + ".com");
-        email.setWidth("100%");
-        email.setRequired(true);
-        details.addComponent(email);
+        emailField = new TextField("Email");
+        emailField.setWidth("100%");
+        emailField.setRequired(true);
+        emailField.setNullRepresentation("");
+        details.addComponent(emailField);
 
-        TextField location = new TextField("Location");
-        location.setValue(DummyDataGenerator.randomWord(5, true));
-        location.setWidth("100%");
-        location.setComponentError(new UserError("This address doesn't exist"));
-        details.addComponent(location);
+        locationField = new TextField("Location");
+        locationField.setWidth("100%");
+        locationField.setNullRepresentation("");
+        locationField.setComponentError(new UserError(
+                "This address doesn't exist"));
+        details.addComponent(locationField);
 
-        TextField phone = new TextField("Phone");
-        phone.setWidth("100%");
-        details.addComponent(phone);
+        phoneField = new TextField("Phone");
+        phoneField.setWidth("100%");
+        phoneField.setNullRepresentation("");
+        details.addComponent(phoneField);
 
-        HorizontalLayout wrap = new HorizontalLayout();
-        wrap.setSpacing(true);
-        wrap.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        wrap.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        wrap.setCaption("Newsletter");
-        CheckBox newsletter = new CheckBox("Subscribe to newsletter", true);
-        wrap.addComponent(newsletter);
-
-        ComboBox period = new ComboBox();
-        period.setTextInputAllowed(false);
-        period.addItem("Daily");
-        period.addItem("Weekly");
-        period.addItem("Montly");
-        period.setNullSelectionAllowed(false);
-        period.select("Weekly");
-        period.addStyleName("small");
-        period.setWidth("10em");
-        wrap.addComponent(period);
-        details.addComponent(wrap);
+        newsletterField = new OptionalSelect<Integer>();
+        newsletterField.addOption(0, "Daily");
+        newsletterField.addOption(1, "Weekly");
+        newsletterField.addOption(2, "Monthly");
+        details.addComponent(newsletterField);
 
         section = new Label("Additional Info");
         section.addStyleName(ValoTheme.LABEL_H4);
         section.addStyleName(ValoTheme.LABEL_COLORED);
         details.addComponent(section);
 
-        TextField website = new TextField("Website");
-        website.setInputPrompt("http://");
-        website.setWidth("100%");
-        details.addComponent(website);
+        websiteField = new TextField("Website");
+        websiteField.setInputPrompt("http://");
+        websiteField.setWidth("100%");
+        websiteField.setNullRepresentation("");
+        details.addComponent(websiteField);
 
-        TextArea shortbio = new TextArea("Bio");
-        shortbio.setValue("Quis aute iure reprehenderit in voluptate velit esse. Cras mattis iudicium purus sit amet fermentum.");
-        shortbio.setWidth("100%");
-        shortbio.setRows(4);
-        details.addComponent(shortbio);
+        bioField = new TextArea("Bio");
+        bioField.setWidth("100%");
+        bioField.setRows(4);
+        bioField.setNullRepresentation("");
+        details.addComponent(bioField);
 
         return root;
     }
@@ -212,13 +231,25 @@ public class ProfilePreferencesWindow extends Window {
         ok.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                close();
-                Notification success = new Notification(
-                        "Profile updated successfully");
-                success.setDelayMsec(2000);
-                success.setStyleName("bar success small");
-                success.setPosition(Position.BOTTOM_CENTER);
-                success.show(Page.getCurrent());
+                try {
+                    fieldGroup.commit();
+                    // Updated user should also be persisted. But not in this
+                    // demo.
+
+                    Notification success = new Notification(
+                            "Profile updated successfully");
+                    success.setDelayMsec(2000);
+                    success.setStyleName("bar success small");
+                    success.setPosition(Position.BOTTOM_CENTER);
+                    success.show(Page.getCurrent());
+
+                    DashboardEventBus.post(new ProfileUpdatedEvent());
+                    close();
+                } catch (CommitException e) {
+                    Notification.show("Error while updating profile",
+                            Type.ERROR_MESSAGE);
+                }
+
             }
         });
         ok.focus();
@@ -229,8 +260,7 @@ public class ProfilePreferencesWindow extends Window {
 
     public static void open(User user, boolean preferencesTabActive) {
         DashboardEventBus.post(new CloseOpenWindowsEvent());
-        Window w = new ProfilePreferencesWindow(user.getFirstName(),
-                user.getLastName(), preferencesTabActive);
+        Window w = new ProfilePreferencesWindow(user, preferencesTabActive);
         UI.getCurrent().addWindow(w);
         w.focus();
     }

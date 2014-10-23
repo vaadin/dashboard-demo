@@ -89,6 +89,9 @@ public class DashboardEvent {
     public static class CloseOpenWindowsEvent {
     }
 
+    public static class ProfileUpdatedEvent {
+    }
+
     public static class MaximizeDashboardPanelEvent {
         private final Component panel;
 
