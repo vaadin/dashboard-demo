@@ -84,4 +84,10 @@ public class TBMainView extends TestBenchTestCase {
         }
         return result;
     }
+
+    public TBTransactionsView openTransactionsView() {
+        getDashboardMenu().$(ButtonElement.class).caption("Transactions")
+                .first().click();
+        return new TBTransactionsView(driver);
+    }
 }

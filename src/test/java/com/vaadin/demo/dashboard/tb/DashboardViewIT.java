@@ -15,17 +15,16 @@ public class DashboardViewIT extends TestBenchTestCase {
 
     private static TBLoginView loginView;
     private static TBMainView mainView;
-    private static TBDashboardView dashboardView;
 
     @BeforeClass
     public static void setUp() {
         loginView = TBUtils.openInitialView();
         mainView = loginView.login();
-        dashboardView = mainView.openDashboardView();
     }
 
     @Test
     public void testEditDashboardTitle() {
+        TBDashboardView dashboardView = mainView.openDashboardView();
         String newTitle = "New Dashboard";
         TBDashboardEdit edit = dashboardView.openDashboardEdit();
         edit.setDashboardTitle(newTitle);
@@ -35,6 +34,7 @@ public class DashboardViewIT extends TestBenchTestCase {
 
     @Test
     public void testReadNotifications() {
+        TBDashboardView dashboardView = mainView.openDashboardView();
         Assert.assertEquals(mainView.getUnreadNotificationsCount(),
                 dashboardView.getUnreadNotificationsCount());
         dashboardView.openNotifications();
