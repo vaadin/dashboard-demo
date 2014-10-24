@@ -4,7 +4,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 
 import com.vaadin.demo.dashboard.tb.pageobjects.TBDashboardEdit;
 import com.vaadin.demo.dashboard.tb.pageobjects.TBDashboardView;
@@ -14,16 +13,14 @@ import com.vaadin.testbench.TestBenchTestCase;
 
 public class DashboardViewIT extends TestBenchTestCase {
 
-    protected static WebDriver driver;
-    protected static TBDashboardView dashboardView;
+    private static TBLoginView loginView;
     private static TBMainView mainView;
+    private static TBDashboardView dashboardView;
 
     @BeforeClass
     public static void setUp() {
-        driver = TBUtils.getDriver();
-        driver.get(TBUtils.TARGET_URL);
-
-        mainView = new TBLoginView(driver).login();
+        loginView = TBUtils.openInitialView();
+        mainView = loginView.login();
         dashboardView = mainView.openDashboardView();
     }
 
@@ -47,7 +44,6 @@ public class DashboardViewIT extends TestBenchTestCase {
 
     @AfterClass
     public static void tearDown() {
-        mainView.logout();
-        driver.quit();
+        loginView.getDriver().quit();
     }
 }
