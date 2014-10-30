@@ -16,12 +16,7 @@ public class TBDashboardEdit extends TestBenchTestCase {
     }
 
     public void setDashboardTitle(String newName) {
-        // scope.$(TextFieldElement.class).first().setValue(newName);
-        // TODO: setValue shouldn't hit return
-
-        TextFieldElement title = scope.$(TextFieldElement.class).first();
-        title.clear();
-        title.sendKeys(newName);
+        scope.$(TextFieldElement.class).first().setValue(newName);
     }
 
     public void save() {

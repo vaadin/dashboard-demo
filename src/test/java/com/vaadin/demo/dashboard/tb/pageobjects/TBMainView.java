@@ -1,8 +1,7 @@
 package com.vaadin.demo.dashboard.tb.pageobjects;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,6 +11,7 @@ import com.vaadin.demo.dashboard.view.DashboardMenu;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CustomComponentElement;
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.MenuBarElement;
 
 public class TBMainView extends TestBenchTestCase {
@@ -77,10 +77,11 @@ public class TBMainView extends TestBenchTestCase {
 
     public int getUnreadNotificationsCount() {
         int result = 0;
-        List<WebElement> badges = getDashboardMenu().findElements(
-                By.className("valo-menu-badge"));
-        if (!badges.isEmpty()) {
-            result = Integer.parseInt(badges.get(0).getText());
+        try {
+            result = Integer.parseInt($(LabelElement.class).id(
+                    DashboardMenu.NOTIFICATIONS_BADGE_ID).getText());
+        } catch (NoSuchElementException e) {
+            // Ignore
         }
         return result;
     }
@@ -89,5 +90,22 @@ public class TBMainView extends TestBenchTestCase {
         getDashboardMenu().$(ButtonElement.class).caption("Transactions")
                 .first().click();
         return new TBTransactionsView(driver);
+    }
+
+    public int getReportsCount() {
+        int result = 0;
+        try {
+            result = Integer.parseInt($(LabelElement.class).id(
+                    DashboardMenu.REPORTS_BADGE_ID).getText());
+        } catch (NoSuchElementException e) {
+            // Ignore
+        }
+        return result;
+    }
+
+    public TBReportsView openReportsView() {
+        getDashboardMenu().$(ButtonElement.class).caption("Reports").first()
+                .click();
+        return new TBReportsView(driver);
     }
 }

@@ -38,6 +38,8 @@ import com.vaadin.ui.themes.ValoTheme;
 public class ReportsView extends TabSheet implements View, CloseHandler,
         ReportEditorListener {
 
+    public static final String CONFIRM_DIALOG_ID = "confirm-dialog";
+
     public ReportsView() {
         setSizeFull();
         addStyleName("reports");
@@ -179,6 +181,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         message.setWidth("25em");
 
         final Window confirmDialog = new Window("Unsaved Changes");
+        confirmDialog.setId(CONFIRM_DIALOG_ID);
         confirmDialog.setCloseShortcut(KeyCode.ESCAPE, null);
         confirmDialog.setModal(true);
         confirmDialog.setClosable(false);

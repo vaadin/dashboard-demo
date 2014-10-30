@@ -13,8 +13,7 @@ import com.vaadin.ui.Label;
 @SuppressWarnings("serial")
 public class TransactionsListing extends CssLayout {
 
-    private static final DateFormat DF = new SimpleDateFormat(
-            "MM/dd/yyyy hh:mm:ss a");
+    private final DateFormat DF = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
     public TransactionsListing(Object prefillData) {
         Collection<Transaction> transactions = (Collection<Transaction>) prefillData;

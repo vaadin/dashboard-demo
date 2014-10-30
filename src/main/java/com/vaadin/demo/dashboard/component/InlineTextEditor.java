@@ -25,6 +25,7 @@ public class InlineTextEditor extends CustomComponent {
 
     public InlineTextEditor(Object prefillData) {
         setWidth(100.0f, Unit.PERCENTAGE);
+        addStyleName("inline-text-editor");
 
         editor = buildEditor();
         readOnly = buildReadOnly();

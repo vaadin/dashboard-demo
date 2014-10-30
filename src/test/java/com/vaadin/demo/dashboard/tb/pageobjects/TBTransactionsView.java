@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -50,8 +49,7 @@ public class TBTransactionsView extends TestBenchTestCase {
     }
 
     public TBReportsView createReportFromSelection() {
-        new Actions(driver).contextClick(
-                $(TableElement.class).first().getCell(0, 0)).perform();
+        $(TableElement.class).first().getCell(0, 0).contextClick();
         findElement(By.xpath("//div[text() = 'Create Report']")).click();
         return new TBReportsView(driver);
     }
