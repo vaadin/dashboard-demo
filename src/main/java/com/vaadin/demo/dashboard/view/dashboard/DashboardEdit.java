@@ -1,7 +1,5 @@
 package com.vaadin.demo.dashboard.view.dashboard;
 
-import com.vaadin.demo.dashboard.event.DashboardEvent.DashboardEditEvent;
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -14,12 +12,18 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * Simple name editor Window.
+ */
 @SuppressWarnings("serial")
 public class DashboardEdit extends Window {
 
     private final TextField nameField = new TextField("Name");
+    private final DashboardEditListener listener;
 
-    public DashboardEdit(String currentName) {
+    public DashboardEdit(final DashboardEditListener listener,
+            final String currentName) {
+        this.listener = listener;
         setCaption("Edit Dashboard");
         setModal(true);
         setClosable(false);
@@ -31,7 +35,7 @@ public class DashboardEdit extends Window {
         setContent(buildContent(currentName));
     }
 
-    private Component buildContent(String currentName) {
+    private Component buildContent(final String currentName) {
         VerticalLayout result = new VerticalLayout();
         result.setMargin(true);
         result.setSpacing(true);
@@ -55,7 +59,7 @@ public class DashboardEdit extends Window {
         Button cancel = new Button("Cancel");
         cancel.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 close();
             }
         });
@@ -65,9 +69,8 @@ public class DashboardEdit extends Window {
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
         save.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
-                DashboardEventBus.post(new DashboardEditEvent(nameField
-                        .getValue()));
+            public void buttonClick(final ClickEvent event) {
+                listener.dashboardNameEdited(nameField.getValue());
                 close();
             }
         });
@@ -77,5 +80,9 @@ public class DashboardEdit extends Window {
         footer.setExpandRatio(cancel, 1);
         footer.setComponentAlignment(cancel, Alignment.TOP_RIGHT);
         return footer;
+    }
+
+    public interface DashboardEditListener {
+        void dashboardNameEdited(String name);
     }
 }

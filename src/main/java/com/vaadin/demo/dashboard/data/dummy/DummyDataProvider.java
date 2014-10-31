@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,9 @@ import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.util.CurrentInstance;
 
+/**
+ * A dummy implementation for the backend API.
+ */
 public class DummyDataProvider implements DataProvider {
 
     /* List of countries and cities for them */
@@ -293,8 +295,6 @@ public class DummyDataProvider implements DataProvider {
      * @return
      */
     private Multimap<Long, Transaction> generateTransactionsData() {
-        GregorianCalendar today = new GregorianCalendar();
-
         Multimap<Long, Transaction> result = MultimapBuilder.hashKeys()
                 .arrayListValues().build();
 

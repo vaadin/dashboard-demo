@@ -2,7 +2,7 @@ package com.vaadin.demo.dashboard.domain;
 
 import java.util.Date;
 
-public class MovieRevenue {
+public final class MovieRevenue {
 
     private Date timestamp;
     private String title;
@@ -12,7 +12,7 @@ public class MovieRevenue {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(final Date timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -20,7 +20,7 @@ public class MovieRevenue {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -28,7 +28,7 @@ public class MovieRevenue {
         return revenue;
     }
 
-    public void setRevenue(Double revenue) {
+    public void setRevenue(final Double revenue) {
         this.revenue = revenue;
     }
 

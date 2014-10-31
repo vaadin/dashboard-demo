@@ -16,22 +16,29 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.themes.ValoTheme;
 
+@SuppressWarnings("serial")
 public class InlineTextEditor extends CustomComponent {
 
+    /*
+     * This Property contains the String type value to be edited. The same
+     * object is passed as content source for the label in read-only mode as
+     * well as the data source for the RichTextArea in edit mode. From there on
+     * synchronization between the two is automatic.
+     */
     private final Property<String> property = new ObjectProperty<String>(
             "Enter text here...");
     private final Component editor;
     private final Component readOnly;
 
-    public InlineTextEditor(Object prefillData) {
+    public InlineTextEditor(final String initialValue) {
         setWidth(100.0f, Unit.PERCENTAGE);
         addStyleName("inline-text-editor");
 
         editor = buildEditor();
         readOnly = buildReadOnly();
 
-        if (prefillData != null) {
-            property.setValue(String.valueOf(prefillData));
+        if (initialValue != null) {
+            property.setValue(initialValue);
         }
 
         setCompositionRoot(editor);
@@ -46,7 +53,7 @@ public class InlineTextEditor extends CustomComponent {
         editButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         editButton.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 setCompositionRoot(editor);
             }
         });
@@ -56,7 +63,7 @@ public class InlineTextEditor extends CustomComponent {
         result.setSizeFull();
         result.addLayoutClickListener(new LayoutClickListener() {
             @Override
-            public void layoutClick(LayoutClickEvent event) {
+            public void layoutClick(final LayoutClickEvent event) {
                 if (event.getChildComponent() == text && event.isDoubleClick()) {
                     setCompositionRoot(editor);
                 }
@@ -70,7 +77,7 @@ public class InlineTextEditor extends CustomComponent {
         rta.setWidth(100.0f, Unit.PERCENTAGE);
         rta.addAttachListener(new AttachListener() {
             @Override
-            public void attach(AttachEvent event) {
+            public void attach(final AttachEvent event) {
                 rta.focus();
                 rta.selectAll();
             }
@@ -82,7 +89,7 @@ public class InlineTextEditor extends CustomComponent {
         save.addStyleName(ValoTheme.BUTTON_SMALL);
         save.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 setCompositionRoot(readOnly);
             }
         });

@@ -25,11 +25,12 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class MovieDetailsWindow extends Window {
+public final class MovieDetailsWindow extends Window {
 
     private final Label synopsis = new Label();
 
-    public MovieDetailsWindow(Movie movie, Date startTime, Date endTime) {
+    private MovieDetailsWindow(final Movie movie, final Date startTime,
+            final Date endTime) {
         addStyleName("moviedetailswindow");
         Responsive.makeResponsive(this);
 
@@ -64,7 +65,7 @@ public class MovieDetailsWindow extends Window {
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
         ok.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 close();
             }
         });
@@ -74,8 +75,8 @@ public class MovieDetailsWindow extends Window {
         return footer;
     }
 
-    private Component buildMovieDetails(Movie movie, Date startTime,
-            Date endTime) {
+    private Component buildMovieDetails(final Movie movie,
+            final Date startTime, final Date endTime) {
         HorizontalLayout details = new HorizontalLayout();
         details.setWidth(100.0f, Unit.PERCENTAGE);
         details.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
@@ -94,7 +95,8 @@ public class MovieDetailsWindow extends Window {
         return details;
     }
 
-    private Component buildDetailsForm(Movie movie, Date startTime, Date endTime) {
+    private Component buildDetailsForm(final Movie movie, final Date startTime,
+            final Date endTime) {
         FormLayout fields = new FormLayout();
         fields.setSpacing(false);
         fields.setMargin(false);
@@ -137,7 +139,7 @@ public class MovieDetailsWindow extends Window {
         fields.addComponent(more);
         more.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 updateSynopsis(null, true);
                 event.getButton().setVisible(false);
                 MovieDetailsWindow.this.focus();
@@ -147,7 +149,7 @@ public class MovieDetailsWindow extends Window {
         return fields;
     }
 
-    public void updateSynopsis(Movie m, boolean expand) {
+    private void updateSynopsis(final Movie m, final boolean expand) {
         String synopsisText = synopsis.getData().toString();
         if (m != null) {
             synopsisText = m.getSynopsis();
@@ -161,7 +163,8 @@ public class MovieDetailsWindow extends Window {
         synopsis.setValue(synopsisText);
     }
 
-    public static void open(Movie movie, Date startTime, Date endTime) {
+    public static void open(final Movie movie, final Date startTime,
+            final Date endTime) {
         DashboardEventBus.post(new CloseOpenWindowsEvent());
         Window w = new MovieDetailsWindow(movie, startTime, endTime);
         UI.getCurrent().addWindow(w);

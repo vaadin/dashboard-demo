@@ -1,6 +1,7 @@
 package com.vaadin.demo.dashboard.view.reports;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -9,6 +10,7 @@ import com.vaadin.demo.dashboard.component.InlineTextEditor;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
 import com.vaadin.demo.dashboard.component.TransactionsListing;
+import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.Transferable;
@@ -33,13 +35,13 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SuppressWarnings("serial")
-public class ReportEditor extends VerticalLayout {
+@SuppressWarnings({ "serial", "unchecked" })
+public final class ReportEditor extends VerticalLayout {
 
     private final ReportEditorListener listener;
     private final SortableLayout canvas;
 
-    public ReportEditor(ReportEditorListener listener) {
+    public ReportEditor(final ReportEditorListener listener) {
         this.listener = listener;
         setSizeFull();
         addStyleName("editor");
@@ -56,7 +58,7 @@ public class ReportEditor extends VerticalLayout {
         setExpandRatio(canvas, 1);
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         canvas.setTitle(title);
     }
 
@@ -72,7 +74,7 @@ public class ReportEditor extends VerticalLayout {
 
         paletteLayout.addLayoutClickListener(new LayoutClickListener() {
             @Override
-            public void layoutClick(LayoutClickEvent event) {
+            public void layoutClick(final LayoutClickEvent event) {
                 if (event.getChildComponent() != null) {
                     PaletteItemType data = (PaletteItemType) ((DragAndDropWrapper) event
                             .getChildComponent()).getData();
@@ -84,7 +86,7 @@ public class ReportEditor extends VerticalLayout {
         return paletteLayout;
     }
 
-    private Component buildPaletteItem(PaletteItemType type) {
+    private Component buildPaletteItem(final PaletteItemType type) {
         Label caption = new Label(type.getIcon().getHtml() + type.getTitle(),
                 ContentMode.HTML);
         caption.setSizeUndefined();
@@ -96,11 +98,12 @@ public class ReportEditor extends VerticalLayout {
         return ddWrap;
     }
 
-    public void addWidget(PaletteItemType paletteItemType, Object prefillData) {
+    public void addWidget(final PaletteItemType paletteItemType,
+            final Object prefillData) {
         canvas.addComponent(paletteItemType, prefillData);
     }
 
-    public class SortableLayout extends CustomComponent {
+    public final class SortableLayout extends CustomComponent {
 
         private VerticalLayout layout;
         private final DropHandler dropHandler;
@@ -108,7 +111,8 @@ public class ReportEditor extends VerticalLayout {
         private DragAndDropWrapper placeholder;
 
         public SortableLayout() {
-            setCompositionRoot(layout = new VerticalLayout());
+            layout = new VerticalLayout();
+            setCompositionRoot(layout);
             layout.addStyleName("canvas-layout");
 
             titleLabel = new TextField();
@@ -118,7 +122,7 @@ public class ReportEditor extends VerticalLayout {
 
             titleLabel.addValueChangeListener(new ValueChangeListener() {
                 @Override
-                public void valueChange(ValueChangeEvent event) {
+                public void valueChange(final ValueChangeEvent event) {
                     String t = titleLabel.getValue();
                     if (t == null || t.equals("")) {
                         t = " ";
@@ -143,7 +147,7 @@ public class ReportEditor extends VerticalLayout {
                 }
 
                 @Override
-                public void drop(DragAndDropEvent event) {
+                public void drop(final DragAndDropEvent event) {
                     Transferable transferable = event.getTransferable();
                     Component sourceComponent = transferable
                             .getSourceComponent();
@@ -158,12 +162,12 @@ public class ReportEditor extends VerticalLayout {
             layout.addComponent(placeholder);
         }
 
-        public void setTitle(String title) {
+        public void setTitle(final String title) {
             titleLabel.setValue(title);
         }
 
-        public void addComponent(PaletteItemType paletteItemType,
-                Object prefillData) {
+        public void addComponent(final PaletteItemType paletteItemType,
+                final Object prefillData) {
             if (placeholder.getParent() != null) {
                 layout.removeComponent(placeholder);
             }
@@ -172,17 +176,20 @@ public class ReportEditor extends VerticalLayout {
                             paletteItemType, prefillData)), 1);
         }
 
-        private Component createComponentFromPaletteItem(PaletteItemType type,
-                Object prefillData) {
+        private Component createComponentFromPaletteItem(
+                final PaletteItemType type, final Object prefillData) {
             Component result = null;
             if (type == PaletteItemType.TEXT) {
-                result = new InlineTextEditor(prefillData);
+                result = new InlineTextEditor(
+                        prefillData != null ? String.valueOf(prefillData)
+                                : null);
             } else if (type == PaletteItemType.TABLE) {
                 result = new TopTenMoviesTable();
             } else if (type == PaletteItemType.CHART) {
                 result = new TopSixTheatersChart();
             } else if (type == PaletteItemType.TRANSACTIONS) {
-                result = new TransactionsListing(prefillData);
+                result = new TransactionsListing(
+                        (Collection<Transaction>) prefillData);
             }
 
             return result;
@@ -190,7 +197,7 @@ public class ReportEditor extends VerticalLayout {
 
         private class WrappedComponent extends DragAndDropWrapper {
 
-            public WrappedComponent(Component content) {
+            public WrappedComponent(final Component content) {
                 super(content);
                 setDragStartMode(DragStartMode.WRAPPER);
             }
@@ -211,7 +218,7 @@ public class ReportEditor extends VerticalLayout {
             }
 
             @Override
-            public void drop(DragAndDropEvent dropEvent) {
+            public void drop(final DragAndDropEvent dropEvent) {
                 Transferable transferable = dropEvent.getTransferable();
                 Component sourceComponent = transferable.getSourceComponent();
 
@@ -293,7 +300,7 @@ public class ReportEditor extends VerticalLayout {
     }
 
     public interface ReportEditorListener {
-        public void titleChanged(String newTitle, ReportEditor editor);
+        void titleChanged(String newTitle, ReportEditor editor);
     }
 
     public enum PaletteItemType {
@@ -305,7 +312,7 @@ public class ReportEditor extends VerticalLayout {
         private final String title;
         private final FontAwesome icon;
 
-        PaletteItemType(String title, FontAwesome icon) {
+        PaletteItemType(final String title, final FontAwesome icon) {
             this.title = title;
             this.icon = icon;
         }

@@ -1,6 +1,7 @@
 package com.vaadin.demo.dashboard.domain;
 
-public class DashboardNotification {
+
+public final class DashboardNotification {
     private long id;
     private String content;
     private boolean read;
@@ -13,7 +14,7 @@ public class DashboardNotification {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -21,7 +22,7 @@ public class DashboardNotification {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(final String content) {
         this.content = content;
     }
 
@@ -29,7 +30,7 @@ public class DashboardNotification {
         return read;
     }
 
-    public void setRead(boolean read) {
+    public void setRead(final boolean read) {
         this.read = read;
     }
 
@@ -37,7 +38,7 @@ public class DashboardNotification {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -45,7 +46,7 @@ public class DashboardNotification {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 
@@ -53,7 +54,7 @@ public class DashboardNotification {
         return prettyTime;
     }
 
-    public void setPrettyTime(String prettyTime) {
+    public void setPrettyTime(final String prettyTime) {
         this.prettyTime = prettyTime;
     }
 
@@ -61,7 +62,7 @@ public class DashboardNotification {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(final String action) {
         this.action = action;
     }
 

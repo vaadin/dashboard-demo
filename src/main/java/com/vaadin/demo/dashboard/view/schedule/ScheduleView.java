@@ -45,7 +45,7 @@ import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class ScheduleView extends CssLayout implements View {
+public final class ScheduleView extends CssLayout implements View {
 
     private Calendar calendar;
     private final Component tray;
@@ -73,8 +73,8 @@ public class ScheduleView extends CssLayout implements View {
     @Override
     public void detach() {
         super.detach();
-        // This view gets re-instantiated every time it's navigated to so we'll
-        // need to clean up references to it on detach.
+        // A new instance of ScheduleView is created every time it's navigated
+        // to so we'll need to clean up references to it on detach.
         DashboardEventBus.unregister(this);
     }
 
@@ -111,7 +111,7 @@ public class ScheduleView extends CssLayout implements View {
 
         calendar.setHandler(new EventClickHandler() {
             @Override
-            public void eventClick(EventClick event) {
+            public void eventClick(final EventClick event) {
                 setTrayVisible(false);
                 MovieEvent movieEvent = (MovieEvent) event.getCalendarEvent();
                 MovieDetailsWindow.open(movieEvent.getMovie(),
@@ -125,7 +125,7 @@ public class ScheduleView extends CssLayout implements View {
 
         calendar.setHandler(new BasicEventMoveHandler() {
             @Override
-            public void eventMove(MoveEvent event) {
+            public void eventMove(final MoveEvent event) {
                 CalendarEvent calendarEvent = event.getCalendarEvent();
                 if (calendarEvent instanceof MovieEvent) {
                     MovieEvent editableEvent = (MovieEvent) calendarEvent;
@@ -141,14 +141,15 @@ public class ScheduleView extends CssLayout implements View {
                 }
             }
 
-            protected void setDates(MovieEvent event, Date start, Date end) {
+            protected void setDates(final MovieEvent event, final Date start,
+                    final Date end) {
                 event.start = start;
                 event.end = end;
             }
         });
         calendar.setHandler(new BasicEventResizeHandler() {
             @Override
-            public void eventResize(EventResize event) {
+            public void eventResize(final EventResize event) {
                 Notification
                         .show("You're not allowed to change the movie duration");
             }
@@ -187,7 +188,7 @@ public class ScheduleView extends CssLayout implements View {
 
             frame.addLayoutClickListener(new LayoutClickListener() {
                 @Override
-                public void layoutClick(LayoutClickEvent event) {
+                public void layoutClick(final LayoutClickEvent event) {
                     if (event.getButton() == MouseButton.LEFT) {
                         MovieDetailsWindow.open(movie, null, null);
                     }
@@ -215,7 +216,7 @@ public class ScheduleView extends CssLayout implements View {
 
         ClickListener close = new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 setTrayVisible(false);
             }
         };
@@ -230,7 +231,7 @@ public class ScheduleView extends CssLayout implements View {
         discard.addClickListener(close);
         discard.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 calendar.markAsDirty();
             }
         });
@@ -239,7 +240,7 @@ public class ScheduleView extends CssLayout implements View {
         return tray;
     }
 
-    private void setTrayVisible(boolean visible) {
+    private void setTrayVisible(final boolean visible) {
         final String styleReveal = "v-animate-reveal";
         if (visible) {
             tray.addStyleName(styleReveal);
@@ -249,20 +250,23 @@ public class ScheduleView extends CssLayout implements View {
     }
 
     @Subscribe
-    public void browserWindowResized(BrowserResizeEvent event) {
+    public void browserWindowResized(final BrowserResizeEvent event) {
         if (Page.getCurrent().getBrowserWindowWidth() < 800) {
             calendar.setEndDate(calendar.getStartDate());
         }
     }
 
     @Override
-    public void enter(ViewChangeEvent event) {
+    public void enter(final ViewChangeEvent event) {
     }
 
     private class MovieEventProvider implements CalendarEventProvider {
 
         @Override
-        public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
+        public List<CalendarEvent> getEvents(final Date startDate,
+                final Date endDate) {
+            // Transactions are dynamically fetched from the backend service
+            // when needed.
             Collection<Transaction> transactions = DashboardUI
                     .getDataProvider().getTransactionsBetween(startDate,
                             endDate);
@@ -278,13 +282,13 @@ public class ScheduleView extends CssLayout implements View {
         }
     }
 
-    public class MovieEvent implements CalendarEvent {
+    public final class MovieEvent implements CalendarEvent {
 
         private Date start;
         private Date end;
         private Movie movie;
 
-        public MovieEvent(Date start, Date end, Movie movie) {
+        public MovieEvent(final Date start, final Date end, final Movie movie) {
             this.start = start;
             this.end = end;
             this.movie = movie;
@@ -319,15 +323,15 @@ public class ScheduleView extends CssLayout implements View {
             return movie;
         }
 
-        public void setMovie(Movie movie) {
+        public void setMovie(final Movie movie) {
             this.movie = movie;
         }
 
-        public void setStart(Date start) {
+        public void setStart(final Date start) {
             this.start = start;
         }
 
-        public void setEnd(Date end) {
+        public void setEnd(final Date end) {
             this.end = end;
         }
 

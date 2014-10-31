@@ -29,12 +29,12 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+@SuppressWarnings("serial")
 public class SparklineChart extends VerticalLayout {
 
-    private static final long serialVersionUID = -8775096885448756786L;
-
-    public SparklineChart(String name, String unit, String prefix, Color color,
-            int howManyPoints, int min, int max) {
+    public SparklineChart(final String name, final String unit,
+            final String prefix, final Color color, final int howManyPoints,
+            final int min, final int max) {
         setSizeUndefined();
         addStyleName("spark");
         setDefaultComponentAlignment(Alignment.TOP_CENTER);
@@ -66,7 +66,7 @@ public class SparklineChart extends VerticalLayout {
 
     }
 
-    private Component buildSparkline(int[] values, Color color) {
+    private Component buildSparkline(final int[] values, final Color color) {
         Chart spark = new Chart();
         spark.getConfiguration().setTitle("");
         spark.getConfiguration().getChart().setType(ChartType.LINE);

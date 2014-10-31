@@ -13,11 +13,12 @@ import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class TopTenMoviesTable extends Table {
+@SuppressWarnings("serial")
+public final class TopTenMoviesTable extends Table {
 
     @Override
-    protected String formatPropertyValue(Object rowId, Object colId,
-            Property<?> property) {
+    protected String formatPropertyValue(final Object rowId,
+            final Object colId, final Property<?> property) {
         String result = super.formatPropertyValue(rowId, colId, property);
         if (colId.equals("revenue")) {
             if (property != null && property.getValue() != null) {
@@ -48,7 +49,7 @@ public class TopTenMoviesTable extends Table {
                 DashboardUI.getDataProvider().getTotalMovieRevenues());
         Collections.sort(movieRevenues, new Comparator<MovieRevenue>() {
             @Override
-            public int compare(MovieRevenue o1, MovieRevenue o2) {
+            public int compare(final MovieRevenue o1, final MovieRevenue o2) {
                 return o2.getRevenue().compareTo(o1.getRevenue());
             }
         });

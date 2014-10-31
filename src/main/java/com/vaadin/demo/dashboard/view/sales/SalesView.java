@@ -101,7 +101,7 @@ public class SalesView extends VerticalLayout implements View {
         movieSelect.addShortcutListener(new ShortcutListener("Add",
                 KeyCode.ENTER, null) {
             @Override
-            public void handleAction(Object sender, Object target) {
+            public void handleAction(final Object sender, final Object target) {
                 addDataSet((Movie) movieSelect.getValue());
             }
         });
@@ -116,7 +116,7 @@ public class SalesView extends VerticalLayout implements View {
 
         movieSelect.addValueChangeListener(new ValueChangeListener() {
             @Override
-            public void valueChange(ValueChangeEvent event) {
+            public void valueChange(final ValueChangeEvent event) {
                 add.setEnabled(event.getProperty().getValue() != null);
             }
         });
@@ -125,7 +125,7 @@ public class SalesView extends VerticalLayout implements View {
         clear.addStyleName("clearbutton");
         clear.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 timeline.removeAllGraphDataSources();
                 initMovieSelect();
                 clear.setEnabled(false);
@@ -135,7 +135,7 @@ public class SalesView extends VerticalLayout implements View {
 
         add.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 addDataSet((Movie) movieSelect.getValue());
                 clear.setEnabled(true);
             }
@@ -145,17 +145,17 @@ public class SalesView extends VerticalLayout implements View {
     }
 
     private Timeline buildTimeline() {
-        Timeline timeline = new Timeline();
-        timeline.setDateSelectVisible(false);
-        timeline.setChartModesVisible(false);
-        timeline.setGraphShadowsEnabled(false);
-        timeline.setZoomLevelsVisible(false);
-        timeline.setSizeFull();
-        timeline.setNoDataSourceCaption("<span class=\"v-label h2 light\">Add a data set from the dropdown above</span>");
-        return timeline;
+        Timeline result = new Timeline();
+        result.setDateSelectVisible(false);
+        result.setChartModesVisible(false);
+        result.setGraphShadowsEnabled(false);
+        result.setZoomLevelsVisible(false);
+        result.setSizeFull();
+        result.setNoDataSourceCaption("<span class=\"v-label h2 light\">Add a data set from the dropdown above</span>");
+        return result;
     }
 
-    private void addDataSet(Movie movie) {
+    private void addDataSet(final Movie movie) {
         movieSelect.removeItem(movie);
         movieSelect.setValue(null);
 
@@ -182,24 +182,25 @@ public class SalesView extends VerticalLayout implements View {
     }
 
     @Override
-    public void enter(ViewChangeEvent event) {
+    public void enter(final ViewChangeEvent event) {
     }
 
     private class TempMovieRevenuesContainer extends
             ListContainer<MovieRevenue> {
 
-        public TempMovieRevenuesContainer(Collection<MovieRevenue> collection) {
+        public TempMovieRevenuesContainer(
+                final Collection<MovieRevenue> collection) {
             super(MovieRevenue.class, collection);
         }
 
         // This is only temporarily overridden until issues with
         // BeanComparator get resolved.
         @Override
-        public void sort(Object[] propertyId, boolean[] ascending) {
+        public void sort(final Object[] propertyId, final boolean[] ascending) {
             final boolean sortAscending = ascending[0];
             Collections.sort(getBackingList(), new Comparator<MovieRevenue>() {
                 @Override
-                public int compare(MovieRevenue o1, MovieRevenue o2) {
+                public int compare(final MovieRevenue o1, final MovieRevenue o2) {
                     int result = o1.getTimestamp().compareTo(o2.getTimestamp());
                     if (!sortAscending) {
                         result *= -1;

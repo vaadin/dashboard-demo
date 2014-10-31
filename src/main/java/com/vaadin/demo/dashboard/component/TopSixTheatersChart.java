@@ -13,11 +13,10 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.Movie;
 
+@SuppressWarnings("serial")
 public class TopSixTheatersChart extends Chart {
 
     public TopSixTheatersChart() {
-        // TODO this don't actually visualize top six theaters, but just makes a
-        // pie chart
         super(ChartType.PIE);
 
         setCaption("Popular Movies");

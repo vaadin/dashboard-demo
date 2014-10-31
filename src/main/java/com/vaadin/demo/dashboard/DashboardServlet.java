@@ -8,7 +8,7 @@ import com.vaadin.server.VaadinServlet;
 public class DashboardServlet extends VaadinServlet {
 
     @Override
-    protected void servletInitialized() throws ServletException {
+    protected final void servletInitialized() throws ServletException {
         super.servletInitialized();
         getService().addSessionInitListener(new DashboardSessionInitListener());
     }

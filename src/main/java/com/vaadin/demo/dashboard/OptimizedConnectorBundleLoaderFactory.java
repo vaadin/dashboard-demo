@@ -17,7 +17,7 @@ import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
-public class OptimizedConnectorBundleLoaderFactory extends
+public final class OptimizedConnectorBundleLoaderFactory extends
         ConnectorBundleLoaderFactory {
     private final Set<String> eagerConnectors = new HashSet<String>();
     {
@@ -34,7 +34,7 @@ public class OptimizedConnectorBundleLoaderFactory extends
     }
 
     @Override
-    protected LoadStyle getLoadStyle(JClassType connectorType) {
+    protected LoadStyle getLoadStyle(final JClassType connectorType) {
         if (eagerConnectors.contains(connectorType.getQualifiedBinaryName())) {
             return LoadStyle.EAGER;
         } else {

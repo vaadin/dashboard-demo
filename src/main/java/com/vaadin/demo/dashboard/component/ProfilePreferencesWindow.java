@@ -42,6 +42,13 @@ public class ProfilePreferencesWindow extends Window {
     public static final String ID = "profilepreferenceswindow";
 
     private final BeanFieldGroup<User> fieldGroup;
+    /*
+     * Fields for editing the User object are defined here as class members.
+     * They are later bound to a FieldGroup by calling
+     * fieldGroup.bindMemberFields(this). The Fields' values don't need to be
+     * explicitly set, calling fieldGroup.setItemDataSource(user) synchronizes
+     * the fields with the user object.
+     */
     @PropertyId("firstName")
     private TextField firstNameField;
     @PropertyId("lastName")
@@ -63,7 +70,8 @@ public class ProfilePreferencesWindow extends Window {
     @PropertyId("bio")
     private TextArea bioField;
 
-    public ProfilePreferencesWindow(User user, boolean preferencesTabOpen) {
+    private ProfilePreferencesWindow(final User user,
+            final boolean preferencesTabOpen) {
         addStyleName("profile-window");
         setId(ID);
         Responsive.makeResponsive(this);
@@ -233,8 +241,8 @@ public class ProfilePreferencesWindow extends Window {
             public void buttonClick(ClickEvent event) {
                 try {
                     fieldGroup.commit();
-                    // Updated user should also be persisted. But not in this
-                    // demo.
+                    // Updated user should also be persisted to database. But
+                    // not in this demo.
 
                     Notification success = new Notification(
                             "Profile updated successfully");
@@ -258,7 +266,7 @@ public class ProfilePreferencesWindow extends Window {
         return footer;
     }
 
-    public static void open(User user, boolean preferencesTabActive) {
+    public static void open(final User user, final boolean preferencesTabActive) {
         DashboardEventBus.post(new CloseOpenWindowsEvent());
         Window w = new ProfilePreferencesWindow(user, preferencesTabActive);
         UI.getCurrent().addWindow(w);

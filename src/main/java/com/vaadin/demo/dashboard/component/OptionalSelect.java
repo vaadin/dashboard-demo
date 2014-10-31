@@ -11,8 +11,12 @@ import com.vaadin.ui.CustomField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SuppressWarnings("serial")
-public class OptionalSelect<T> extends CustomField<T> {
+/*
+ * This component extends a CustomField and implements all the necessary
+ * functionality so that it can be used just like any other Field.
+ */
+@SuppressWarnings({ "serial", "unchecked" })
+public final class OptionalSelect<T> extends CustomField<T> {
 
     private final CheckBox checkBox;
     private final ComboBox comboBox;
@@ -38,7 +42,7 @@ public class OptionalSelect<T> extends CustomField<T> {
         comboBox.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(
-                    com.vaadin.data.Property.ValueChangeEvent event) {
+                    final com.vaadin.data.Property.ValueChangeEvent event) {
                 setValue((T) event.getProperty().getValue());
             }
         });
@@ -50,7 +54,7 @@ public class OptionalSelect<T> extends CustomField<T> {
         checkBox.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(
-                    com.vaadin.data.Property.ValueChangeEvent event) {
+                    final com.vaadin.data.Property.ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     if (comboBox.getValue() == null) {
                         Iterator<?> iterator = comboBox.getItemIds().iterator();
@@ -68,13 +72,13 @@ public class OptionalSelect<T> extends CustomField<T> {
     }
 
     @Override
-    protected void setInternalValue(T newValue) {
+    protected void setInternalValue(final T newValue) {
         super.setInternalValue(newValue);
         comboBox.setValue(newValue);
         checkBox.setValue(newValue != null);
     }
 
-    public void addOption(T itemId, String caption) {
+    public void addOption(final T itemId, final String caption) {
         comboBox.addItem(itemId);
         comboBox.setItemCaption(itemId, caption);
     }

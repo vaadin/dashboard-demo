@@ -13,13 +13,10 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.Movie;
 
+@SuppressWarnings("serial")
 public class TopGrossingMoviesChart extends Chart {
 
     public TopGrossingMoviesChart() {
-        // TODO this don't actually visualize top grossing movies, but just
-        // makes a
-        // bar chart of movie scores
-
         setCaption("Top Grossing Movies");
         getConfiguration().setTitle("");
         getConfiguration().getChart().setType(ChartType.BAR);

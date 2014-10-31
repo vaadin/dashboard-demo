@@ -40,8 +40,12 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SuppressWarnings("serial")
-public class DashboardMenu extends CustomComponent {
+/**
+ * A responsive menu component providing user information and the controls for
+ * primary navigation between the views.
+ */
+@SuppressWarnings({ "serial", "unchecked" })
+public final class DashboardMenu extends CustomComponent {
 
     public static final String ID = "dashboard-menu";
     public static final String REPORTS_BADGE_ID = "dashboard-menu-reports-badge";
@@ -55,6 +59,9 @@ public class DashboardMenu extends CustomComponent {
         addStyleName("valo-menu");
         setId(ID);
         setSizeUndefined();
+
+        // There's only one DashboardMenu per UI so this doesn't need to be
+        // unregistered from the UI-scoped DashboardEventBus.
         DashboardEventBus.register(this);
 
         setCompositionRoot(buildContent());
@@ -101,20 +108,20 @@ public class DashboardMenu extends CustomComponent {
         updateUserName(null);
         settingsItem.addItem("Edit Profile", new Command() {
             @Override
-            public void menuSelected(MenuItem selectedItem) {
+            public void menuSelected(final MenuItem selectedItem) {
                 ProfilePreferencesWindow.open(user, false);
             }
         });
         settingsItem.addItem("Preferences", new Command() {
             @Override
-            public void menuSelected(MenuItem selectedItem) {
+            public void menuSelected(final MenuItem selectedItem) {
                 ProfilePreferencesWindow.open(user, true);
             }
         });
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", new Command() {
             @Override
-            public void menuSelected(MenuItem selectedItem) {
+            public void menuSelected(final MenuItem selectedItem) {
                 DashboardEventBus.post(new UserLoggedOutEvent());
             }
         });
@@ -124,7 +131,7 @@ public class DashboardMenu extends CustomComponent {
     private Component buildToggleButton() {
         Button valoMenuToggleButton = new Button("Menu", new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 if (getCompositionRoot().getStyleName().contains(STYLE_VISIBLE)) {
                     getCompositionRoot().removeStyleName(STYLE_VISIBLE);
                 } else {
@@ -144,10 +151,10 @@ public class DashboardMenu extends CustomComponent {
         menuItemsLayout.addStyleName("valo-menuitems");
         menuItemsLayout.setHeight(100.0f, Unit.PERCENTAGE);
 
-        for (final QuickTicketsView view : QuickTicketsView.values()) {
+        for (final DashboardViewType view : DashboardViewType.values()) {
             Component menuItemComponent = new ValoMenuItemButton(view);
 
-            if (view == QuickTicketsView.REPORTS) {
+            if (view == DashboardViewType.REPORTS) {
                 // Add drop target to reports button
                 DragAndDropWrapper reports = new DragAndDropWrapper(
                         menuItemComponent);
@@ -155,11 +162,11 @@ public class DashboardMenu extends CustomComponent {
                 reports.setDropHandler(new DropHandler() {
 
                     @Override
-                    public void drop(DragAndDropEvent event) {
+                    public void drop(final DragAndDropEvent event) {
                         UI.getCurrent()
                                 .getNavigator()
                                 .navigateTo(
-                                        QuickTicketsView.REPORTS.getViewName());
+                                        DashboardViewType.REPORTS.getViewName());
                         Table table = (Table) event.getTransferable()
                                 .getSourceComponent();
                         DashboardEventBus.post(new TransactionReportEvent(
@@ -175,13 +182,13 @@ public class DashboardMenu extends CustomComponent {
                 menuItemComponent = reports;
             }
 
-            if (view == QuickTicketsView.DASHBOARD) {
+            if (view == DashboardViewType.DASHBOARD) {
                 notificationsBadge = new Label();
                 notificationsBadge.setId(NOTIFICATIONS_BADGE_ID);
                 menuItemComponent = buildBadgeWrapper(menuItemComponent,
                         notificationsBadge);
             }
-            if (view == QuickTicketsView.REPORTS) {
+            if (view == DashboardViewType.REPORTS) {
                 reportsBadge = new Label();
                 reportsBadge.setId(REPORTS_BADGE_ID);
                 menuItemComponent = buildBadgeWrapper(menuItemComponent,
@@ -194,8 +201,8 @@ public class DashboardMenu extends CustomComponent {
 
     }
 
-    private Component buildBadgeWrapper(Component menuItemButton,
-            Component badgeLabel) {
+    private Component buildBadgeWrapper(final Component menuItemButton,
+            final Component badgeLabel) {
         CssLayout dashboardWrapper = new CssLayout(menuItemButton);
         dashboardWrapper.addStyleName("badgewrapper");
         dashboardWrapper.addStyleName(ValoTheme.MENU_ITEM);
@@ -214,12 +221,14 @@ public class DashboardMenu extends CustomComponent {
     }
 
     @Subscribe
-    public void postViewChange(PostViewChangeEvent event) {
+    public void postViewChange(final PostViewChangeEvent event) {
+        // After a successful view change the menu can be hidden in mobile view.
         getCompositionRoot().removeStyleName(STYLE_VISIBLE);
     }
 
     @Subscribe
-    public void updateNotificationsCount(NotificationsCountUpdatedEvent event) {
+    public void updateNotificationsCount(
+            final NotificationsCountUpdatedEvent event) {
         int unreadNotificationsCount = DashboardUI.getDataProvider()
                 .getUnreadNotificationsCount();
         notificationsBadge.setValue(String.valueOf(unreadNotificationsCount));
@@ -227,29 +236,30 @@ public class DashboardMenu extends CustomComponent {
     }
 
     @Subscribe
-    public void updateReportsCount(ReportsCountUpdatedEvent event) {
+    public void updateReportsCount(final ReportsCountUpdatedEvent event) {
         reportsBadge.setValue(String.valueOf(event.getCount()));
         reportsBadge.setVisible(event.getCount() > 0);
     }
 
     @Subscribe
-    public void updateUserName(ProfileUpdatedEvent event) {
+    public void updateUserName(final ProfileUpdatedEvent event) {
         User user = getCurrentUser();
         settingsItem.setText(user.getFirstName() + " " + user.getLastName());
     }
 
-    public class ValoMenuItemButton extends Button {
+    public final class ValoMenuItemButton extends Button {
 
         private static final String STYLE_SELECTED = "selected";
 
-        private final QuickTicketsView view;
+        private final DashboardViewType view;
 
-        public ValoMenuItemButton(final QuickTicketsView view) {
+        public ValoMenuItemButton(final DashboardViewType view) {
             this.view = view;
             setPrimaryStyleName("valo-menu-item");
             setIcon(view.getIcon());
             setCaption(view.getViewName().substring(0, 1).toUpperCase()
                     + view.getViewName().substring(1));
+            DashboardEventBus.register(this);
             addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(final ClickEvent event) {
@@ -257,22 +267,11 @@ public class DashboardMenu extends CustomComponent {
                             .navigateTo(view.getViewName());
                 }
             });
-        }
 
-        @Override
-        public void attach() {
-            super.attach();
-            DashboardEventBus.register(this);
-        }
-
-        @Override
-        public void detach() {
-            super.detach();
-            DashboardEventBus.unregister(this);
         }
 
         @Subscribe
-        public void postViewChange(PostViewChangeEvent event) {
+        public void postViewChange(final PostViewChangeEvent event) {
             removeStyleName(STYLE_SELECTED);
             if (event.getView() == view) {
                 addStyleName(STYLE_SELECTED);

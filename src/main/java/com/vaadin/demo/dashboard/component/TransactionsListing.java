@@ -13,10 +13,9 @@ import com.vaadin.ui.Label;
 @SuppressWarnings("serial")
 public class TransactionsListing extends CssLayout {
 
-    private final DateFormat DF = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+    private final DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
-    public TransactionsListing(Object prefillData) {
-        Collection<Transaction> transactions = (Collection<Transaction>) prefillData;
+    public TransactionsListing(final Collection<Transaction> transactions) {
         addComponent(new Label("<strong>Selected transactions</strong>",
                 ContentMode.HTML));
 
@@ -25,7 +24,7 @@ public class TransactionsListing extends CssLayout {
                 CssLayout transationLayout = new CssLayout();
                 transationLayout.addStyleName("transaction");
 
-                Label content = new Label(DF.format((transaction.getTime()))
+                Label content = new Label(df.format((transaction.getTime()))
                         + "<br>" + transaction.getCity() + ", "
                         + transaction.getCountry());
                 content.setSizeUndefined();

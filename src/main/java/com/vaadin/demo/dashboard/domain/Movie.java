@@ -2,7 +2,7 @@ package com.vaadin.demo.dashboard.domain;
 
 import java.util.Date;
 
-public class Movie {
+public final class Movie {
     private long id;
     private String title;
     private String synopsis;
@@ -12,27 +12,27 @@ public class Movie {
     private Date releaseDate;
     private int score;
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
-    public void setSynopsis(String synopsis) {
+    public void setSynopsis(final String synopsis) {
         this.synopsis = synopsis;
     }
 
-    public void setThumbUrl(String thumbUrl) {
+    public void setThumbUrl(final String thumbUrl) {
         this.thumbUrl = thumbUrl;
     }
 
-    public void setPosterUrl(String posterUrl) {
+    public void setPosterUrl(final String posterUrl) {
         this.posterUrl = posterUrl;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(final int duration) {
         this.duration = duration;
     }
 
@@ -40,7 +40,7 @@ public class Movie {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(final Date releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -48,7 +48,7 @@ public class Movie {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(final int score) {
         this.score = score;
     }
 

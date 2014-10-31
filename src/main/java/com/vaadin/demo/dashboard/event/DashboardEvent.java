@@ -3,15 +3,18 @@ package com.vaadin.demo.dashboard.event;
 import java.util.Collection;
 
 import com.vaadin.demo.dashboard.domain.Transaction;
-import com.vaadin.demo.dashboard.view.QuickTicketsView;
-import com.vaadin.ui.Component;
+import com.vaadin.demo.dashboard.view.DashboardViewType;
 
-public class DashboardEvent {
+/*
+ * Event bus events used in Dashboard are listed here as inner classes.
+ */
+public abstract class DashboardEvent {
 
-    public static class UserLoginRequestedEvent {
+    public static final class UserLoginRequestedEvent {
         private final String userName, password;
 
-        public UserLoginRequestedEvent(String userName, String password) {
+        public UserLoginRequestedEvent(final String userName,
+                final String password) {
             this.userName = userName;
             this.password = password;
         }
@@ -36,10 +39,10 @@ public class DashboardEvent {
     public static class NotificationsCountUpdatedEvent {
     }
 
-    public static class ReportsCountUpdatedEvent {
+    public static final class ReportsCountUpdatedEvent {
         private final int count;
 
-        public ReportsCountUpdatedEvent(int count) {
+        public ReportsCountUpdatedEvent(final int count) {
             this.count = count;
         }
 
@@ -49,10 +52,10 @@ public class DashboardEvent {
 
     }
 
-    public static class TransactionReportEvent {
+    public static final class TransactionReportEvent {
         private final Collection<Transaction> transactions;
 
-        public TransactionReportEvent(Collection<Transaction> transactions) {
+        public TransactionReportEvent(final Collection<Transaction> transactions) {
             this.transactions = transactions;
         }
 
@@ -61,27 +64,14 @@ public class DashboardEvent {
         }
     }
 
-    public static class DashboardEditEvent {
-        private final String name;
+    public static final class PostViewChangeEvent {
+        private final DashboardViewType view;
 
-        public DashboardEditEvent(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-    }
-
-    public static class PostViewChangeEvent {
-        private final QuickTicketsView view;
-
-        public PostViewChangeEvent(QuickTicketsView view) {
+        public PostViewChangeEvent(final DashboardViewType view) {
             this.view = view;
         }
 
-        public QuickTicketsView getView() {
+        public DashboardViewType getView() {
             return view;
         }
     }
@@ -90,30 +80,6 @@ public class DashboardEvent {
     }
 
     public static class ProfileUpdatedEvent {
-    }
-
-    public static class MaximizeDashboardPanelEvent {
-        private final Component panel;
-
-        public MaximizeDashboardPanelEvent(Component panel) {
-            this.panel = panel;
-        }
-
-        public Component getPanel() {
-            return panel;
-        }
-    }
-
-    public static class MinimizeDashboardPanelEvent {
-        private final Component panel;
-
-        public MinimizeDashboardPanelEvent(Component panel) {
-            this.panel = panel;
-        }
-
-        public Component getPanel() {
-            return panel;
-        }
     }
 
 }

@@ -2,7 +2,7 @@ package com.vaadin.demo.dashboard.domain;
 
 import java.util.Date;
 
-public class Transaction {
+public final class Transaction {
     private Date time;
     private String country;
     private String city;
@@ -17,7 +17,7 @@ public class Transaction {
         return movieId;
     }
 
-    public void setMovieId(long movieId) {
+    public void setMovieId(final long movieId) {
         this.movieId = movieId;
     }
 
@@ -25,7 +25,7 @@ public class Transaction {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -33,7 +33,7 @@ public class Transaction {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(final Date time) {
         this.time = time;
     }
 
@@ -41,7 +41,7 @@ public class Transaction {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(final String country) {
         this.country = country;
     }
 
@@ -49,7 +49,7 @@ public class Transaction {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(final String city) {
         this.city = city;
     }
 
@@ -57,7 +57,7 @@ public class Transaction {
         return theater;
     }
 
-    public void setTheater(String theater) {
+    public void setTheater(final String theater) {
         this.theater = theater;
     }
 
@@ -65,7 +65,7 @@ public class Transaction {
         return room;
     }
 
-    public void setRoom(String room) {
+    public void setRoom(final String room) {
         this.room = room;
     }
 
@@ -73,7 +73,7 @@ public class Transaction {
         return seats;
     }
 
-    public void setSeats(int seats) {
+    public void setSeats(final int seats) {
         this.seats = seats;
     }
 
@@ -81,7 +81,7 @@ public class Transaction {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(final double price) {
         this.price = price;
     }
 

@@ -9,10 +9,11 @@ import com.vaadin.server.ServiceException;
 import com.vaadin.server.SessionInitEvent;
 import com.vaadin.server.SessionInitListener;
 
+@SuppressWarnings("serial")
 public class DashboardSessionInitListener implements SessionInitListener {
 
     @Override
-    public void sessionInit(final SessionInitEvent event)
+    public final void sessionInit(final SessionInitEvent event)
             throws ServiceException {
 
         event.getSession().addBootstrapListener(new BootstrapListener() {

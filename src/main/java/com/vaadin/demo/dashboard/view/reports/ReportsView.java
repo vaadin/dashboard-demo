@@ -35,7 +35,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class ReportsView extends TabSheet implements View, CloseHandler,
+public final class ReportsView extends TabSheet implements View, CloseHandler,
         ReportEditorListener {
 
     public static final String CONFIRM_DIALOG_ID = "confirm-dialog";
@@ -106,7 +106,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         delete.setPrimaryStyleName("delete-button");
         delete.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 Notification.show("Not implemented in this demo");
             }
         });
@@ -114,7 +114,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
 
         draftThumb.addLayoutClickListener(new LayoutClickListener() {
             @Override
-            public void layoutClick(LayoutClickEvent event) {
+            public void layoutClick(final LayoutClickEvent event) {
                 if (event.getButton() == MouseButton.LEFT
                         && event.getChildComponent() != delete) {
                     addReport(ReportType.MONTHLY, null);
@@ -135,7 +135,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         create.addStyleName(ValoTheme.BUTTON_PRIMARY);
         create.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 addReport(ReportType.EMPTY, null);
             }
         });
@@ -145,7 +145,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
         return createBox;
     }
 
-    public void addReport(ReportType reportType, Object prefillData) {
+    public void addReport(final ReportType reportType, final Object prefillData) {
         ReportEditor reportEditor = new ReportEditor(this);
         addTab(reportEditor).setClosable(true);
 
@@ -170,12 +170,12 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
     }
 
     @Subscribe
-    public void createTransactionReport(TransactionReportEvent event) {
+    public void createTransactionReport(final TransactionReportEvent event) {
         addReport(ReportType.TRANSACTIONS, event.getTransactions());
     }
 
     @Override
-    public void onTabClose(TabSheet tabsheet, final Component tabContent) {
+    public void onTabClose(final TabSheet tabsheet, final Component tabContent) {
         Label message = new Label(
                 "You have not saved this report. Do you want to save or discard any changes you've made to this report?");
         message.setWidth("25em");
@@ -201,7 +201,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
 
         Button ok = new Button("Save", new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 confirmDialog.close();
                 removeComponent(tabContent);
                 DashboardEventBus.post(new ReportsCountUpdatedEvent(
@@ -216,7 +216,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
 
         Button discard = new Button("Discard Changes", new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 confirmDialog.close();
                 removeComponent(tabContent);
                 DashboardEventBus.post(new ReportsCountUpdatedEvent(
@@ -227,7 +227,7 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
 
         Button cancel = new Button("Cancel", new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 confirmDialog.close();
             }
         });
@@ -240,11 +240,11 @@ public class ReportsView extends TabSheet implements View, CloseHandler,
     }
 
     @Override
-    public void enter(ViewChangeEvent event) {
+    public void enter(final ViewChangeEvent event) {
     }
 
     @Override
-    public void titleChanged(String newTitle, ReportEditor editor) {
+    public void titleChanged(final String newTitle, final ReportEditor editor) {
         getTab(editor).setCaption(newTitle);
     }
 

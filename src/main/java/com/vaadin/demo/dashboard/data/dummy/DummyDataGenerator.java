@@ -7,7 +7,7 @@ import com.vaadin.addon.charts.model.style.Color;
 import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.demo.dashboard.domain.DashboardNotification;
 
-public class DummyDataGenerator {
+public abstract class DummyDataGenerator {
 
     static String randomFirstName() {
         String[] names = { "Dave", "Mike", "Katherine", "Jonas", "Linus",

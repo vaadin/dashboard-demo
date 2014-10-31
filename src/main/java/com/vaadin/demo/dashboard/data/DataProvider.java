@@ -9,25 +9,68 @@ import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
 
+/**
+ * QuickTickets Dashboard backend API.
+ */
 public interface DataProvider {
-    public Collection<Transaction> getRecentTransactions(int count);
+    /**
+     * @param count
+     *            Number of transactions to fetch.
+     * @return A Collection of most recent transactions.
+     */
+    Collection<Transaction> getRecentTransactions(int count);
 
-    public Collection<MovieRevenue> getDailyRevenuesByMovie(long id);
+    /**
+     * @param id
+     *            Movie identifier.
+     * @return A Collection of daily revenues for the movie.
+     */
+    Collection<MovieRevenue> getDailyRevenuesByMovie(long id);
 
-    public Collection<MovieRevenue> getTotalMovieRevenues();
+    /**
+     * @return Total revenues for each listed movie.
+     */
+    Collection<MovieRevenue> getTotalMovieRevenues();
 
-    public User authenticate(String userName, String password);
+    /**
+     * @param userName
+     * @param password
+     * @return Authenticated used.
+     */
+    User authenticate(String userName, String password);
 
-    public int getUnreadNotificationsCount();
+    /**
+     * @return The number of unread notifications for the current user.
+     */
+    int getUnreadNotificationsCount();
 
-    public Collection<DashboardNotification> getNotifications();
+    /**
+     * @return Notifications for the current user.
+     */
+    Collection<DashboardNotification> getNotifications();
 
-    public double getTotalSum();
+    /**
+     * @return The total summed up revenue of sold movie tickets
+     */
+    double getTotalSum();
 
-    public Collection<Movie> getMovies();
+    /**
+     * @return A Collection of movies.
+     */
+    Collection<Movie> getMovies();
 
-    public Movie getMovie(long movieId);
+    /**
+     * @param movieId
+     *            Movie's identifier
+     * @return A Movie instance for the given id.
+     */
+    Movie getMovie(long movieId);
 
-    public Collection<Transaction> getTransactionsBetween(Date startDate,
-            Date endDate);
+    /**
+     * @param startDate
+     * @param endDate
+     * @return A Collection of Transactions between the given start and end
+     *         dates.
+     */
+    Collection<Transaction> getTransactionsBetween(Date startDate, Date endDate);
 }

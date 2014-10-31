@@ -24,7 +24,7 @@ import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.event.DashboardEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.view.QuickTicketsView;
+import com.vaadin.demo.dashboard.view.DashboardViewType;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -51,8 +51,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SuppressWarnings("serial")
-public class TransactionsView extends VerticalLayout implements View {
+@SuppressWarnings({ "serial", "unchecked" })
+public final class TransactionsView extends VerticalLayout implements View {
 
     private final Table table;
     private Button createReport;
@@ -77,8 +77,8 @@ public class TransactionsView extends VerticalLayout implements View {
     @Override
     public void detach() {
         super.detach();
-        // This view gets re-instantiated every time it's navigated to so we'll
-        // need to clean up references to it on detach.
+        // A new instance of TransactionsView is created every time it's
+        // navigated to so we'll need to clean up references to it on detach.
         DashboardEventBus.unregister(this);
     }
 
@@ -110,7 +110,7 @@ public class TransactionsView extends VerticalLayout implements View {
                 .setDescription("Create a new report from the selected transactions");
         createReport.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 createNewReportFromSelection();
             }
         });
@@ -127,8 +127,8 @@ public class TransactionsView extends VerticalLayout implements View {
                 data.removeAllContainerFilters();
                 data.addContainerFilter(new Filter() {
                     @Override
-                    public boolean passesFilter(Object itemId, Item item)
-                            throws UnsupportedOperationException {
+                    public boolean passesFilter(final Object itemId,
+                            final Item item) {
 
                         if (event.getText() == null
                                 || event.getText().equals("")) {
@@ -145,7 +145,7 @@ public class TransactionsView extends VerticalLayout implements View {
                     }
 
                     @Override
-                    public boolean appliesToProperty(Object propertyId) {
+                    public boolean appliesToProperty(final Object propertyId) {
                         if (propertyId.equals("country")
                                 || propertyId.equals("city")
                                 || propertyId.equals("title")) {
@@ -163,7 +163,7 @@ public class TransactionsView extends VerticalLayout implements View {
         filter.addShortcutListener(new ShortcutListener("Clear",
                 KeyCode.ESCAPE, null) {
             @Override
-            public void handleAction(Object sender, Object target) {
+            public void handleAction(final Object sender, final Object target) {
                 filter.setValue("");
                 ((Filterable) table.getContainerDataSource())
                         .removeAllContainerFilters();
@@ -175,8 +175,8 @@ public class TransactionsView extends VerticalLayout implements View {
     private Table buildTable() {
         final Table table = new Table() {
             @Override
-            protected String formatPropertyValue(Object rowId, Object colId,
-                    Property<?> property) {
+            protected String formatPropertyValue(final Object rowId,
+                    final Object colId, final Property<?> property) {
                 String result = super.formatPropertyValue(rowId, colId,
                         property);
                 if (colId.equals("time")) {
@@ -232,11 +232,10 @@ public class TransactionsView extends VerticalLayout implements View {
 
         table.addValueChangeListener(new ValueChangeListener() {
             @Override
-            public void valueChange(ValueChangeEvent event) {
+            public void valueChange(final ValueChangeEvent event) {
                 if (table.getValue() instanceof Set) {
                     Set<Object> val = (Set<Object>) table.getValue();
                     createReport.setEnabled(val.size() > 0);
-                } else {
                 }
             }
         });
@@ -257,7 +256,9 @@ public class TransactionsView extends VerticalLayout implements View {
     }
 
     @Subscribe
-    public void browserResized(BrowserResizeEvent event) {
+    public void browserResized(final BrowserResizeEvent event) {
+        // Some columns are collapsed when browser window width gets small
+        // enough to make the table fit better.
         if (defaultColumnsVisible()) {
             for (String propertyId : DEFAULT_COLLAPSIBLE) {
                 table.setColumnCollapsed(propertyId, Page.getCurrent()
@@ -266,7 +267,8 @@ public class TransactionsView extends VerticalLayout implements View {
         }
     }
 
-    private boolean filterByProperty(String prop, Item item, String text) {
+    private boolean filterByProperty(final String prop, final Item item,
+            final String text) {
         if (item == null || item.getItemProperty(prop) == null
                 || item.getItemProperty(prop).getValue() == null) {
             return false;
@@ -276,26 +278,18 @@ public class TransactionsView extends VerticalLayout implements View {
         if (val.contains(text.toLowerCase().trim())) {
             return true;
         }
-        // String[] parts = text.split(" ");
-        // for (String part : parts) {
-        // if (val.contains(part.toLowerCase()))
-        // return true;
-        //
-        // }
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     void createNewReportFromSelection() {
         UI.getCurrent().getNavigator()
-                .navigateTo(QuickTicketsView.REPORTS.getViewName());
+                .navigateTo(DashboardViewType.REPORTS.getViewName());
         DashboardEventBus.post(new TransactionReportEvent(
                 (Collection<Transaction>) table.getValue()));
-
     }
 
     @Override
-    public void enter(ViewChangeEvent event) {
+    public void enter(final ViewChangeEvent event) {
     }
 
     private class TransactionsActionHandler implements Handler {
@@ -306,7 +300,8 @@ public class TransactionsView extends VerticalLayout implements View {
         private final Action details = new Action("Movie details");
 
         @Override
-        public void handleAction(Action action, Object sender, Object target) {
+        public void handleAction(final Action action, final Object sender,
+                final Object target) {
             if (action == report) {
                 createNewReportFromSelection();
             } else if (action == discard) {
@@ -323,7 +318,7 @@ public class TransactionsView extends VerticalLayout implements View {
         }
 
         @Override
-        public Action[] getActions(Object target, Object sender) {
+        public Action[] getActions(final Object target, final Object sender) {
             return new Action[] { details, report, discard };
         }
     }
@@ -331,19 +326,20 @@ public class TransactionsView extends VerticalLayout implements View {
     private class TempTransactionsContainer extends
             FilterableListContainer<Transaction> {
 
-        public TempTransactionsContainer(Collection<Transaction> collection) {
+        public TempTransactionsContainer(
+                final Collection<Transaction> collection) {
             super(collection);
         }
 
         // This is only temporarily overridden until issues with
         // BeanComparator get resolved.
         @Override
-        public void sort(Object[] propertyId, boolean[] ascending) {
+        public void sort(final Object[] propertyId, final boolean[] ascending) {
             final boolean sortAscending = ascending[0];
             final Object sortContainerPropertyId = propertyId[0];
             Collections.sort(getBackingList(), new Comparator<Transaction>() {
                 @Override
-                public int compare(Transaction o1, Transaction o2) {
+                public int compare(final Transaction o1, final Transaction o2) {
                     int result = 0;
                     if ("time".equals(sortContainerPropertyId)) {
                         result = o1.getTime().compareTo(o2.getTime());
