@@ -11,6 +11,9 @@ Run the Maven 'install' target and deploy the resulting WAR file to your Java ap
 
 *Note*: You need a [Rotten Tomatoes API key](http://developer.rottentomatoes.com) and a connection to the internet to run the app. Insert your own API key here: [DummyDataProvider.java#L122](https://github.com/vaadin/dashboard-demo/blob/master/src/main/java/com/vaadin/demo/dashboard/data/dummy/DummyDataProvider.java#L122)
 
+Run 'mvn -Pproduction-mode verify' to run the Vaadin TestBench tests. 
+
+*Note*: You need a valid [Vaadin TestBench license](https://vaadin.com/add-ons/testbench) and [Firefox browser](https://www.mozilla.org/firefox/) installed to run the tests.
 
 Licenses
 ==
