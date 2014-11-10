@@ -85,11 +85,11 @@ public final class ScheduleView extends CssLayout implements View {
             WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
 
             String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
-                    + "/img/event-title-bg.png), url(" + m.getPosterUrl() + ")";
+                    + "/img/event-title-bg.png), url(" + m.getThumbUrl() + ")";
 
             // IE8 doesn't support multiple background images
             if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
-                bg = "url(" + m.getPosterUrl() + ")";
+                bg = "url(" + m.getThumbUrl() + ")";
             }
 
             styles += ".v-calendar-event-" + m.getId()

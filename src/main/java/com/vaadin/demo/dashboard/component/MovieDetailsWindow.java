@@ -84,7 +84,7 @@ public final class MovieDetailsWindow extends Window {
         details.setSpacing(true);
 
         final Image coverImage = new Image(null, new ExternalResource(
-                movie.getPosterUrl()));
+                movie.getThumbUrl()));
         coverImage.addStyleName("cover");
         details.addComponent(coverImage);
 
