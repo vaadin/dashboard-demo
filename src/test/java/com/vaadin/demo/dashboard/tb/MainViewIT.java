@@ -1,8 +1,8 @@
 package com.vaadin.demo.dashboard.tb;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.demo.dashboard.tb.pageobjects.TBLoginView;
@@ -12,11 +12,11 @@ import com.vaadin.testbench.TestBenchTestCase;
 
 public class MainViewIT extends TestBenchTestCase {
 
-    private static TBLoginView loginView;
-    private static TBMainView mainView;
+    private TBLoginView loginView;
+    private TBMainView mainView;
 
-    @BeforeClass
-    public static void setUp() {
+    @Before
+    public void setUp() {
         loginView = TBUtils.openInitialView();
         mainView = loginView.login();
     }
@@ -29,8 +29,8 @@ public class MainViewIT extends TestBenchTestCase {
         Assert.assertEquals("Test User", mainView.getUserFullName());
     }
 
-    @AfterClass
-    public static void tearDown() {
+    @After
+    public void tearDown() {
         loginView.getDriver().quit();
     }
 }
