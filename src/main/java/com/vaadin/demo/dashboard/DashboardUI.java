@@ -50,7 +50,7 @@ public final class DashboardUI extends UI {
         updateContent();
 
         // Some views need to be aware of browser resize events so a
-        // BrowserResizeEvent gets fired to the event but on every occasion.
+        // BrowserResizeEvent gets fired to the event bus on every occasion.
         Page.getCurrent().addBrowserWindowResizeListener(
                 new BrowserWindowResizeListener() {
                     @Override
