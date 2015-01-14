@@ -207,8 +207,8 @@ public final class TransactionsView extends VerticalLayout implements View {
         table.setSortContainerPropertyId("time");
         table.setSortAscending(false);
 
-        table.setColumnAlignment("Seats", Align.RIGHT);
-        table.setColumnAlignment("Price", Align.RIGHT);
+        table.setColumnAlignment("seats", Align.RIGHT);
+        table.setColumnAlignment("price", Align.RIGHT);
 
         table.setVisibleColumns("time", "country", "city", "theater", "room",
                 "title", "seats", "price");
