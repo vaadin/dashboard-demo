@@ -210,7 +210,9 @@
 						</configuration>
 						<goals>
 							<goal>resources</goal>
+              <goal>update-theme</goal>
 							<goal>update-widgetset</goal>
+              <goal>compile-theme</goal>
 							<goal>compile</goal>
 						</goals>
 					</execution>
