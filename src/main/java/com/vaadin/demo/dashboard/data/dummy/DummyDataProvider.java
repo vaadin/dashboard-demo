@@ -48,6 +48,9 @@ import com.vaadin.util.CurrentInstance;
  */
 public class DummyDataProvider implements DataProvider {
 
+    // TODO: Get API key from http://developer.rottentomatoes.com
+    private static final String ROTTEN_TOMATOES_API_KEY = null;
+
     /* List of countries and cities for them */
     private static Multimap<String, String> countryToCities;
     private static Date lastDataUpdate;
@@ -81,7 +84,7 @@ public class DummyDataProvider implements DataProvider {
 
     /**
      * Get a list of movies currently playing in theaters.
-     * 
+     *
      * @return a list of Movie objects
      */
     @Override
@@ -93,41 +96,41 @@ public class DummyDataProvider implements DataProvider {
      * Initialize the list of movies playing in theaters currently. Uses the
      * Rotten Tomatoes API to get the list. The result is cached to a local file
      * for 24h (daily limit of API calls is 10,000).
-     * 
+     *
      * @return
      */
     private static Collection<Movie> loadMoviesData() {
 
-        File cache;
-
-        VaadinRequest vaadinRequest = CurrentInstance.get(VaadinRequest.class);
-        if (vaadinRequest == null) {
-            // PANIC!!!
-            cache = new File("movies.txt");
-        } else {
-            File baseDirectory = vaadinRequest.getService().getBaseDirectory();
-            cache = new File(baseDirectory + "/movies.txt");
-        }
-
         JsonObject json = null;
+        File cache;
+        VaadinRequest vaadinRequest = CurrentInstance.get(VaadinRequest.class);
+
+        File baseDirectory = vaadinRequest.getService().getBaseDirectory();
+        cache = new File(baseDirectory + "/movies.txt");
+
         try {
-            // TODO check for internet connection also, and use the cache
-            // anyway
-            // if no connection is available
             if (cache.exists()
-                    && System.currentTimeMillis() < cache.lastModified() + 1000
-                            * 60 * 60 * 24) {
+                    && System.currentTimeMillis() < cache.lastModified()
+                            + (1000 * 60 * 60 * 24)) {
+                // Use cache if it's under 24h old
                 json = readJsonFromFile(cache);
             } else {
-                // TODO: Get an API key from
-                // http://developer.rottentomatoes.com
-                String apiKey = "xxxxxxxxxxxxxxxxxxxxxxxx";
-                json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
-                        + apiKey);
-                // Store in cache
-                FileWriter fileWriter = new FileWriter(cache);
-                fileWriter.write(json.toString());
-                fileWriter.close();
+                if (ROTTEN_TOMATOES_API_KEY != null) {
+                    try {
+                        json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
+                                + ROTTEN_TOMATOES_API_KEY);
+                        // Store in cache
+                        FileWriter fileWriter = new FileWriter(cache);
+                        fileWriter.write(json.toString());
+                        fileWriter.close();
+                    } catch (Exception e) {
+                        json = readJsonFromFile(new File(baseDirectory
+                                + "/movies-fallback.txt"));
+                    }
+                } else {
+                    json = readJsonFromFile(new File(baseDirectory
+                            + "/movies-fallback.txt"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -291,7 +294,7 @@ public class DummyDataProvider implements DataProvider {
 
     /**
      * Create a list of dummy transactions
-     * 
+     *
      * @return
      */
     private Multimap<Long, Transaction> generateTransactionsData() {

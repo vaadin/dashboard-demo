@@ -24,6 +24,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("dashboard")
 @Widgetset("com.vaadin.demo.dashboard.DashboardWidgetSet")
@@ -46,6 +47,7 @@ public final class DashboardUI extends UI {
 
         DashboardEventBus.register(this);
         Responsive.makeResponsive(this);
+        addStyleName(ValoTheme.UI_WITH_MENU);
 
         updateContent();
 

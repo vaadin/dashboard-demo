@@ -1,6 +1,5 @@
 package com.vaadin.demo.dashboard.view.sales;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -11,6 +10,7 @@ import java.util.List;
 
 import org.vaadin.maddon.ListContainer;
 
+import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.timeline.Timeline;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -40,9 +40,14 @@ public class SalesView extends VerticalLayout implements View {
     private final Timeline timeline;
     private ComboBox movieSelect;
 
-    private static final Color[] COLORS = new Color[] {
-            new Color(52, 154, 255), new Color(242, 81, 57),
-            new Color(255, 201, 35), new Color(83, 220, 164) };
+    private static final SolidColor[] COLORS = new SolidColor[] {
+            new SolidColor(52, 154, 255), new SolidColor(242, 81, 57),
+            new SolidColor(255, 201, 35), new SolidColor(83, 220, 164) };
+    private static final SolidColor[] COLORS_ALPHA = new SolidColor[] {
+            new SolidColor(52, 154, 255, 0.3),
+            new SolidColor(242, 81, 57, 0.3),
+            new SolidColor(255, 201, 35, 0.3),
+            new SolidColor(83, 220, 164, 0.3) };
     private int colorIndex = -1;
 
     public SalesView() {
@@ -175,7 +180,7 @@ public class SalesView extends VerticalLayout implements View {
         timeline.setBrowserOutlineColor(dailyRevenueContainer,
                 COLORS[colorIndex]);
         timeline.setBrowserFillColor(dailyRevenueContainer,
-                COLORS[colorIndex].brighter());
+                COLORS_ALPHA[colorIndex]);
         timeline.setGraphCaption(dailyRevenueContainer, movie.getTitle());
         timeline.setEventCaptionPropertyId("date");
         timeline.setVerticalAxisLegendUnit(dailyRevenueContainer, "$");

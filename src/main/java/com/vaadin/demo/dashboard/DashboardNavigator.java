@@ -36,7 +36,7 @@ public class DashboardNavigator extends Navigator {
     }
 
     private void initGATracker(final String trackerId) {
-        tracker = new GoogleAnalyticsTracker(trackerId, "none");
+        tracker = new GoogleAnalyticsTracker(trackerId, "demo.vaadin.com");
 
         // GoogleAnalyticsTracker is an extension add-on for UI so it is
         // initialized by calling .extend(UI)
