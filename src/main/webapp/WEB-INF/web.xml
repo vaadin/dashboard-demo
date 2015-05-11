@@ -22,25 +22,4 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
-	<filter>
-		<filter-name>CompressionFilter</filter-name>
-		<filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>*.css</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>*.js</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>/UIDL/*</url-pattern>
-	</filter-mapping>
 </web-app>
