@@ -8,7 +8,7 @@
 
 	<properties>
 		<productionMode>false</productionMode>
-		<vaadin.version>7.3.8</vaadin.version>
+		<vaadin.version>7.4.6</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -262,6 +262,8 @@
 											<goal>
 												update-widgetset
 											</goal>
+											<goal>compile-theme</goal>
+											<goal>update-theme</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

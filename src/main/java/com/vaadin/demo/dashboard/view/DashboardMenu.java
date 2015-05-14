@@ -56,7 +56,7 @@ public final class DashboardMenu extends CustomComponent {
     private MenuItem settingsItem;
 
     public DashboardMenu() {
-        addStyleName("valo-menu");
+        setPrimaryStyleName("valo-menu");
         setId(ID);
         setSizeUndefined();
 
@@ -158,6 +158,7 @@ public final class DashboardMenu extends CustomComponent {
                 // Add drop target to reports button
                 DragAndDropWrapper reports = new DragAndDropWrapper(
                         menuItemComponent);
+                reports.setSizeUndefined();
                 reports.setDragStartMode(DragStartMode.NONE);
                 reports.setDropHandler(new DropHandler() {
 
@@ -206,7 +207,6 @@ public final class DashboardMenu extends CustomComponent {
         CssLayout dashboardWrapper = new CssLayout(menuItemButton);
         dashboardWrapper.addStyleName("badgewrapper");
         dashboardWrapper.addStyleName(ValoTheme.MENU_ITEM);
-        dashboardWrapper.setWidth(100.0f, Unit.PERCENTAGE);
         badgeLabel.addStyleName(ValoTheme.MENU_BADGE);
         badgeLabel.setWidthUndefined();
         badgeLabel.setVisible(false);
