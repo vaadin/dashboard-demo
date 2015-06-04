@@ -149,7 +149,11 @@ public class DummyDataProvider implements DataProvider {
                     Movie movie = new Movie();
                     movie.setId(i);
                     movie.setTitle(movieJson.get("title").getAsString());
-                    movie.setDuration(movieJson.get("runtime").getAsInt());
+                    try {
+                        movie.setDuration(movieJson.get("runtime").getAsInt());
+                    } catch (Exception e) {
+                        // No need to handle this exception
+                    }
                     movie.setSynopsis(movieJson.get("synopsis").getAsString());
                     movie.setThumbUrl(posters.get("profile").getAsString()
                             .replace("_tmb", "_320"));
@@ -172,7 +176,7 @@ public class DummyDataProvider implements DataProvider {
                                 .getAsJsonObject().get("critics_score")
                                 .getAsInt());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        // No need to handle this exception
                     }
 
                     result.add(movie);
