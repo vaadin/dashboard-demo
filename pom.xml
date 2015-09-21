@@ -8,7 +8,7 @@
 
 	<properties>
 		<productionMode>false</productionMode>
-		<vaadin.version>7.5.1</vaadin.version>
+		<vaadin.version>7.5.5</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
