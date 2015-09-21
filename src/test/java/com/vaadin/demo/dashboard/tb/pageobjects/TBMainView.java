@@ -70,8 +70,13 @@ public class TBMainView extends TestBenchTestCase {
     }
 
     public TBDashboardView openDashboardView() {
-        getDashboardMenu().$(ButtonElement.class).caption("Dashboard").first()
-                .click();
+    	ButtonElement dashboard = getDashboardMenu().$(ButtonElement.class).caption("Dashboard").first();
+    	
+    	// TODO: This hack shouldn't be needed
+        new WebDriverWait(driver, 2).until(ExpectedConditions
+                .elementToBeClickable(dashboard));
+
+        dashboard.click();
         return new TBDashboardView(driver);
     }
 
@@ -87,8 +92,13 @@ public class TBMainView extends TestBenchTestCase {
     }
 
     public TBTransactionsView openTransactionsView() {
-        getDashboardMenu().$(ButtonElement.class).caption("Transactions")
-                .first().click();
+    	ButtonElement transactions = getDashboardMenu().$(ButtonElement.class).caption("Transactions").first();
+    	
+    	// TODO: This hack shouldn't be needed
+        new WebDriverWait(driver, 2).until(ExpectedConditions
+                .elementToBeClickable(transactions));
+
+        transactions.click();
         return new TBTransactionsView(driver);
     }
 
@@ -104,8 +114,13 @@ public class TBMainView extends TestBenchTestCase {
     }
 
     public TBReportsView openReportsView() {
-        getDashboardMenu().$(ButtonElement.class).caption("Reports").first()
-                .click();
+    	ButtonElement reports = getDashboardMenu().$(ButtonElement.class).caption("Reports").first();
+    	
+    	// TODO: This hack shouldn't be needed
+        new WebDriverWait(driver, 2).until(ExpectedConditions
+                .elementToBeClickable(reports));
+
+        reports.click();
         return new TBReportsView(driver);
     }
 }
