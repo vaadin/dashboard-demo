@@ -10,3 +10,6 @@ styles.css
 addons.scss
 rebel.xml
 .DS_Store
+*.iml
+.idea/
+
