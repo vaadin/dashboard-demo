@@ -5,7 +5,6 @@ public final class User {
     private String firstName;
     private String lastName;
     private String title;
-    private boolean male;
     private String email;
     private String location;
     private String phone;
@@ -59,14 +58,6 @@ public final class User {
 
     public void setBio(final String bio) {
         this.bio = bio;
-    }
-
-    public boolean isMale() {
-        return male;
-    }
-
-    public void setMale(final boolean male) {
-        this.male = male;
     }
 
     public String getTitle() {

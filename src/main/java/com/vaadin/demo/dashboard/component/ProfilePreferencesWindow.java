@@ -55,8 +55,6 @@ public class ProfilePreferencesWindow extends Window {
     private TextField lastNameField;
     @PropertyId("title")
     private ComboBox titleField;
-    @PropertyId("male")
-    private OptionGroup sexField;
     @PropertyId("email")
     private TextField emailField;
     @PropertyId("location")
@@ -171,14 +169,6 @@ public class ProfilePreferencesWindow extends Window {
         titleField.addItem("Ms.");
         titleField.setNewItemsAllowed(true);
         details.addComponent(titleField);
-
-        sexField = new OptionGroup("Sex");
-        sexField.addItem(Boolean.FALSE);
-        sexField.setItemCaption(Boolean.FALSE, "Female");
-        sexField.addItem(Boolean.TRUE);
-        sexField.setItemCaption(Boolean.TRUE, "Male");
-        sexField.addStyleName("horizontal");
-        details.addComponent(sexField);
 
         Label section = new Label("Contact Info");
         section.addStyleName(ValoTheme.LABEL_H4);
