@@ -6,19 +6,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.domain.MovieRevenue;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public final class TopTenMoviesTable extends Table {
 
     @Override
-    protected String formatPropertyValue(final Object rowId,
-            final Object colId, final Property<?> property) {
+    protected String formatPropertyValue(final Object rowId, final Object colId,
+            final Property<?> property) {
         String result = super.formatPropertyValue(rowId, colId, property);
         if (colId.equals("revenue")) {
             if (property != null && property.getValue() != null) {

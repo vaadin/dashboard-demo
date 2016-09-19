@@ -10,7 +10,6 @@
 // Optimize the CSS output
 $v-included-components: remove($v-included-components, accordion);
 $v-included-components: remove($v-included-components, colorpicker);
-$v-included-components: remove($v-included-components, grid);
 $v-included-components: remove($v-included-components, popupview);
 $v-included-components: remove($v-included-components, progressbar);
 $v-included-components: remove($v-included-components, slider);

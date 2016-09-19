@@ -24,7 +24,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -34,15 +33,16 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
-import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
-import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResize;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.MoveEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.v7.ui.components.calendar.handler.BasicEventMoveHandler;
+import com.vaadin.v7.ui.components.calendar.handler.BasicEventResizeHandler;
 
 @SuppressWarnings("serial")
 public final class ScheduleView extends CssLayout implements View {
@@ -150,8 +150,8 @@ public final class ScheduleView extends CssLayout implements View {
         calendar.setHandler(new BasicEventResizeHandler() {
             @Override
             public void eventResize(final EventResize event) {
-                Notification
-                        .show("You're not allowed to change the movie duration");
+                Notification.show(
+                        "You're not allowed to change the movie duration");
             }
         });
 
@@ -176,8 +176,8 @@ public final class ScheduleView extends CssLayout implements View {
             frame.addStyleName("frame");
             frame.setWidthUndefined();
 
-            Image poster = new Image(null, new ExternalResource(
-                    movie.getThumbUrl()));
+            Image poster = new Image(null,
+                    new ExternalResource(movie.getThumbUrl()));
             poster.setWidth(100.0f, Unit.PIXELS);
             poster.setHeight(145.0f, Unit.PIXELS);
             frame.addComponent(poster);
@@ -267,13 +267,12 @@ public final class ScheduleView extends CssLayout implements View {
                 final Date endDate) {
             // Transactions are dynamically fetched from the backend service
             // when needed.
-            Collection<Transaction> transactions = DashboardUI
-                    .getDataProvider().getTransactionsBetween(startDate,
-                            endDate);
+            Collection<Transaction> transactions = DashboardUI.getDataProvider()
+                    .getTransactionsBetween(startDate, endDate);
             List<CalendarEvent> result = new ArrayList<CalendarEvent>();
             for (Transaction transaction : transactions) {
-                Movie movie = DashboardUI.getDataProvider().getMovie(
-                        transaction.getMovieId());
+                Movie movie = DashboardUI.getDataProvider()
+                        .getMovie(transaction.getMovieId());
                 Date end = new Date(transaction.getTime().getTime()
                         + movie.getDuration() * 60 * 1000);
                 result.add(new MovieEvent(transaction.getTime(), end, movie));
