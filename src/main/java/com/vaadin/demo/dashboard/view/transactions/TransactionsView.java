@@ -42,13 +42,12 @@ public final class TransactionsView extends VerticalLayout implements View {
 
     private final Grid<Transaction> grid;
     private Button createReport;
+    private String filterValue = "";
     private static final DateFormat DATEFORMAT = new SimpleDateFormat(
             "MM/dd/yyyy hh:mm:ss a");
     private static final DecimalFormat DECIMALFORMAT = new DecimalFormat(
             "#.##");
-    private static final String[] DEFAULT_COLLAPSIBLE = { "country", "city",
-            "theater", "room", "title", "seats" };
-    private static final Set<Column<Transaction, ?>> collapsibleColumns = new LinkedHashSet();
+    private static final Set<Column<Transaction, ?>> collapsibleColumns = new LinkedHashSet<>();
 
     public TransactionsView() {
         setSizeFull();
@@ -109,14 +108,10 @@ public final class TransactionsView extends VerticalLayout implements View {
 
             Collection<Transaction> transactions = DashboardUI.getDataProvider()
                     .getRecentTransactions(200).stream().filter(transaction -> {
-                        String filterValue = filter.getValue().trim()
-                                .toLowerCase();
-                        return transaction.getCountry().toLowerCase()
-                                .contains(filterValue)
-                                || transaction.getTitle().toLowerCase()
-                                        .contains(filterValue)
-                                || transaction.getCity().toLowerCase()
-                                        .contains(filterValue);
+                        filterValue = filter.getValue().trim().toLowerCase();
+                        return passesFilter(transaction.getCountry())
+                                || passesFilter(transaction.getTitle())
+                                || passesFilter(transaction.getCity());
                     }).collect(Collectors.toList());
 
             ListDataSource<Transaction> dataSource = new ListDataSource<>(
@@ -146,12 +141,15 @@ public final class TransactionsView extends VerticalLayout implements View {
         grid.addColumn("Time",
                 transaction -> DATEFORMAT.format(transaction.getTime()))
                 .setHidable(true);
-        grid.addColumn("Country", Transaction::getCountry);
-        grid.addColumn("City", Transaction::getCity);
-        grid.addColumn("Theater", Transaction::getTheater);
-        grid.addColumn("Room", Transaction::getRoom);
-        grid.addColumn("Title", Transaction::getTitle);
-        grid.addColumn("Seats", Transaction::getSeats, new NumberRenderer());
+        collapsibleColumns
+                .add(grid.addColumn("Country", Transaction::getCountry));
+        collapsibleColumns.add(grid.addColumn("City", Transaction::getCity));
+        collapsibleColumns
+                .add(grid.addColumn("Theater", Transaction::getTheater));
+        collapsibleColumns.add(grid.addColumn("Room", Transaction::getRoom));
+        collapsibleColumns.add(grid.addColumn("Title", Transaction::getTitle));
+        collapsibleColumns.add(grid.addColumn("Seats", Transaction::getSeats,
+                new NumberRenderer()));
         grid.addColumn("Price",
                 transaction -> "$"
                         + DECIMALFORMAT.format(transaction.getPrice()))
@@ -200,11 +198,8 @@ public final class TransactionsView extends VerticalLayout implements View {
 
         if (defaultColumnsVisible()) {
             for (Column<Transaction, ?> column : collapsibleColumns) {
-                if (Page.getCurrent().getBrowserWindowWidth() < 800) {
-                    break;
-                } else {
-                    column.setHidden(true);
-                }
+                column.setHidden(
+                        Page.getCurrent().getBrowserWindowWidth() < 800);
             }
         }
     }
@@ -216,6 +211,13 @@ public final class TransactionsView extends VerticalLayout implements View {
             DashboardEventBus.post(new TransactionReportEvent(
                     Collections.singletonList(transaction)));
         });
+    }
+
+    private boolean passesFilter(String subject) {
+        if (subject == null) {
+            return false;
+        }
+        return subject.trim().toLowerCase().contains(filterValue);
     }
 
     @Override

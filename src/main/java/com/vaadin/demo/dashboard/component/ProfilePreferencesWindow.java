@@ -26,6 +26,7 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -36,7 +37,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.fieldgroup.PropertyId;
-import com.vaadin.v7.ui.OptionGroup;
 
 @SuppressWarnings("serial")
 public class ProfilePreferencesWindow extends Window {
@@ -58,7 +58,7 @@ public class ProfilePreferencesWindow extends Window {
     @PropertyId("title")
     private ComboBox<String> titleField;
     @PropertyId("male")
-    private OptionGroup sexField;
+    private RadioButtonGroup<Boolean> sexField;
     @PropertyId("email")
     private TextField emailField;
     @PropertyId("location")
@@ -171,11 +171,8 @@ public class ProfilePreferencesWindow extends Window {
         titleField.setPlaceholder("Please specify");
         details.addComponent(titleField);
 
-        sexField = new OptionGroup("Sex");
-        sexField.addItem(Boolean.FALSE);
-        sexField.setItemCaption(Boolean.FALSE, "Female");
-        sexField.addItem(Boolean.TRUE);
-        sexField.setItemCaption(Boolean.TRUE, "Male");
+        sexField = new RadioButtonGroup<>("Sex", Arrays.asList(true, false));
+        sexField.setItemCaptionGenerator(item -> item ? "Male" : "Female");
         sexField.addStyleName("horizontal");
         details.addComponent(sexField);
 

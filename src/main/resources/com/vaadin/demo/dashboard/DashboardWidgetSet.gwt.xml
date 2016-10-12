@@ -3,12 +3,6 @@
 <module>
 	<inherits name="com.vaadin.DefaultWidgetSet" />
 	<inherits name="com.vaadin.v7.Vaadin7WidgetSet" />
-	
-	
-	
-	
-	
-	<!--  -->
 
 	<set-configuration-property name="devModeRedirectEnabled"
 		value="true" />
@@ -31,9 +25,4 @@
 
     <inherits name="com.vaadin.addon.charts.Widgetset" />
 
-    
-
-    
-
-    <inherits name="com.vaadin.demo.dashboard.com.vaadin.demo.dashboard.DashboardWidgetSet" />
 </module>
