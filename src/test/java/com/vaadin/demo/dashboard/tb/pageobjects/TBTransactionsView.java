@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 
@@ -29,9 +30,9 @@ public class TBTransactionsView extends TestBenchTestCase {
     public boolean listingContainsCity(String city) {
         try {
             // TODO: This hack shouldn't be needed
-            new WebDriverWait(driver, 2).until(ExpectedConditions
-                    .invisibilityOfElementLocated(By.xpath("//div[text() = '"
-                            + city + "']")));
+            new WebDriverWait(driver, 2)
+                    .until(ExpectedConditions.invisibilityOfElementLocated(
+                            By.xpath("//div[text() = '" + city + "']")));
             return false;
         } catch (TimeoutException e) {
             return true;
@@ -41,7 +42,7 @@ public class TBTransactionsView extends TestBenchTestCase {
     public List<String> selectFirstTransactions(int count) {
         List<String> result = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
-            TestBenchElement cell = $(TableElement.class).first().getCell(i, 5);
+            TestBenchElement cell = $(GridElement.class).first().getCell(i, 5);
             result.add(cell.getText());
             cell.click(10, 10, Keys.SHIFT);
         }

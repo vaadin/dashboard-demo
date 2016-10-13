@@ -69,8 +69,8 @@ public final class DashboardUI extends UI {
      * Otherwise login view is shown.
      */
     private void updateContent() {
-        User user = (User) VaadinSession.getCurrent().getAttribute(
-                User.class.getName());
+        User user = (User) VaadinSession.getCurrent()
+                .getAttribute(User.class.getName());
         if (user != null && "admin".equals(user.getRole())) {
             // Authenticated user
             setContent(new MainView());

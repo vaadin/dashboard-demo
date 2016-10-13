@@ -2,10 +2,7 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module>
 	<inherits name="com.vaadin.DefaultWidgetSet" />
-	
-	
-	
-	<!--  -->
+	<inherits name="com.vaadin.v7.Vaadin7WidgetSet" />
 
 	<set-configuration-property name="devModeRedirectEnabled"
 		value="true" />
@@ -28,7 +25,4 @@
 
     <inherits name="com.vaadin.addon.charts.Widgetset" />
 
-    <inherits name="com.vaadin.addon.timeline.gwt.TimelineWidgetSet" />
-
-    
 </module>
