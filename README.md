@@ -1,9 +1,9 @@
 Vaadin QuickTickets Dashboard Demo
 ==================================
 
-Sources for the official [Vaadin](https://vaadin.com) demo application: http://demo.vaadin.com/dashboard
+Responsive application demo/template built using only server-side Java with [Vaadin Framework](https://vaadin.com/framework). Showcasing big data, data visualization, drag 'n' drop and other Vaadin features.
 
-![QuickTickets Dashboard](https://vaadin.com/documents/10187/2487938/Dashboard+Demo+2014/a37b2c4d-c941-48fe-97c3-ad5a60586882?t=1412769929183)
+[![View the application](https://vaadin.com/documents/10187/2487938/Dashboard+Demo+2014/a37b2c4d-c941-48fe-97c3-ad5a60586882?t=1412769929183)](http://demo.vaadin.com/dashboard)
 
 Running the App
 ==
