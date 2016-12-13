@@ -56,6 +56,8 @@ public final class TransactionsView extends VerticalLayout implements View {
     public TransactionsView() {
         setSizeFull();
         addStyleName("transactions");
+        setMargin(false);
+        setSpacing(false);
         DashboardEventBus.register(this);
 
         addComponent(buildToolbar());
@@ -77,7 +79,6 @@ public final class TransactionsView extends VerticalLayout implements View {
     private Component buildToolbar() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setSpacing(true);
         Responsive.makeResponsive(header);
 
         Label title = new Label("Latest Transactions");
@@ -89,7 +90,6 @@ public final class TransactionsView extends VerticalLayout implements View {
         createReport = buildCreateReport();
         HorizontalLayout tools = new HorizontalLayout(buildFilter(),
                 createReport);
-        tools.setSpacing(true);
         tools.addStyleName("toolbar");
         header.addComponent(tools);
 

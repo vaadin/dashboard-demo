@@ -40,6 +40,8 @@ public class SalesView extends VerticalLayout implements View {
     public SalesView() {
         setSizeFull();
         addStyleName("sales");
+        setMargin(false);
+        setSpacing(false);
 
         addComponent(buildHeader());
 
@@ -64,7 +66,6 @@ public class SalesView extends VerticalLayout implements View {
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setSpacing(true);
         Responsive.makeResponsive(header);
 
         Label titleLabel = new Label("Revenue by Movie");
@@ -79,7 +80,6 @@ public class SalesView extends VerticalLayout implements View {
     private Component buildToolbar() {
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.addStyleName("toolbar");
-        toolbar.setSpacing(true);
 
         movieSelect = new ComboBox<>();
         movieSelect.setItemCaptionGenerator(Movie::getTitle);

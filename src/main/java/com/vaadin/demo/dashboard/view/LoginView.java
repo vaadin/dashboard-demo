@@ -27,6 +27,8 @@ public class LoginView extends VerticalLayout {
 
     public LoginView() {
         setSizeFull();
+        setMargin(false);
+        setSpacing(false);
 
         Component loginForm = buildLoginForm();
         addComponent(loginForm);
@@ -46,7 +48,7 @@ public class LoginView extends VerticalLayout {
     private Component buildLoginForm() {
         final VerticalLayout loginPanel = new VerticalLayout();
         loginPanel.setSizeUndefined();
-        loginPanel.setSpacing(true);
+        loginPanel.setMargin(false);
         Responsive.makeResponsive(loginPanel);
         loginPanel.addStyleName("login-panel");
 
@@ -58,7 +60,6 @@ public class LoginView extends VerticalLayout {
 
     private Component buildFields() {
         HorizontalLayout fields = new HorizontalLayout();
-        fields.setSpacing(true);
         fields.addStyleName("fields");
 
         final TextField username = new TextField("Username");

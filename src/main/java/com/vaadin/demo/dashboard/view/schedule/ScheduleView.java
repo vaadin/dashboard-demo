@@ -103,7 +103,7 @@ public final class ScheduleView extends CssLayout implements View {
     private Component buildCalendarView() {
         VerticalLayout calendarLayout = new VerticalLayout();
         calendarLayout.setCaption("Calendar");
-        calendarLayout.setMargin(true);
+        calendarLayout.setSpacing(false);
 
         calendar = new Calendar(new MovieEventProvider());
         calendar.setWidth(100.0f, Unit.PERCENTAGE);
@@ -175,6 +175,8 @@ public final class ScheduleView extends CssLayout implements View {
             VerticalLayout frame = new VerticalLayout();
             frame.addStyleName("frame");
             frame.setWidthUndefined();
+            frame.setMargin(false);
+            frame.setSpacing(false);
 
             Image poster = new Image(null,
                     new ExternalResource(movie.getThumbUrl()));
@@ -203,7 +205,6 @@ public final class ScheduleView extends CssLayout implements View {
         final HorizontalLayout tray = new HorizontalLayout();
         tray.setWidth(100.0f, Unit.PERCENTAGE);
         tray.addStyleName("tray");
-        tray.setSpacing(true);
         tray.setMargin(true);
 
         Label warning = new Label(

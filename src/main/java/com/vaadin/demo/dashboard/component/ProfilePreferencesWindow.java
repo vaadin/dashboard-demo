@@ -87,6 +87,7 @@ public class ProfilePreferencesWindow extends Window {
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
         content.setMargin(new MarginInfo(true, false, false, false));
+        content.setSpacing(false);
         setContent(content);
 
         TabSheet detailsWrapper = new TabSheet();
@@ -133,7 +134,6 @@ public class ProfilePreferencesWindow extends Window {
         root.setCaption("Profile");
         root.setIcon(FontAwesome.USER);
         root.setWidth(100.0f, Unit.PERCENTAGE);
-        root.setSpacing(true);
         root.setMargin(true);
         root.addStyleName("profile-form");
 
@@ -225,6 +225,7 @@ public class ProfilePreferencesWindow extends Window {
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth(100.0f, Unit.PERCENTAGE);
+        footer.setSpacing(false);
 
         Button ok = new Button("OK");
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);

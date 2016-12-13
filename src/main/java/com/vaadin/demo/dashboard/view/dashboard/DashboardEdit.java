@@ -37,8 +37,6 @@ public class DashboardEdit extends Window {
 
     private Component buildContent(final String currentName) {
         VerticalLayout result = new VerticalLayout();
-        result.setMargin(true);
-        result.setSpacing(true);
 
         nameField.setValue(currentName);
         nameField.addStyleName("caption-on-left");
@@ -52,7 +50,6 @@ public class DashboardEdit extends Window {
 
     private Component buildFooter() {
         HorizontalLayout footer = new HorizontalLayout();
-        footer.setSpacing(true);
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth(100.0f, Unit.PERCENTAGE);
 

@@ -44,6 +44,8 @@ public final class MovieDetailsWindow extends Window {
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
         setContent(content);
+        content.setMargin(false);
+        content.setSpacing(false);
 
         Panel detailsWrapper = new Panel(buildMovieDetails(movie, startTime,
                 endTime));
@@ -60,6 +62,7 @@ public final class MovieDetailsWindow extends Window {
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth(100.0f, Unit.PERCENTAGE);
+        footer.setSpacing(false);
 
         Button ok = new Button("Close");
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -81,7 +84,6 @@ public final class MovieDetailsWindow extends Window {
         details.setWidth(100.0f, Unit.PERCENTAGE);
         details.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         details.setMargin(true);
-        details.setSpacing(true);
 
         final Image coverImage = new Image(null, new ExternalResource(
                 movie.getThumbUrl()));
