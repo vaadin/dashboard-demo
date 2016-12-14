@@ -19,7 +19,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Responsive;
-import com.vaadin.server.data.ListDataSource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -59,7 +58,7 @@ public class SalesView extends VerticalLayout implements View {
 
     private void initMovieSelect() {
         movies = new HashSet<>(DashboardUI.getDataProvider().getMovies());
-        movieSelect.setDataSource(new ListDataSource<>(movies));
+        movieSelect.setItems(movies);
     }
 
     private Component buildHeader() {
@@ -146,7 +145,7 @@ public class SalesView extends VerticalLayout implements View {
     private void addDataSet(final Movie movie) {
         movies.remove(movie);
         movieSelect.setValue(null);
-        movieSelect.getDataSource().refreshAll();
+        movieSelect.getDataProvider().refreshAll();
 
         Collection<MovieRevenue> revenues = DashboardUI.getDataProvider()
                 .getDailyRevenuesByMovie(movie.getId());

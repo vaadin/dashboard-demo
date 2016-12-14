@@ -2,6 +2,7 @@ package com.vaadin.demo.dashboard.component;
 
 import java.util.Arrays;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
@@ -36,7 +37,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 
 @SuppressWarnings("serial")
 public class ProfilePreferencesWindow extends Window {
@@ -183,7 +183,8 @@ public class ProfilePreferencesWindow extends Window {
 
         emailField = new TextField("Email");
         emailField.setWidth("100%");
-        emailField.setRequired(true);
+        emailField.setRequiredIndicatorVisible(true);
+        // TODO add validation that not empty, use binder
         details.addComponent(emailField);
 
         locationField = new TextField("Location");
