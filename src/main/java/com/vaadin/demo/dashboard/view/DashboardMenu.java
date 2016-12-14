@@ -91,6 +91,7 @@ public final class DashboardMenu extends CustomComponent {
         HorizontalLayout logoWrapper = new HorizontalLayout(logo);
         logoWrapper.setComponentAlignment(logo, Alignment.MIDDLE_CENTER);
         logoWrapper.addStyleName("valo-menu-title");
+        logoWrapper.setSpacing(false);
         return logoWrapper;
     }
 

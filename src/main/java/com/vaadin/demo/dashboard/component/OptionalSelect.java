@@ -29,7 +29,6 @@ public final class OptionalSelect<T> extends CustomField<T> {
 
     public OptionalSelect() {
         content = new HorizontalLayout();
-        content.setSpacing(true);
         content.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         content.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
 

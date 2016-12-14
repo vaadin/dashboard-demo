@@ -2,6 +2,7 @@ package com.vaadin.demo.dashboard.component;
 
 import java.util.Arrays;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
@@ -36,7 +37,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 
 @SuppressWarnings("serial")
 public class ProfilePreferencesWindow extends Window {
@@ -87,6 +87,7 @@ public class ProfilePreferencesWindow extends Window {
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
         content.setMargin(new MarginInfo(true, false, false, false));
+        content.setSpacing(false);
         setContent(content);
 
         TabSheet detailsWrapper = new TabSheet();
@@ -133,7 +134,6 @@ public class ProfilePreferencesWindow extends Window {
         root.setCaption("Profile");
         root.setIcon(FontAwesome.USER);
         root.setWidth(100.0f, Unit.PERCENTAGE);
-        root.setSpacing(true);
         root.setMargin(true);
         root.addStyleName("profile-form");
 
@@ -183,7 +183,8 @@ public class ProfilePreferencesWindow extends Window {
 
         emailField = new TextField("Email");
         emailField.setWidth("100%");
-        emailField.setRequired(true);
+        emailField.setRequiredIndicatorVisible(true);
+        // TODO add validation that not empty, use binder
         details.addComponent(emailField);
 
         locationField = new TextField("Location");
@@ -224,6 +225,7 @@ public class ProfilePreferencesWindow extends Window {
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth(100.0f, Unit.PERCENTAGE);
+        footer.setSpacing(false);
 
         Button ok = new Button("OK");
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);

@@ -60,7 +60,7 @@ public final class DashboardView extends Panel implements View,
 
         root = new VerticalLayout();
         root.setSizeFull();
-        root.setMargin(true);
+        root.setSpacing(false);
         root.addStyleName("dashboard-view");
         setContent(root);
         Responsive.makeResponsive(root);
@@ -111,7 +111,6 @@ public final class DashboardView extends Panel implements View,
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setSpacing(true);
 
         titleLabel = new Label("Dashboard");
         titleLabel.setId(TITLE_ID);
@@ -123,7 +122,6 @@ public final class DashboardView extends Panel implements View,
         notificationsButton = buildNotificationsButton();
         Component edit = buildEditButton();
         HorizontalLayout tools = new HorizontalLayout(notificationsButton, edit);
-        tools.setSpacing(true);
         tools.addStyleName("toolbar");
         header.addComponent(tools);
 
@@ -210,6 +208,7 @@ public final class DashboardView extends Panel implements View,
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.addStyleName("dashboard-panel-toolbar");
         toolbar.setWidth("100%");
+        toolbar.setSpacing(false);
 
         Label caption = new Label(content.getCaption());
         caption.addStyleName(ValoTheme.LABEL_H4);
@@ -260,8 +259,6 @@ public final class DashboardView extends Panel implements View,
 
     private void openNotificationsPopup(final ClickEvent event) {
         VerticalLayout notificationsLayout = new VerticalLayout();
-        notificationsLayout.setMargin(true);
-        notificationsLayout.setSpacing(true);
 
         Label title = new Label("Notifications");
         title.addStyleName(ValoTheme.LABEL_H3);
@@ -274,6 +271,8 @@ public final class DashboardView extends Panel implements View,
 
         for (DashboardNotification notification : notifications) {
             VerticalLayout notificationLayout = new VerticalLayout();
+            notificationLayout.setMargin(false);
+            notificationLayout.setSpacing(false);
             notificationLayout.addStyleName("notification-item");
 
             Label titleLabel = new Label(notification.getFirstName() + " "
@@ -295,6 +294,7 @@ public final class DashboardView extends Panel implements View,
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth("100%");
+        footer.setSpacing(false);
         Button showAll = new Button("View All Notifications",
                 new ClickListener() {
                     @Override

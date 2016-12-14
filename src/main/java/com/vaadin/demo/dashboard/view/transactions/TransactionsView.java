@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.event.DashboardEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
@@ -24,23 +25,26 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
-import com.vaadin.server.data.ListDataSource;
+import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.SingleSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SuppressWarnings({ "serial", "unchecked" })
+@SuppressWarnings("serial")
 public final class TransactionsView extends VerticalLayout implements View {
 
     private final Grid<Transaction> grid;
+	private SingleSelect<Transaction> singleSelect;
     private Button createReport;
     private String filterValue = "";
     private static final DateFormat DATEFORMAT = new SimpleDateFormat(
@@ -52,11 +56,14 @@ public final class TransactionsView extends VerticalLayout implements View {
     public TransactionsView() {
         setSizeFull();
         addStyleName("transactions");
+        setMargin(false);
+        setSpacing(false);
         DashboardEventBus.register(this);
 
         addComponent(buildToolbar());
 
         grid = buildGrid();
+        singleSelect = grid.asSingleSelect();
         addComponent(grid);
         setExpandRatio(grid, 1);
     }
@@ -72,7 +79,6 @@ public final class TransactionsView extends VerticalLayout implements View {
     private Component buildToolbar() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setSpacing(true);
         Responsive.makeResponsive(header);
 
         Label title = new Label("Latest Transactions");
@@ -84,7 +90,6 @@ public final class TransactionsView extends VerticalLayout implements View {
         createReport = buildCreateReport();
         HorizontalLayout tools = new HorizontalLayout(buildFilter(),
                 createReport);
-        tools.setSpacing(true);
         tools.addStyleName("toolbar");
         header.addComponent(tools);
 
@@ -103,7 +108,7 @@ public final class TransactionsView extends VerticalLayout implements View {
     private Component buildFilter() {
         final TextField filter = new TextField();
 
-        // TODO improve filtering
+        // TODO use new filtering API
         filter.addValueChangeListener(event -> {
 
             Collection<Transaction> transactions = DashboardUI.getDataProvider()
@@ -114,9 +119,9 @@ public final class TransactionsView extends VerticalLayout implements View {
                                 || passesFilter(transaction.getCity());
                     }).collect(Collectors.toList());
 
-            ListDataSource<Transaction> dataSource = new ListDataSource<>(
+            ListDataProvider<Transaction> dataSource = com.vaadin.server.data.DataProvider.create(
                     transactions);
-            grid.setDataSource(dataSource.sortingBy(
+            grid.setDataProvider(dataSource.sortingBy(
                     Comparator.comparing(Transaction::getTime).reversed()));
         });
 
@@ -136,6 +141,7 @@ public final class TransactionsView extends VerticalLayout implements View {
 
     private Grid<Transaction> buildGrid() {
         final Grid<Transaction> grid = new Grid<>();
+        grid.setSelectionMode(SelectionMode.SINGLE);
         grid.setSizeFull();
 
         grid.addColumn("Time",
@@ -157,9 +163,9 @@ public final class TransactionsView extends VerticalLayout implements View {
 
         grid.setColumnReorderingAllowed(true);
 
-        ListDataSource<Transaction> dataSource = new ListDataSource<>(
+        ListDataProvider<Transaction> dataSource = com.vaadin.server.data.DataProvider.create(
                 DashboardUI.getDataProvider().getRecentTransactions(200));
-        grid.setDataSource(dataSource.sortingBy(
+        grid.setDataProvider(dataSource.sortingBy(
                 Comparator.comparing(Transaction::getTime).reversed()));
 
         // TODO either add these to grid or do it with style generators here
@@ -176,7 +182,7 @@ public final class TransactionsView extends VerticalLayout implements View {
         // grid.addActionHandler(new TransactionsActionHandler());
 
         grid.addSelectionListener(event -> createReport
-                .setEnabled(!grid.getSelectedItems().isEmpty()));
+                .setEnabled(!singleSelect.isEmpty()));
         return grid;
     }
 
@@ -205,12 +211,12 @@ public final class TransactionsView extends VerticalLayout implements View {
     }
 
     void createNewReportFromSelection() {
-        grid.getSelectedItem().ifPresent(transaction -> {
+    	if (!singleSelect.isEmpty()) {
             UI.getCurrent().getNavigator()
                     .navigateTo(DashboardViewType.REPORTS.getViewName());
             DashboardEventBus.post(new TransactionReportEvent(
-                    Collections.singletonList(transaction)));
-        });
+                    Collections.singletonList(singleSelect.getValue())));
+    	}
     }
 
     private boolean passesFilter(String subject) {

@@ -44,6 +44,8 @@ public final class ReportEditor extends VerticalLayout {
         setSizeFull();
         addStyleName("editor");
         addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
+        setMargin(false);
+        setSpacing(false);
 
         Component palette = buildPalette();
         addComponent(palette);
@@ -62,7 +64,6 @@ public final class ReportEditor extends VerticalLayout {
 
     private Component buildPalette() {
         HorizontalLayout paletteLayout = new HorizontalLayout();
-        paletteLayout.setSpacing(true);
         paletteLayout.setWidthUndefined();
         paletteLayout.addStyleName("palette");
 
@@ -112,6 +113,8 @@ public final class ReportEditor extends VerticalLayout {
             layout = new VerticalLayout();
             setCompositionRoot(layout);
             layout.addStyleName("canvas-layout");
+            layout.setMargin(false);
+            layout.setSpacing(false);
 
             titleLabel = new TextField();
             titleLabel.addStyleName("title");

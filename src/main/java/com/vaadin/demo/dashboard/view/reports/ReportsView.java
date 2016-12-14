@@ -54,10 +54,12 @@ public final class ReportsView extends TabSheet implements View, CloseHandler,
         final VerticalLayout allDrafts = new VerticalLayout();
         allDrafts.setSizeFull();
         allDrafts.setCaption("All Drafts");
+        allDrafts.setMargin(false);
+        allDrafts.setSpacing(false);
 
         VerticalLayout titleAndDrafts = new VerticalLayout();
         titleAndDrafts.setSizeUndefined();
-        titleAndDrafts.setSpacing(true);
+        titleAndDrafts.setMargin(false);
         titleAndDrafts.addStyleName("drafts");
         allDrafts.addComponent(titleAndDrafts);
         allDrafts
@@ -76,7 +78,6 @@ public final class ReportsView extends TabSheet implements View, CloseHandler,
 
     private Component buildDraftsList() {
         HorizontalLayout drafts = new HorizontalLayout();
-        drafts.setSpacing(true);
 
         drafts.addComponent(buildDraftThumb());
         drafts.addComponent(buildCreateBox());
@@ -86,7 +87,7 @@ public final class ReportsView extends TabSheet implements View, CloseHandler,
 
     private Component buildDraftThumb() {
         VerticalLayout draftThumb = new VerticalLayout();
-        draftThumb.setSpacing(true);
+        draftThumb.setMargin(false);
 
         draftThumb.addStyleName("draft-thumb");
         Image draft = new Image(null, new ThemeResource(
@@ -130,6 +131,8 @@ public final class ReportsView extends TabSheet implements View, CloseHandler,
         createBox.setWidth(160.0f, Unit.PIXELS);
         createBox.setHeight(200.0f, Unit.PIXELS);
         createBox.addStyleName("create");
+        createBox.setMargin(false);
+        createBox.setSpacing(false);
 
         Button create = new Button("Create New");
         create.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -188,14 +191,11 @@ public final class ReportsView extends TabSheet implements View, CloseHandler,
         confirmDialog.setResizable(false);
 
         VerticalLayout root = new VerticalLayout();
-        root.setSpacing(true);
-        root.setMargin(true);
         confirmDialog.setContent(root);
 
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth("100%");
-        footer.setSpacing(true);
 
         root.addComponents(message, footer);
 

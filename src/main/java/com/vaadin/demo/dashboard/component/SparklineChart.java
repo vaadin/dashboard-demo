@@ -38,6 +38,8 @@ public class SparklineChart extends VerticalLayout {
             final int min, final int max) {
         setSizeUndefined();
         addStyleName("spark");
+        setMargin(false);
+        setSpacing(false);
         setDefaultComponentAlignment(Alignment.TOP_CENTER);
 
         int[] values = DummyDataGenerator.randomSparklineValues(howManyPoints,
