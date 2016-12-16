@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.event.DashboardEvent.BrowserResizeEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
@@ -25,7 +25,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
-import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -44,7 +43,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public final class TransactionsView extends VerticalLayout implements View {
 
     private final Grid<Transaction> grid;
-	private SingleSelect<Transaction> singleSelect;
+    private SingleSelect<Transaction> singleSelect;
     private Button createReport;
     private String filterValue = "";
     private static final DateFormat DATEFORMAT = new SimpleDateFormat(
@@ -119,8 +118,8 @@ public final class TransactionsView extends VerticalLayout implements View {
                                 || passesFilter(transaction.getCity());
                     }).collect(Collectors.toList());
 
-            ListDataProvider<Transaction> dataSource = com.vaadin.server.data.DataProvider.create(
-                    transactions);
+            ListDataProvider<Transaction> dataSource = com.vaadin.data.provider.DataProvider
+                    .create(transactions);
             grid.setDataProvider(dataSource.sortingBy(
                     Comparator.comparing(Transaction::getTime).reversed()));
         });
@@ -144,27 +143,32 @@ public final class TransactionsView extends VerticalLayout implements View {
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.setSizeFull();
 
-        grid.addColumn("Time",
-                transaction -> DATEFORMAT.format(transaction.getTime()))
-                .setHidable(true);
+        Column<Transaction, String> time = grid.addColumn(
+                transaction -> DATEFORMAT.format(transaction.getTime()));
+        time.setId("Time").setHidable(true);
+
         collapsibleColumns
-                .add(grid.addColumn("Country", Transaction::getCountry));
-        collapsibleColumns.add(grid.addColumn("City", Transaction::getCity));
+                .add(grid.addColumn(Transaction::getCountry).setId("Country"));
         collapsibleColumns
-                .add(grid.addColumn("Theater", Transaction::getTheater));
-        collapsibleColumns.add(grid.addColumn("Room", Transaction::getRoom));
-        collapsibleColumns.add(grid.addColumn("Title", Transaction::getTitle));
-        collapsibleColumns.add(grid.addColumn("Seats", Transaction::getSeats,
-                new NumberRenderer()));
-        grid.addColumn("Price",
-                transaction -> "$"
-                        + DECIMALFORMAT.format(transaction.getPrice()))
+                .add(grid.addColumn(Transaction::getCity).setId("City"));
+        collapsibleColumns
+                .add(grid.addColumn(Transaction::getTheater).setId("Theater"));
+        collapsibleColumns
+                .add(grid.addColumn(Transaction::getRoom).setId("Room"));
+        collapsibleColumns
+                .add(grid.addColumn(Transaction::getRoom).setId("Title"));
+        collapsibleColumns
+                .add(grid.addColumn(Transaction::getSeats, new NumberRenderer())
+                        .setId("Seats"));
+        grid.addColumn(transaction -> "$"
+                + DECIMALFORMAT.format(transaction.getPrice())).setId("Price")
                 .setHidable(true);
 
         grid.setColumnReorderingAllowed(true);
 
-        ListDataProvider<Transaction> dataSource = com.vaadin.server.data.DataProvider.create(
-                DashboardUI.getDataProvider().getRecentTransactions(200));
+        ListDataProvider<Transaction> dataSource = com.vaadin.data.provider.DataProvider
+                .create(DashboardUI.getDataProvider()
+                        .getRecentTransactions(200));
         grid.setDataProvider(dataSource.sortingBy(
                 Comparator.comparing(Transaction::getTime).reversed()));
 
@@ -181,8 +185,8 @@ public final class TransactionsView extends VerticalLayout implements View {
         // TODO add this functionality to grid?
         // grid.addActionHandler(new TransactionsActionHandler());
 
-        grid.addSelectionListener(event -> createReport
-                .setEnabled(!singleSelect.isEmpty()));
+        grid.addSelectionListener(
+                event -> createReport.setEnabled(!singleSelect.isEmpty()));
         return grid;
     }
 
@@ -211,12 +215,12 @@ public final class TransactionsView extends VerticalLayout implements View {
     }
 
     void createNewReportFromSelection() {
-    	if (!singleSelect.isEmpty()) {
+        if (!singleSelect.isEmpty()) {
             UI.getCurrent().getNavigator()
                     .navigateTo(DashboardViewType.REPORTS.getViewName());
             DashboardEventBus.post(new TransactionReportEvent(
                     Collections.singletonList(singleSelect.getValue())));
-    	}
+        }
     }
 
     private boolean passesFilter(String subject) {
