@@ -8,7 +8,7 @@
 
 	<properties>
 		<productionMode>false</productionMode>
-		<vaadin.version>7.6.5</vaadin.version>
+		<vaadin.version>8.0-SNAPSHOT</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -131,7 +131,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes</artifactId>
+			<artifactId>vaadin-compatibility-server</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-client</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
@@ -141,9 +146,14 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-themes</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.vaadin.addon</groupId>
 			<artifactId>vaadin-charts</artifactId>
-			<version>2.0.0</version>
+			<version>4.0.0-alpha4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -171,6 +181,11 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+			    <artifactId>gson</artifactId>
+				    <version>2.7</version>
+					</dependency>
         
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -185,8 +200,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

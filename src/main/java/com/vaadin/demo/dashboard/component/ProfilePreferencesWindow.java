@@ -1,8 +1,8 @@
 package com.vaadin.demo.dashboard.component;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.PropertyId;
+import java.util.Arrays;
+
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
@@ -27,7 +27,7 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -35,6 +35,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 
 @SuppressWarnings("serial")
 public class ProfilePreferencesWindow extends Window {
@@ -54,9 +56,9 @@ public class ProfilePreferencesWindow extends Window {
     @PropertyId("lastName")
     private TextField lastNameField;
     @PropertyId("title")
-    private ComboBox titleField;
+    private ComboBox<String> titleField;
     @PropertyId("male")
-    private OptionGroup sexField;
+    private RadioButtonGroup<Boolean> sexField;
     @PropertyId("email")
     private TextField emailField;
     @PropertyId("location")
@@ -85,6 +87,7 @@ public class ProfilePreferencesWindow extends Window {
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
         content.setMargin(new MarginInfo(true, false, false, false));
+        content.setSpacing(false);
         setContent(content);
 
         TabSheet detailsWrapper = new TabSheet();
@@ -131,15 +134,14 @@ public class ProfilePreferencesWindow extends Window {
         root.setCaption("Profile");
         root.setIcon(FontAwesome.USER);
         root.setWidth(100.0f, Unit.PERCENTAGE);
-        root.setSpacing(true);
         root.setMargin(true);
         root.addStyleName("profile-form");
 
         VerticalLayout pic = new VerticalLayout();
         pic.setSizeUndefined();
         pic.setSpacing(true);
-        Image profilePic = new Image(null, new ThemeResource(
-                "img/profile-pic-300px.jpg"));
+        Image profilePic = new Image(null,
+                new ThemeResource("img/profile-pic-300px.jpg"));
         profilePic.setWidth(100.0f, Unit.PIXELS);
         pic.addComponent(profilePic);
 
@@ -164,19 +166,13 @@ public class ProfilePreferencesWindow extends Window {
         lastNameField = new TextField("Last Name");
         details.addComponent(lastNameField);
 
-        titleField = new ComboBox("Title");
-        titleField.setInputPrompt("Please specify");
-        titleField.addItem("Mr.");
-        titleField.addItem("Mrs.");
-        titleField.addItem("Ms.");
-        titleField.setNewItemsAllowed(true);
+        titleField = new ComboBox<>("Title",
+                Arrays.asList("Mr.", "Mrs.", "Ms."));
+        titleField.setPlaceholder("Please specify");
         details.addComponent(titleField);
 
-        sexField = new OptionGroup("Sex");
-        sexField.addItem(Boolean.FALSE);
-        sexField.setItemCaption(Boolean.FALSE, "Female");
-        sexField.addItem(Boolean.TRUE);
-        sexField.setItemCaption(Boolean.TRUE, "Male");
+        sexField = new RadioButtonGroup<>("Sex", Arrays.asList(true, false));
+        sexField.setItemCaptionGenerator(item -> item ? "Male" : "Female");
         sexField.addStyleName("horizontal");
         details.addComponent(sexField);
 
@@ -187,20 +183,18 @@ public class ProfilePreferencesWindow extends Window {
 
         emailField = new TextField("Email");
         emailField.setWidth("100%");
-        emailField.setRequired(true);
-        emailField.setNullRepresentation("");
+        emailField.setRequiredIndicatorVisible(true);
+        // TODO add validation that not empty, use binder
         details.addComponent(emailField);
 
         locationField = new TextField("Location");
         locationField.setWidth("100%");
-        locationField.setNullRepresentation("");
-        locationField.setComponentError(new UserError(
-                "This address doesn't exist"));
+        locationField
+                .setComponentError(new UserError("This address doesn't exist"));
         details.addComponent(locationField);
 
         phoneField = new TextField("Phone");
         phoneField.setWidth("100%");
-        phoneField.setNullRepresentation("");
         details.addComponent(phoneField);
 
         newsletterField = new OptionalSelect<Integer>();
@@ -215,15 +209,13 @@ public class ProfilePreferencesWindow extends Window {
         details.addComponent(section);
 
         websiteField = new TextField("Website");
-        websiteField.setInputPrompt("http://");
+        websiteField.setPlaceholder("http://");
         websiteField.setWidth("100%");
-        websiteField.setNullRepresentation("");
         details.addComponent(websiteField);
 
         bioField = new TextArea("Bio");
         bioField.setWidth("100%");
         bioField.setRows(4);
-        bioField.setNullRepresentation("");
         details.addComponent(bioField);
 
         return root;
@@ -233,6 +225,7 @@ public class ProfilePreferencesWindow extends Window {
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth(100.0f, Unit.PERCENTAGE);
+        footer.setSpacing(false);
 
         Button ok = new Button("OK");
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -266,7 +259,8 @@ public class ProfilePreferencesWindow extends Window {
         return footer;
     }
 
-    public static void open(final User user, final boolean preferencesTabActive) {
+    public static void open(final User user,
+            final boolean preferencesTabActive) {
         DashboardEventBus.post(new CloseOpenWindowsEvent());
         Window w = new ProfilePreferencesWindow(user, preferencesTabActive);
         UI.getCurrent().addWindow(w);

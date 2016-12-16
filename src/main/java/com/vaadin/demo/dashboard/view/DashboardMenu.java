@@ -21,7 +21,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -36,9 +35,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.ui.AbstractSelect.AcceptItem;
+import com.vaadin.v7.ui.Table;
 
 /**
  * A responsive menu component providing user information and the controls for
@@ -91,20 +91,21 @@ public final class DashboardMenu extends CustomComponent {
         HorizontalLayout logoWrapper = new HorizontalLayout(logo);
         logoWrapper.setComponentAlignment(logo, Alignment.MIDDLE_CENTER);
         logoWrapper.addStyleName("valo-menu-title");
+        logoWrapper.setSpacing(false);
         return logoWrapper;
     }
 
     private User getCurrentUser() {
-        return (User) VaadinSession.getCurrent().getAttribute(
-                User.class.getName());
+        return (User) VaadinSession.getCurrent()
+                .getAttribute(User.class.getName());
     }
 
     private Component buildUserMenu() {
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         final User user = getCurrentUser();
-        settingsItem = settings.addItem("", new ThemeResource(
-                "img/profile-pic-300px.jpg"), null);
+        settingsItem = settings.addItem("",
+                new ThemeResource("img/profile-pic-300px.jpg"), null);
         updateUserName(null);
         settingsItem.addItem("Edit Profile", new Command() {
             @Override
@@ -132,7 +133,8 @@ public final class DashboardMenu extends CustomComponent {
         Button valoMenuToggleButton = new Button("Menu", new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
-                if (getCompositionRoot().getStyleName().contains(STYLE_VISIBLE)) {
+                if (getCompositionRoot().getStyleName()
+                        .contains(STYLE_VISIBLE)) {
                     getCompositionRoot().removeStyleName(STYLE_VISIBLE);
                 } else {
                     getCompositionRoot().addStyleName(STYLE_VISIBLE);
@@ -163,10 +165,8 @@ public final class DashboardMenu extends CustomComponent {
 
                     @Override
                     public void drop(final DragAndDropEvent event) {
-                        UI.getCurrent()
-                                .getNavigator()
-                                .navigateTo(
-                                        DashboardViewType.REPORTS.getViewName());
+                        UI.getCurrent().getNavigator().navigateTo(
+                                DashboardViewType.REPORTS.getViewName());
                         Table table = (Table) event.getTransferable()
                                 .getSourceComponent();
                         DashboardEventBus.post(new TransactionReportEvent(

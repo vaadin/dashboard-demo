@@ -1,20 +1,16 @@
 package com.vaadin.demo.dashboard.view.sales;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
-import org.vaadin.maddon.ListContainer;
-
-import com.vaadin.addon.charts.model.style.SolidColor;
-import com.vaadin.addon.timeline.Timeline;
-import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.addon.charts.Chart;
+import com.vaadin.addon.charts.model.DataSeries;
+import com.vaadin.addon.charts.model.DataSeriesItem;
+import com.vaadin.addon.charts.model.HorizontalAlign;
+import com.vaadin.addon.charts.model.Legend;
+import com.vaadin.addon.charts.model.VerticalAlign;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.domain.MovieRevenue;
@@ -37,22 +33,15 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class SalesView extends VerticalLayout implements View {
 
-    private final Timeline timeline;
-    private ComboBox movieSelect;
-
-    private static final SolidColor[] COLORS = new SolidColor[] {
-            new SolidColor(52, 154, 255), new SolidColor(242, 81, 57),
-            new SolidColor(255, 201, 35), new SolidColor(83, 220, 164) };
-    private static final SolidColor[] COLORS_ALPHA = new SolidColor[] {
-            new SolidColor(52, 154, 255, 0.3),
-            new SolidColor(242, 81, 57, 0.3),
-            new SolidColor(255, 201, 35, 0.3),
-            new SolidColor(83, 220, 164, 0.3) };
-    private int colorIndex = -1;
+    private final Chart timeline;
+    private ComboBox<Movie> movieSelect;
+    private Collection<Movie> movies;
 
     public SalesView() {
         setSizeFull();
         addStyleName("sales");
+        setMargin(false);
+        setSpacing(false);
 
         addComponent(buildHeader());
 
@@ -62,29 +51,21 @@ public class SalesView extends VerticalLayout implements View {
 
         initMovieSelect();
         // Add first 4 by default
-        List<Movie> subList = new ArrayList<Movie>(DashboardUI
-                .getDataProvider().getMovies()).subList(0, 4);
+        List<Movie> subList = new ArrayList<Movie>(
+                DashboardUI.getDataProvider().getMovies()).subList(0, 4);
         for (Movie m : subList) {
             addDataSet(m);
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -2);
-        if (timeline.getGraphDatasources().size() > 0) {
-            timeline.setVisibleDateRange(calendar.getTime(), new Date());
         }
     }
 
     private void initMovieSelect() {
-        Collection<Movie> movies = DashboardUI.getDataProvider().getMovies();
-        Container movieContainer = new ListContainer<Movie>(Movie.class, movies);
-        movieSelect.setContainerDataSource(movieContainer);
+        movies = new HashSet<>(DashboardUI.getDataProvider().getMovies());
+        movieSelect.setItems(movies);
     }
 
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
-        header.setSpacing(true);
         Responsive.makeResponsive(header);
 
         Label titleLabel = new Label("Revenue by Movie");
@@ -99,17 +80,17 @@ public class SalesView extends VerticalLayout implements View {
     private Component buildToolbar() {
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.addStyleName("toolbar");
-        toolbar.setSpacing(true);
 
-        movieSelect = new ComboBox();
-        movieSelect.setItemCaptionPropertyId("title");
-        movieSelect.addShortcutListener(new ShortcutListener("Add",
-                KeyCode.ENTER, null) {
-            @Override
-            public void handleAction(final Object sender, final Object target) {
-                addDataSet((Movie) movieSelect.getValue());
-            }
-        });
+        movieSelect = new ComboBox<>();
+        movieSelect.setItemCaptionGenerator(Movie::getTitle);
+        movieSelect.addShortcutListener(
+                new ShortcutListener("Add", KeyCode.ENTER, null) {
+                    @Override
+                    public void handleAction(final Object sender,
+                            final Object target) {
+                        addDataSet(movieSelect.getValue());
+                    }
+                });
 
         final Button add = new Button("Add");
         add.setEnabled(false);
@@ -119,19 +100,16 @@ public class SalesView extends VerticalLayout implements View {
         group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         toolbar.addComponent(group);
 
-        movieSelect.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(final ValueChangeEvent event) {
-                add.setEnabled(event.getProperty().getValue() != null);
-            }
-        });
+        movieSelect.addSelectionListener(
+                event -> add.setEnabled(event.getValue() != null));
 
         final Button clear = new Button("Clear");
         clear.addStyleName("clearbutton");
         clear.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
-                timeline.removeAllGraphDataSources();
+                timeline.getConfiguration().setSeries(new ArrayList<>());
+                timeline.drawChart();
                 initMovieSelect();
                 clear.setEnabled(false);
             }
@@ -141,7 +119,7 @@ public class SalesView extends VerticalLayout implements View {
         add.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
-                addDataSet((Movie) movieSelect.getValue());
+                addDataSet(movieSelect.getValue());
                 clear.setEnabled(true);
             }
         });
@@ -149,71 +127,42 @@ public class SalesView extends VerticalLayout implements View {
         return toolbar;
     }
 
-    private Timeline buildTimeline() {
-        Timeline result = new Timeline();
-        result.setDateSelectVisible(false);
-        result.setChartModesVisible(false);
-        result.setGraphShadowsEnabled(false);
-        result.setZoomLevelsVisible(false);
+    private Chart buildTimeline() {
+        Chart result = new Chart();
         result.setSizeFull();
-        result.setNoDataSourceCaption("<span class=\"v-label h2 light\">Add a data set from the dropdown above</span>");
+
+        result.setTimeline(true);
+
+        result.getConfiguration().getRangeSelector().setEnabled(false);
+
+        Legend legend = result.getConfiguration().getLegend();
+        legend.setAlign(HorizontalAlign.RIGHT);
+        legend.setVerticalAlign(VerticalAlign.TOP);
+        legend.setEnabled(true);
         return result;
     }
 
     private void addDataSet(final Movie movie) {
-        movieSelect.removeItem(movie);
+        movies.remove(movie);
         movieSelect.setValue(null);
+        movieSelect.getDataProvider().refreshAll();
 
-        Collection<MovieRevenue> dailyRevenue = DashboardUI.getDataProvider()
+        Collection<MovieRevenue> revenues = DashboardUI.getDataProvider()
                 .getDailyRevenuesByMovie(movie.getId());
 
-        ListContainer<MovieRevenue> dailyRevenueContainer = new TempMovieRevenuesContainer(
-                dailyRevenue);
-
-        dailyRevenueContainer.sort(new Object[] { "timestamp" },
-                new boolean[] { true });
-
-        timeline.addGraphDataSource(dailyRevenueContainer, "timestamp",
-                "revenue");
-        colorIndex = (colorIndex >= COLORS.length - 1 ? 0 : ++colorIndex);
-        timeline.setGraphOutlineColor(dailyRevenueContainer, COLORS[colorIndex]);
-        timeline.setBrowserOutlineColor(dailyRevenueContainer,
-                COLORS[colorIndex]);
-        timeline.setBrowserFillColor(dailyRevenueContainer,
-                COLORS_ALPHA[colorIndex]);
-        timeline.setGraphCaption(dailyRevenueContainer, movie.getTitle());
-        timeline.setEventCaptionPropertyId("date");
-        timeline.setVerticalAxisLegendUnit(dailyRevenueContainer, "$");
+        DataSeries movieSeries = new DataSeries();
+        for (MovieRevenue revenue : revenues) {
+            DataSeriesItem item = new DataSeriesItem();
+            item.setX(revenue.getTimestamp());
+            item.setY(revenue.getRevenue());
+            movieSeries.add(item);
+        }
+        movieSeries.setName(movie.getTitle());
+        timeline.getConfiguration().addSeries(movieSeries);
+        timeline.drawChart();
     }
 
     @Override
     public void enter(final ViewChangeEvent event) {
-    }
-
-    private class TempMovieRevenuesContainer extends
-            ListContainer<MovieRevenue> {
-
-        public TempMovieRevenuesContainer(
-                final Collection<MovieRevenue> collection) {
-            super(MovieRevenue.class, collection);
-        }
-
-        // This is only temporarily overridden until issues with
-        // BeanComparator get resolved.
-        @Override
-        public void sort(final Object[] propertyId, final boolean[] ascending) {
-            final boolean sortAscending = ascending[0];
-            Collections.sort(getBackingList(), new Comparator<MovieRevenue>() {
-                @Override
-                public int compare(final MovieRevenue o1, final MovieRevenue o2) {
-                    int result = o1.getTimestamp().compareTo(o2.getTimestamp());
-                    if (!sortAscending) {
-                        result *= -1;
-                    }
-                    return result;
-                }
-            });
-        }
-
     }
 }

@@ -15,6 +15,7 @@ public class MainView extends HorizontalLayout {
     public MainView() {
         setSizeFull();
         addStyleName("mainview");
+        setSpacing(false);
 
         addComponent(new DashboardMenu());
 

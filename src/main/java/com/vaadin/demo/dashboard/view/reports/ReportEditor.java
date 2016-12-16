@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.dashboard.component.InlineTextEditor;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.component.TopTenMoviesTable;
@@ -46,6 +44,8 @@ public final class ReportEditor extends VerticalLayout {
         setSizeFull();
         addStyleName("editor");
         addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
+        setMargin(false);
+        setSpacing(false);
 
         Component palette = buildPalette();
         addComponent(palette);
@@ -64,7 +64,6 @@ public final class ReportEditor extends VerticalLayout {
 
     private Component buildPalette() {
         HorizontalLayout paletteLayout = new HorizontalLayout();
-        paletteLayout.setSpacing(true);
         paletteLayout.setWidthUndefined();
         paletteLayout.addStyleName("palette");
 
@@ -114,21 +113,20 @@ public final class ReportEditor extends VerticalLayout {
             layout = new VerticalLayout();
             setCompositionRoot(layout);
             layout.addStyleName("canvas-layout");
+            layout.setMargin(false);
+            layout.setSpacing(false);
 
             titleLabel = new TextField();
             titleLabel.addStyleName("title");
             SimpleDateFormat df = new SimpleDateFormat();
             df.applyPattern("M/dd/yyyy");
 
-            titleLabel.addValueChangeListener(new ValueChangeListener() {
-                @Override
-                public void valueChange(final ValueChangeEvent event) {
-                    String t = titleLabel.getValue();
-                    if (t == null || t.equals("")) {
-                        t = " ";
-                    }
-                    listener.titleChanged(t, ReportEditor.this);
+            titleLabel.addValueChangeListener(event -> {
+                String t = titleLabel.getValue();
+                if (t == null || t.equals("")) {
+                    t = " ";
                 }
+                listener.titleChanged(t, ReportEditor.this);
             });
             layout.addComponent(titleLabel);
 
@@ -173,16 +171,16 @@ public final class ReportEditor extends VerticalLayout {
             }
             layout.addComponent(
                     new WrappedComponent(createComponentFromPaletteItem(
-                            paletteItemType, prefillData)), 1);
+                            paletteItemType, prefillData)),
+                    1);
         }
 
         private Component createComponentFromPaletteItem(
                 final PaletteItemType type, final Object prefillData) {
             Component result = null;
             if (type == PaletteItemType.TEXT) {
-                result = new InlineTextEditor(
-                        prefillData != null ? String.valueOf(prefillData)
-                                : null);
+                result = new InlineTextEditor(prefillData != null
+                        ? String.valueOf(prefillData) : null);
             } else if (type == PaletteItemType.TABLE) {
                 result = new TopTenMoviesTable();
             } else if (type == PaletteItemType.CHART) {
@@ -243,8 +241,8 @@ public final class ReportEditor extends VerticalLayout {
                         }
                     }
 
-                    if (dropTargetData.getData("verticalLocation").equals(
-                            VerticalDropLocation.TOP.toString())) {
+                    if (dropTargetData.getData("verticalLocation")
+                            .equals(VerticalDropLocation.TOP.toString())) {
                         index--;
                         if (index <= 0) {
                             index = 1;
@@ -274,16 +272,16 @@ public final class ReportEditor extends VerticalLayout {
                     }
 
                     // drop on top of target?
-                    if (dropTargetData.getData("verticalLocation").equals(
-                            VerticalDropLocation.MIDDLE.toString())) {
+                    if (dropTargetData.getData("verticalLocation")
+                            .equals(VerticalDropLocation.MIDDLE.toString())) {
                         if (sourceWasAfterTarget) {
                             index--;
                         }
                     }
 
                     // drop before the target?
-                    else if (dropTargetData.getData("verticalLocation").equals(
-                            VerticalDropLocation.TOP.toString())) {
+                    else if (dropTargetData.getData("verticalLocation")
+                            .equals(VerticalDropLocation.TOP.toString())) {
                         index--;
                         if (index <= 0) {
                             index = 1;
@@ -306,8 +304,8 @@ public final class ReportEditor extends VerticalLayout {
     public enum PaletteItemType {
         TEXT("Text Block", FontAwesome.FONT), TABLE("Top 10 Movies",
                 FontAwesome.TABLE), CHART("Top 6 Revenue",
-                FontAwesome.BAR_CHART_O), TRANSACTIONS("Latest transactions",
-                null);
+                        FontAwesome.BAR_CHART_O), TRANSACTIONS(
+                                "Latest transactions", null);
 
         private final String title;
         private final FontAwesome icon;

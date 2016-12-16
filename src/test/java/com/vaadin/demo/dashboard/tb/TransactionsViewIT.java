@@ -33,9 +33,10 @@ public class TransactionsViewIT extends TestBenchTestCase {
     }
 
     @Test
+    // TODO also test multiselect case
     public void testCreateReport() {
         TBTransactionsView transactionsView = mainView.openTransactionsView();
-        List<String> titles = transactionsView.selectFirstTransactions(5);
+        List<String> titles = transactionsView.selectFirstTransactions(1);
         TBReportsView reportsView = transactionsView
                 .createReportFromSelection();
         Assert.assertTrue(reportsView.isDisplayed());

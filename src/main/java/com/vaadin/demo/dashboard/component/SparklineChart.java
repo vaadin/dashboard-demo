@@ -6,17 +6,18 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.vaadin.addon.charts.Chart;
+import com.vaadin.addon.charts.model.AxisTitle;
 import com.vaadin.addon.charts.model.ChartType;
 import com.vaadin.addon.charts.model.Configuration;
 import com.vaadin.addon.charts.model.Credits;
 import com.vaadin.addon.charts.model.DashStyle;
+import com.vaadin.addon.charts.model.DataLabels;
 import com.vaadin.addon.charts.model.DataSeries;
 import com.vaadin.addon.charts.model.DataSeriesItem;
 import com.vaadin.addon.charts.model.Labels;
 import com.vaadin.addon.charts.model.Legend;
 import com.vaadin.addon.charts.model.Marker;
 import com.vaadin.addon.charts.model.PlotOptionsLine;
-import com.vaadin.addon.charts.model.Title;
 import com.vaadin.addon.charts.model.XAxis;
 import com.vaadin.addon.charts.model.YAxis;
 import com.vaadin.addon.charts.model.style.Color;
@@ -37,6 +38,8 @@ public class SparklineChart extends VerticalLayout {
             final int min, final int max) {
         setSizeUndefined();
         addStyleName("spark");
+        setMargin(false);
+        setSpacing(false);
         setDefaultComponentAlignment(Alignment.TOP_CENTER);
 
         int[] values = DummyDataGenerator.randomSparklineValues(howManyPoints,
@@ -56,9 +59,11 @@ public class SparklineChart extends VerticalLayout {
         addComponent(buildSparkline(values, color));
 
         List<Integer> vals = Arrays.asList(ArrayUtils.toObject(values));
-        Label highLow = new Label("High <b>" + java.util.Collections.max(vals)
-                + "</b> &nbsp;&nbsp;&nbsp; Low <b>"
-                + java.util.Collections.min(vals) + "</b>", ContentMode.HTML);
+        Label highLow = new Label(
+                "High <b>" + java.util.Collections.max(vals)
+                        + "</b> &nbsp;&nbsp;&nbsp; Low <b>"
+                        + java.util.Collections.min(vals) + "</b>",
+                ContentMode.HTML);
         highLow.addStyleName(ValoTheme.LABEL_TINY);
         highLow.addStyleName(ValoTheme.LABEL_LIGHT);
         highLow.setSizeUndefined();
@@ -93,7 +98,7 @@ public class SparklineChart extends VerticalLayout {
         PlotOptionsLine opts = new PlotOptionsLine();
         opts.setAllowPointSelect(false);
         opts.setColor(color);
-        opts.setDataLabels(new Labels(false));
+        opts.setDataLabels(new DataLabels(false));
         opts.setLineWidth(1);
         opts.setShadow(false);
         opts.setDashStyle(DashStyle.SOLID);
@@ -111,7 +116,7 @@ public class SparklineChart extends VerticalLayout {
         xAxis.setTickWidth(0);
         xAxis.setLineWidth(0);
 
-        yAxis.setTitle(new Title(""));
+        yAxis.setTitle(new AxisTitle(""));
         yAxis.setAlternateGridColor(transparent);
         yAxis.setLabels(new Labels(false));
         yAxis.setLineWidth(0);
