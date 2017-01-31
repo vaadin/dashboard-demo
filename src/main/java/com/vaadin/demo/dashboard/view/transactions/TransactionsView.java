@@ -25,6 +25,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -119,9 +120,10 @@ public final class TransactionsView extends VerticalLayout implements View {
                     }).collect(Collectors.toList());
 
             ListDataProvider<Transaction> dataProvider = com.vaadin.data.provider.DataProvider
-                    .create(transactions);
-            grid.setDataProvider(dataProvider.sortingBy(
-                    Comparator.comparing(Transaction::getTime).reversed()));
+                    .ofCollection(transactions);
+            dataProvider.addSortComparator(Comparator
+                    .comparing(Transaction::getTime).reversed()::compare);
+            grid.setDataProvider(dataProvider);
         });
 
         filter.setPlaceholder("Filter");
@@ -167,10 +169,11 @@ public final class TransactionsView extends VerticalLayout implements View {
         grid.setColumnReorderingAllowed(true);
 
         ListDataProvider<Transaction> dataProvider = com.vaadin.data.provider.DataProvider
-                .create(DashboardUI.getDataProvider()
+                .ofCollection(DashboardUI.getDataProvider()
                         .getRecentTransactions(200));
-        grid.setDataProvider(dataProvider.sortingBy(
-                Comparator.comparing(Transaction::getTime).reversed()));
+        dataProvider.addSortComparator(
+                Comparator.comparing(Transaction::getTime).reversed()::compare);
+        grid.setDataProvider(dataProvider);
 
         // TODO either add these to grid or do it with style generators here
         // grid.setColumnAlignment("seats", Align.RIGHT);

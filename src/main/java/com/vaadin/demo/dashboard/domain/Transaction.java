@@ -1,8 +1,9 @@
 package com.vaadin.demo.dashboard.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public final class Transaction {
+public final class Transaction implements Serializable {
     private Date time;
     private String country;
     private String city;

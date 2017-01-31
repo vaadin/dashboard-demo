@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 import com.vaadin.demo.dashboard.domain.Transaction;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
