@@ -7,7 +7,7 @@ Responsive application demo/template built using only server-side Java with [Vaa
 
 Running the App
 ==
-Run 'mvn -Pproduction-mode jetty:run' to run in a local jettty. Open in localhost:8080
+Run 'mvn -Pproduction-mode jetty:run' to run in a local jetty. Open in localhost:8080
 
 Run the Maven 'install' target and deploy the resulting WAR file to your Java application server.
 
