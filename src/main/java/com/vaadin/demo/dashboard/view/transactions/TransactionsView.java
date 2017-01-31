@@ -119,9 +119,10 @@ public final class TransactionsView extends VerticalLayout implements View {
                     }).collect(Collectors.toList());
 
             ListDataProvider<Transaction> dataProvider = com.vaadin.data.provider.DataProvider
-                    .create(transactions);
-            grid.setDataProvider(dataProvider.sortingBy(
-                    Comparator.comparing(Transaction::getTime).reversed()));
+                    .ofCollection(transactions);
+            dataProvider.addSortComparator(Comparator
+                    .comparing(Transaction::getTime).reversed()::compare);
+            grid.setDataProvider(dataProvider);
         });
 
         filter.setPlaceholder("Filter");
@@ -167,10 +168,11 @@ public final class TransactionsView extends VerticalLayout implements View {
         grid.setColumnReorderingAllowed(true);
 
         ListDataProvider<Transaction> dataProvider = com.vaadin.data.provider.DataProvider
-                .create(DashboardUI.getDataProvider()
+                .ofCollection(DashboardUI.getDataProvider()
                         .getRecentTransactions(200));
-        grid.setDataProvider(dataProvider.sortingBy(
-                Comparator.comparing(Transaction::getTime).reversed()));
+        dataProvider.addSortComparator(
+                Comparator.comparing(Transaction::getTime).reversed()::compare);
+        grid.setDataProvider(dataProvider);
 
         // TODO either add these to grid or do it with style generators here
         // grid.setColumnAlignment("seats", Align.RIGHT);
