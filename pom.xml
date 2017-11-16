@@ -152,9 +152,9 @@
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin.addon</groupId>
+			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-charts</artifactId>
-			<version>4.0.0-alpha4</version>
+			<version>4.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
