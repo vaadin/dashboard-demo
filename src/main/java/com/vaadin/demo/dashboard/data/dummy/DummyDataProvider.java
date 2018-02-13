@@ -42,6 +42,7 @@ import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.util.CurrentInstance;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * A dummy implementation for the backend API.
@@ -124,12 +125,16 @@ public class DummyDataProvider implements DataProvider {
                         fileWriter.write(json.toString());
                         fileWriter.close();
                     } catch (Exception e) {
-                        json = readJsonFromFile(new File(baseDirectory
-                                + "/movies-fallback.txt"));
+
+
+                        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+                        File file = new File(classLoader.getResource("com/vaadin/demo/dashboard/data/dummy/movies-fallback.txt").getFile());
+                        json = readJsonFromFile(file);
                     }
                 } else {
-                    json = readJsonFromFile(new File(baseDirectory
-                            + "/movies-fallback.txt"));
+                    ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+                    File file = new File(classLoader.getResource("com/vaadin/demo/dashboard/data/dummy/movies-fallback.txt").getFile());
+                    json = readJsonFromFile(file);
                 }
             }
         } catch (Exception e) {

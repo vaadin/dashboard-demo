@@ -22,6 +22,7 @@ import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -29,6 +30,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @Theme("dashboard")
 @Widgetset("com.vaadin.demo.dashboard.DashboardWidgetSet")
 @Title("QuickTickets Dashboard")
+@SpringUI(path = "/*")
 @SuppressWarnings("serial")
 public final class DashboardUI extends UI {
 
