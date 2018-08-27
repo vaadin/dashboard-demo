@@ -81,7 +81,7 @@ public class LoginView extends VerticalLayout {
             @Override
             public void buttonClick(final ClickEvent event) {
                 DashboardEventBus.post(new UserLoginRequestedEvent(username
-                        .getValue(), password.getValue()));
+                        .getValue(), password.getValue(), event.isMetaKey() || event.isCtrlKey()));
             }
         });
         return fields;
