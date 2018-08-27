@@ -1,0 +1,1 @@
+{"csrfToken":"${seckey}","rpc":[["113","v","v",["init",["b",true]]],["113","v","v",["canvasWidth",["i",1183]]]],"syncId":${syncId},"clientId":${clientId}}

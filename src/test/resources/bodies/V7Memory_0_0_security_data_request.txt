@@ -1,0 +1,1 @@
+v-browserDetails=1&theme=dashboard&v-appId=ROOT-2521314&v-sh=1050&v-sw=1680&v-cw=1680&v-ch=966&v-curdate=1535460126619&v-tzo=-180&v-dstd=60&v-rtzo=-120&v-dston=true&v-vw=1680&v-vh=0&v-loc=http%3A%2F%2Flocalhost%3A8080%2F&v-wn=ROOT-2521314-0.5774237221353727

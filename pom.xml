@@ -16,7 +16,6 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<spectator.version>0.74.4</spectator.version>
-
 	</properties>
 
 	<repositories>
@@ -122,6 +121,32 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>scalability</id>
+			<dependencies>
+				<dependency>
+					<groupId>io.gatling.highcharts</groupId>
+					<artifactId>gatling-charts-highcharts</artifactId>
+					<version>2.3.1</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>net.alchim31.maven</groupId>
+						<artifactId>scala-maven-plugin</artifactId>
+						<version>3.4.2</version>
+					</plugin>
+					<plugin>
+						<groupId>io.gatling</groupId>
+						<artifactId>gatling-maven-plugin</artifactId>
+						<version>2.2.4</version>
 					</plugin>
 				</plugins>
 			</build>

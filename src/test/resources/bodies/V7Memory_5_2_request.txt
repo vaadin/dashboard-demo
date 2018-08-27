@@ -1,0 +1,1 @@
+{"csrfToken":"${seckey}","rpc":[["254","v","v",["positionx",["i",480]]],["254","v","v",["positiony",["i",243]]],["265","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":813,"clientY":492,"ctrlKey":false,"metaKey":false,"relativeX":32,"relativeY":8,"shiftKey":false,"type":1}]]],"syncId":${syncId},"clientId":${clientId}}

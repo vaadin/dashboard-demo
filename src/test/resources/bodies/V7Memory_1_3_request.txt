@@ -1,0 +1,1 @@
+{"csrfToken":"${seckey}","rpc":[["36","com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc","layoutClick",[{"altKey":false,"button":"LEFT","clientX":1582,"clientY":56,"ctrlKey":false,"metaKey":false,"relativeX":1086,"relativeY":56,"shiftKey":false,"type":8},"69"]]],"syncId":${syncId},"clientId":${clientId}}

@@ -19,6 +19,32 @@ Run 'mvn -Pproduction-mode verify' to run the Vaadin TestBench tests.
 
 *Note*: You need a valid [Vaadin TestBench license](https://vaadin.com/add-ons/testbench) and [Firefox browser](https://www.mozilla.org/firefox/) installed to run the tests.
 
+# Running Scalability Tests
+
+In order to run the scalability tests locally:
+
+1. Make sure you are using Java 8 (Gatling Maven plugin does not yet work with Java 9+)
+
+1. Run the app (described [above](#running-the-app))
+
+1. Open terminal in the project root
+
+1. Start a test from the command line:
+
+    ```bash
+    mvn -Pscalability gatling:execute
+    ```
+
+1. Test results are stored into target folder (e.g. to ```target/gatling/BaristaFlow-1487784042461/index.html```)
+
+1. By default the scalability test starts 2 user session at a 2 s interval for one repeat, all of which connect to a locally running the app.
+These defaults can be overridden with the `gatling.sessionCount`, `gatling.sessionStartInterval` `gatling.sessionRepeats`, and `gatling.baseUrl` system properties.
+See an example execution for 300 users started within 50 s:
+
+    ```bash
+    mvn -Pscalability gatling:execute -Dgatling.sessionCount=300 -Dgatling.sessionStartInterval=50000
+    ```
+
 Licenses
 ==
 The source code is released under Apache 2.0.

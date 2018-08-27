@@ -1,0 +1,1 @@
+{"csrfToken":"${seckey}","rpc":[["161","com.vaadin.shared.ui.calendar.CalendarServerRpc","eventClick",[1]]],"syncId":${syncId},"clientId":${clientId}}

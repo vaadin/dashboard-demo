@@ -1,0 +1,1 @@
+{"csrfToken":"${seckey}","rpc":[["${gridId}","v","v",["firstToBeRendered",["i",42]]],["${gridId}","v","v",["lastToBeRendered",["i",172]]],["${gridId}","v","v",["firstvisible",["i",94]]],["${gridId}","v","v",["reqfirstrow",["i",79]]],["${gridId}","v","v",["reqrows",["i",94]]]],"syncId":${syncId},"clientId":${clientId}}
