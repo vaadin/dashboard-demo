@@ -91,7 +91,7 @@ public class MainView extends HorizontalLayout {
             if ("jvm.memory.used".equals(id.name()) && containsTag(id.tags(), "memtype", MemoryType.HEAP.name())) {
                 for (Measurement measurement : meter.measure()) {
                     totalMemoryB += measurement.value();
-                    totalMemoryMB += measurement.value() / 1024 / 1024;
+                    totalMemoryMB += measurement.value() / 1000 / 1000;
                 }
             }
         }
