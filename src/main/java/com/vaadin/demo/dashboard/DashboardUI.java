@@ -49,7 +49,7 @@ public final class DashboardUI extends UI {
         Responsive.makeResponsive(this);
         addStyleName(ValoTheme.UI_WITH_MENU);
 
-        updateContent();
+        updateContent(false);
 
         // Some views need to be aware of browser resize events so a
         // BrowserResizeEvent gets fired to the event bus on every occasion.
@@ -67,13 +67,15 @@ public final class DashboardUI extends UI {
      * Updates the correct content for this UI based on the current user status.
      * If the user is logged in with appropriate privileges, main view is shown.
      * Otherwise login view is shown.
+     *
+     * @param isDebug whether the debug functionality should be displayed
      */
-    private void updateContent() {
+    private void updateContent(boolean isDebug) {
         User user = (User) VaadinSession.getCurrent().getAttribute(
                 User.class.getName());
         if (user != null && "admin".equals(user.getRole())) {
             // Authenticated user
-            setContent(new MainView());
+            setContent(new MainView(isDebug));
             removeStyleName("loginview");
             getNavigator().navigateTo(getNavigator().getState());
         } else {
@@ -87,7 +89,7 @@ public final class DashboardUI extends UI {
         User user = getDataProvider().authenticate(event.getUserName(),
                 event.getPassword());
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
-        updateContent();
+        updateContent(event.isDebug());
     }
 
     @Subscribe

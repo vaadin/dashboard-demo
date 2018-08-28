@@ -12,6 +12,8 @@
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<spectator.version>0.74.4</spectator.version>
 	</properties>
 
 	<repositories>
@@ -77,7 +79,7 @@
 						<artifactId>jetty-maven-plugin</artifactId>
 						<version>9.2.3.v20140905</version>
 						<executions>
-							<!-- start and stop jetty (running our app) when running integration 
+							<!-- start and stop jetty (running our app) when running integration
 								tests -->
 							<execution>
 								<id>start-jetty</id>
@@ -171,12 +173,30 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
-        
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.spectator</groupId>
+			<artifactId>spectator-api</artifactId>
+			<version>${spectator.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.spectator</groupId>
+			<artifactId>spectator-ext-jvm</artifactId>
+			<version>${spectator.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.spectator</groupId>
+			<artifactId>spectator-ext-gc</artifactId>
+			<version>${spectator.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -254,7 +274,7 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
