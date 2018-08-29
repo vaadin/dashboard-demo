@@ -1,19 +1,8 @@
 package com.vaadin.demo.dashboard;
 
-import java.lang.management.MemoryType;
 import java.util.Locale;
 
 import com.google.common.eventbus.Subscribe;
-import com.netflix.spectator.api.DefaultRegistry;
-import com.netflix.spectator.api.Id;
-import com.netflix.spectator.api.Measurement;
-import com.netflix.spectator.api.Meter;
-import com.netflix.spectator.api.Registry;
-import com.netflix.spectator.api.Tag;
-import com.netflix.spectator.gc.GcEvent;
-import com.netflix.spectator.gc.GcEventListener;
-import com.netflix.spectator.gc.GcLogger;
-import com.netflix.spectator.jvm.Jmx;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.demo.dashboard.domain.User;
@@ -42,12 +31,8 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -61,9 +46,7 @@ public final class DashboardUI extends MprNavigatorRoute
         implements PageConfigurator {
     private DashboardMenu mainView;
     private CssLayout viewDisplay;
-    private Registry registry;
-    private GcLogger gc;
-    private TextArea memoryData;
+    private boolean isDebug;
 
     public DashboardUI() {
         super(new CssLayout());
@@ -102,12 +85,7 @@ public final class DashboardUI extends MprNavigatorRoute
         User user = DashUI.getDataProvider()
                 .authenticate(event.getUserName(), event.getPassword());
         VaadinSession.getCurrent().setAttribute(User.class, user);
-        if (event.isDebug() && registry == null) {
-            registry = new DefaultRegistry();
-            gc = new GcLogger();
-            memoryData = new TextArea();
-            debugGarbage();
-        }
+        isDebug = event.isDebug();
         navigateTo(DashboardViewType.DASHBOARD.getViewName());
     }
 
@@ -167,7 +145,7 @@ public final class DashboardUI extends MprNavigatorRoute
                 DashboardEventBus.post(new CloseOpenWindowsEvent());
 
                 if (mainView == null && !event.getViewName().equals("")) {
-                    mainView = new DashboardMenu();
+                    mainView = new DashboardMenu(isDebug);
                     viewDisplay.addComponentAsFirst(mainView);
                     getNavigator()
                             .addViewChangeListener(new ViewChangeListener() {
@@ -250,66 +228,5 @@ public final class DashboardUI extends MprNavigatorRoute
 
         initialPageSettings.addLink("apple-touch-icon",
                 "/VAADIN/themes/dashboard/img/app-icon.png");
-    }
-
-    private void debugGarbage() {
-        System.setProperty("spectator.api.gaugePollingFrequency", "PT1S");
-        Jmx.registerStandardMXBeans(registry);
-        gc.start(new GcEventListener() {
-            @Override
-            public void onComplete(GcEvent gcEvent) {
-                System.out.println("GC happened: " + gcEvent.toString());
-                measureCurrentMemory();
-            }
-        });
-
-        memoryData.setEnabled(false);
-        viewDisplay.addComponentAsFirst(new VerticalLayout(
-                        new HorizontalLayout(
-                                new Button("Test", new Button.ClickListener() {
-                                    @Override
-                                    public void buttonClick(Button.ClickEvent event) {
-                                        measureCurrentMemory();
-                                    }
-                                }),
-                                new Button("GC", new Button.ClickListener() {
-                                    @Override
-                                    public void buttonClick(Button.ClickEvent event) {
-                                        System.gc();
-                                    }
-                                })
-                        ),
-                        memoryData
-                )
-        );
-    }
-
-    private void measureCurrentMemory() {
-        double totalMemoryB = 0;
-        double totalMemoryMB = 0;
-        for (Meter meter : registry) {
-            Id id = meter.id();
-            if ("jvm.memory.used".equals(id.name()) && containsTag(id.tags(), "memtype", MemoryType.HEAP.name())) {
-                for (Measurement measurement : meter.measure()) {
-                    totalMemoryB += measurement.value();
-                    totalMemoryMB += measurement.value() / 1000 / 1000;
-                }
-            }
-        }
-        memoryData.setValue(String.format("Total memory (B): %.0f\nTotal memory (MB): %.0f", totalMemoryB, totalMemoryMB));
-    }
-
-    private boolean containsTag(Iterable<Tag> tags, String key, String value) {
-        for (Tag tag : tags) {
-            if (equals(tag.key(), key) && equals(tag.value(), value)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Should be replaced with Object.equals when Java 1.8 is used
-    private boolean equals(Object a, Object b) {
-        return (a == b) || (a != null && a.equals(b));
     }
 }

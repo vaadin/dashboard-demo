@@ -1,8 +1,18 @@
 package com.vaadin.demo.dashboard.view;
 
+import java.lang.management.MemoryType;
 import java.util.Collection;
+import java.util.Objects;
 
 import com.google.common.eventbus.Subscribe;
+import com.netflix.spectator.api.DefaultRegistry;
+import com.netflix.spectator.api.Id;
+import com.netflix.spectator.api.Measurement;
+import com.netflix.spectator.api.Meter;
+import com.netflix.spectator.api.Registry;
+import com.netflix.spectator.api.Tag;
+import com.netflix.spectator.gc.GcLogger;
+import com.netflix.spectator.jvm.Jmx;
 
 import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.component.ProfilePreferencesWindow;
@@ -38,6 +48,7 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -45,18 +56,21 @@ import com.vaadin.ui.themes.ValoTheme;
  * A responsive menu component providing user information and the controls for
  * primary navigation between the views.
  */
-@SuppressWarnings({ "serial", "unchecked" })
+@SuppressWarnings({"serial", "unchecked"})
 public final class DashboardMenu extends CustomComponent {
-
     public static final String ID = "dashboard-menu";
     public static final String REPORTS_BADGE_ID = "dashboard-menu-reports-badge";
     public static final String NOTIFICATIONS_BADGE_ID = "dashboard-menu-notifications-badge";
     private static final String STYLE_VISIBLE = "valo-menu-visible";
+    private static boolean IS_DEBUG;
     private Label notificationsBadge;
     private Label reportsBadge;
     private MenuItem settingsItem;
+    private Registry registry;
+    private GcLogger gc;
+    private TextArea memoryData;
 
-    public DashboardMenu() {
+    public DashboardMenu(boolean isDebug) {
         setPrimaryStyleName("valo-menu");
         setId(ID);
         setSizeUndefined();
@@ -65,6 +79,7 @@ public final class DashboardMenu extends CustomComponent {
         // unregistered from the UI-scoped DashboardEventBus.
         DashboardEventBus.register(this);
 
+        IS_DEBUG = IS_DEBUG || isDebug;
         setCompositionRoot(buildContent());
     }
 
@@ -76,6 +91,20 @@ public final class DashboardMenu extends CustomComponent {
         menuContent.addStyleName("no-horizontal-drag-hints");
         menuContent.setWidth(null);
         menuContent.setHeight("100%");
+
+        if (IS_DEBUG) {
+            if (registry == null) {
+                registry = new DefaultRegistry();
+                gc = new GcLogger();
+                memoryData = new TextArea();
+                memoryData.setEnabled(false);
+                debugGarbage();
+            }
+
+            menuContent.addComponent(new Button("Test", e -> measureCurrentMemory()));
+            menuContent.addComponent(new Button("GC", e -> System.gc()));
+            menuContent.addComponent(memoryData);
+        }
 
         menuContent.addComponent(buildTitle());
         menuContent.addComponent(buildUserMenu());
@@ -203,7 +232,7 @@ public final class DashboardMenu extends CustomComponent {
     }
 
     private Component buildBadgeWrapper(final Component menuItemButton,
-            final Component badgeLabel) {
+                                        final Component badgeLabel) {
         CssLayout dashboardWrapper = new CssLayout(menuItemButton);
         dashboardWrapper.addStyleName("badgewrapper");
         dashboardWrapper.addStyleName(ValoTheme.MENU_ITEM);
@@ -277,5 +306,38 @@ public final class DashboardMenu extends CustomComponent {
                 addStyleName(STYLE_SELECTED);
             }
         }
+    }
+
+    private void debugGarbage() {
+        System.setProperty("spectator.api.gaugePollingFrequency", "PT1S");
+        Jmx.registerStandardMXBeans(registry);
+        gc.start(gcEvent -> {
+            System.out.println("GC happened: " + gcEvent.toString());
+            measureCurrentMemory();
+        });
+    }
+
+    private void measureCurrentMemory() {
+        double totalMemoryB = 0;
+        double totalMemoryMB = 0;
+        for (Meter meter : registry) {
+            Id id = meter.id();
+            if ("jvm.memory.used".equals(id.name()) && containsTag(id.tags(), "memtype", MemoryType.HEAP.name())) {
+                for (Measurement measurement : meter.measure()) {
+                    totalMemoryB += measurement.value();
+                    totalMemoryMB += measurement.value() / 1000 / 1000;
+                }
+            }
+        }
+        memoryData.setValue(String.format("Total memory (B): %.0f\nTotal memory (MB): %.0f", totalMemoryB, totalMemoryMB));
+    }
+
+    private boolean containsTag(Iterable<Tag> tags, String key, String value) {
+        for (Tag tag : tags) {
+            if (Objects.equals(tag.key(), key) && Objects.equals(tag.value(), value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
