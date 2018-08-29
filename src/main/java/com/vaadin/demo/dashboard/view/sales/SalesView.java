@@ -15,7 +15,7 @@ import com.vaadin.addon.timeline.Timeline;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -62,7 +62,7 @@ public class SalesView extends VerticalLayout implements View {
 
         initMovieSelect();
         // Add first 4 by default
-        List<Movie> subList = new ArrayList<Movie>(DashboardUI
+        List<Movie> subList = new ArrayList<Movie>(DashUI
                 .getDataProvider().getMovies()).subList(0, 4);
         for (Movie m : subList) {
             addDataSet(m);
@@ -76,7 +76,7 @@ public class SalesView extends VerticalLayout implements View {
     }
 
     private void initMovieSelect() {
-        Collection<Movie> movies = DashboardUI.getDataProvider().getMovies();
+        Collection<Movie> movies = DashUI.getDataProvider().getMovies();
         Container movieContainer = new ListContainer<Movie>(Movie.class, movies);
         movieSelect.setContainerDataSource(movieContainer);
     }
@@ -164,7 +164,7 @@ public class SalesView extends VerticalLayout implements View {
         movieSelect.removeItem(movie);
         movieSelect.setValue(null);
 
-        Collection<MovieRevenue> dailyRevenue = DashboardUI.getDataProvider()
+        Collection<MovieRevenue> dailyRevenue = DashUI.getDataProvider()
                 .getDailyRevenuesByMovie(movie.getId());
 
         ListContainer<MovieRevenue> dailyRevenueContainer = new TempMovieRevenuesContainer(

@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.demo.dashboard.DashboardUI;
+
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.domain.Transaction;
@@ -81,7 +82,7 @@ public final class ScheduleView extends CssLayout implements View {
     private void injectMovieCoverStyles() {
         // Add all movie cover images as classes to CSSInject
         String styles = "";
-        for (Movie m : DashboardUI.getDataProvider().getMovies()) {
+        for (Movie m : DashUI.getDataProvider().getMovies()) {
             WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
 
             String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
@@ -171,7 +172,7 @@ public final class ScheduleView extends CssLayout implements View {
         catalog.setCaption("Catalog");
         catalog.addStyleName("catalog");
 
-        for (final Movie movie : DashboardUI.getDataProvider().getMovies()) {
+        for (final Movie movie : DashUI.getDataProvider().getMovies()) {
             VerticalLayout frame = new VerticalLayout();
             frame.addStyleName("frame");
             frame.setWidthUndefined();
@@ -237,11 +238,13 @@ public final class ScheduleView extends CssLayout implements View {
         });
         tray.addComponent(discard);
         tray.setComponentAlignment(discard, Alignment.MIDDLE_LEFT);
+        tray.setVisible(false);
         return tray;
     }
 
     private void setTrayVisible(final boolean visible) {
         final String styleReveal = "v-animate-reveal";
+        tray.setVisible(visible);
         if (visible) {
             tray.addStyleName(styleReveal);
         } else {
@@ -267,12 +270,12 @@ public final class ScheduleView extends CssLayout implements View {
                 final Date endDate) {
             // Transactions are dynamically fetched from the backend service
             // when needed.
-            Collection<Transaction> transactions = DashboardUI
+            Collection<Transaction> transactions = DashUI
                     .getDataProvider().getTransactionsBetween(startDate,
                             endDate);
             List<CalendarEvent> result = new ArrayList<CalendarEvent>();
             for (Transaction transaction : transactions) {
-                Movie movie = DashboardUI.getDataProvider().getMovie(
+                Movie movie = DashUI.getDataProvider().getMovie(
                         transaction.getMovieId());
                 Date end = new Date(transaction.getTime().getTime()
                         + movie.getDuration() * 60 * 1000);

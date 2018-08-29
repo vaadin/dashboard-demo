@@ -12,4 +12,4 @@ rebel.xml
 .DS_Store
 *.iml
 .idea/
-
+*.scss.cache

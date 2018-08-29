@@ -3,7 +3,8 @@ package com.vaadin.demo.dashboard.view;
 import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.demo.dashboard.DashboardUI;
+
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.component.ProfilePreferencesWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.domain.User;
@@ -228,7 +229,7 @@ public final class DashboardMenu extends CustomComponent {
     @Subscribe
     public void updateNotificationsCount(
             final NotificationsCountUpdatedEvent event) {
-        int unreadNotificationsCount = DashboardUI.getDataProvider()
+        int unreadNotificationsCount = DashUI.getDataProvider()
                 .getUnreadNotificationsCount();
         notificationsBadge.setValue(String.valueOf(unreadNotificationsCount));
         notificationsBadge.setVisible(unreadNotificationsCount > 0);

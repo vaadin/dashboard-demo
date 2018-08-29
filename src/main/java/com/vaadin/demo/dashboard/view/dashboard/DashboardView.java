@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.demo.dashboard.DashboardUI;
+
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.component.SparklineChart;
 import com.vaadin.demo.dashboard.component.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.component.TopSixTheatersChart;
@@ -268,7 +269,7 @@ public final class DashboardView extends Panel implements View,
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         notificationsLayout.addComponent(title);
 
-        Collection<DashboardNotification> notifications = DashboardUI
+        Collection<DashboardNotification> notifications = DashUI
                 .getDataProvider().getNotifications();
         DashboardEventBus.post(new NotificationsCountUpdatedEvent());
 
@@ -373,7 +374,7 @@ public final class DashboardView extends Panel implements View,
         @Subscribe
         public void updateNotificationsCount(
                 final NotificationsCountUpdatedEvent event) {
-            setUnreadCount(DashboardUI.getDataProvider()
+            setUnreadCount(DashUI.getDataProvider()
                     .getUnreadNotificationsCount());
         }
 

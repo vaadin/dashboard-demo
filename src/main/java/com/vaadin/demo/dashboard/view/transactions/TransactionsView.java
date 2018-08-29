@@ -9,16 +9,16 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
 
+import com.google.common.eventbus.Subscribe;
 import org.vaadin.maddon.FilterableListContainer;
 
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Transaction;
 import com.vaadin.demo.dashboard.event.DashboardEvent.BrowserResizeEvent;
@@ -202,7 +202,7 @@ public final class TransactionsView extends VerticalLayout implements View {
         table.setColumnCollapsible("price", false);
 
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new TempTransactionsContainer(DashboardUI
+        table.setContainerDataSource(new TempTransactionsContainer(DashUI
                 .getDataProvider().getRecentTransactions(200)));
         table.setSortContainerPropertyId("time");
         table.setSortAscending(false);
@@ -221,7 +221,7 @@ public final class TransactionsView extends VerticalLayout implements View {
         table.setColumnFooter(
                 "price",
                 "$"
-                        + DECIMALFORMAT.format(DashboardUI.getDataProvider()
+                        + DECIMALFORMAT.format(DashUI.getDataProvider()
                                 .getTotalSum()));
 
         // Allow dragging items to the reports menu
@@ -311,7 +311,7 @@ public final class TransactionsView extends VerticalLayout implements View {
                 if (item != null) {
                     Long movieId = (Long) item.getItemProperty("movieId")
                             .getValue();
-                    MovieDetailsWindow.open(DashboardUI.getDataProvider()
+                    MovieDetailsWindow.open(DashUI.getDataProvider()
                             .getMovie(movieId), null, null);
                 }
             }

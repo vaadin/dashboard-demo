@@ -9,7 +9,7 @@ import com.vaadin.addon.charts.model.Credits;
 import com.vaadin.addon.charts.model.ListSeries;
 import com.vaadin.addon.charts.model.PlotOptionsBar;
 import com.vaadin.addon.charts.model.Series;
-import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.data.dummy.DummyDataGenerator;
 import com.vaadin.demo.dashboard.domain.Movie;
 
@@ -26,7 +26,7 @@ public class TopGrossingMoviesChart extends Chart {
         getConfiguration().getyAxis().setTitle("");
         setSizeFull();
 
-        List<Movie> movies = new ArrayList<Movie>(DashboardUI.getDataProvider()
+        List<Movie> movies = new ArrayList<Movie>(DashUI.getDataProvider()
                 .getMovies());
 
         List<Series> series = new ArrayList<Series>();

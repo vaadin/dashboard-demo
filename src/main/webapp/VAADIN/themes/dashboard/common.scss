@@ -5,7 +5,9 @@
 }
 
 @mixin dashboard-common {
-
+  .container {
+    display: flex;
+  }
   .valo-menu {
     border-right: none;
 

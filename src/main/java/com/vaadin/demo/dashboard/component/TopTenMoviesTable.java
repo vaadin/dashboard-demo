@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.DashUI;
 import com.vaadin.demo.dashboard.domain.MovieRevenue;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
@@ -46,7 +46,7 @@ public final class TopTenMoviesTable extends Table {
         setSizeFull();
 
         List<MovieRevenue> movieRevenues = new ArrayList<MovieRevenue>(
-                DashboardUI.getDataProvider().getTotalMovieRevenues());
+                DashUI.getDataProvider().getTotalMovieRevenues());
         Collections.sort(movieRevenues, new Comparator<MovieRevenue>() {
             @Override
             public int compare(final MovieRevenue o1, final MovieRevenue o2) {
