@@ -313,7 +313,6 @@ public final class DashboardMenu extends CustomComponent {
         Jmx.registerStandardMXBeans(registry);
         gc.start(gcEvent -> {
             System.out.println("GC happened: " + gcEvent.toString());
-            measureCurrentMemory();
         });
     }
 
