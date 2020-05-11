@@ -21,6 +21,13 @@
 
 	<repositories>
 		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>vaadin-addons</id>
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 			<snapshots>
@@ -38,6 +45,10 @@
 	</repositories>
 
 	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</pluginRepository>
 		<pluginRepository>
 			<id>vaadin-prereleases</id>
 			<url>https://maven.vaadin.com/vaadin-prereleases</url>
